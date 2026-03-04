@@ -22,11 +22,9 @@ namespace LevelUp.Mobile.Infrastructure.Api
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(
-            HttpRequestMessage request,
-            CancellationToken cancellationToken)
+    HttpRequestMessage request,
+    CancellationToken cancellationToken)
         {
-            var clonedRequest = await request.CloneAsync();
-
             var response = await base.SendAsync(request, cancellationToken);
 
             if (response.StatusCode != HttpStatusCode.Unauthorized)
@@ -36,20 +34,19 @@ namespace LevelUp.Mobile.Infrastructure.Api
 
             try
             {
-                //  Verificar si otro request ya refrescó
+                // Verificar si otro request ya refrescó
                 var expiration = await _tokenService.GetExpirationAsync();
 
-                if (expiration > DateTime.UtcNow)
+                if (expiration.HasValue && expiration > DateTime.UtcNow)
                 {
                     var newToken = await _tokenService.GetAccessTokenAsync();
-                    clonedRequest.Headers.Authorization =
+                    request.Headers.Authorization =
                         new AuthenticationHeaderValue("Bearer", newToken);
 
-                    return await base.SendAsync(clonedRequest, cancellationToken);
+                    return await base.SendAsync(request, cancellationToken);
                 }
 
-                //  Intentar refresh real
-                var refreshed = false; //ait _authService.TryRefreshAsync();
+                var refreshed = await _authService.TryRefreshAsync();
 
                 if (!refreshed)
                 {
@@ -60,10 +57,10 @@ namespace LevelUp.Mobile.Infrastructure.Api
 
                 var updatedToken = await _tokenService.GetAccessTokenAsync();
 
-                clonedRequest.Headers.Authorization =
+                request.Headers.Authorization =
                     new AuthenticationHeaderValue("Bearer", updatedToken);
 
-                return await base.SendAsync(clonedRequest, cancellationToken);
+                return await base.SendAsync(request, cancellationToken);
             }
             finally
             {

@@ -28,6 +28,5 @@ public partial class AppShell : Shell
             Content = services.GetRequiredService<HomePage>()
         });
 
-        // Ya NO uses Routing.RegisterRoute para estas páginas
     }
 }

@@ -9,7 +9,13 @@ using LevelUp.Mobile.Features.Splash.ViewModels;
 using LevelUp.Mobile.Infrastructure.Api;
 using LevelUp.Mobile.Infrastructure.Session;
 using LevelUp.Mobile.Infrastructure.Token;
+using LevelUp.Mobile.Settings;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+
+
 namespace LevelUp.Mobile
 {
     public static class MauiProgram
@@ -17,6 +23,7 @@ namespace LevelUp.Mobile
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
+
             builder
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
@@ -25,15 +32,43 @@ namespace LevelUp.Mobile
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            var assembly = typeof(MauiProgram).Assembly;
+            using var stream = assembly.GetManifestResourceStream("LevelUp.Mobile.appsettings.json");
+
+            if (stream != null)
+            {
+                var config = new ConfigurationBuilder()
+                    .AddJsonStream(stream)
+                    .Build();
+
+                builder.Configuration.AddConfiguration(config);
+            }
+
+            builder.Services.Configure<ApiSettings>(
+                builder.Configuration.GetSection(ApiSettings.SettingPath));
+            builder.Services.Configure<AuthSettings>(
+                builder.Configuration.GetSection(AuthSettings.SettingPath));
+
             // ── HTTP ──────────────────────────────────────────────
             builder.Services.AddTransient<AuthHeaderHandler>();
             builder.Services.AddTransient<RefreshHandler>();
-            builder.Services.AddHttpClient<IApiClient, ApiClient>(client =>
+
+            builder.Services.AddHttpClient<IApiClient, ApiClient>((sp, client) =>
             {
-                client.BaseAddress = new Uri("localhost:7145/api");
+                var settings = sp.GetRequiredService<IOptions<ApiSettings>>().Value;
+                client.BaseAddress = new Uri(settings.BaseUrl);
+                client.Timeout = TimeSpan.FromSeconds(settings.TimeoutSeconds); 
             })
             .AddHttpMessageHandler<AuthHeaderHandler>()
             .AddHttpMessageHandler<RefreshHandler>();
+
+            // para evitar loop infinito en el refresh
+            builder.Services.AddHttpClient<AuthService>((sp, client) =>
+            {
+                var settings = sp.GetRequiredService<IOptions<ApiSettings>>().Value;
+                client.BaseAddress = new Uri(settings.BaseUrl); 
+                client.Timeout = TimeSpan.FromSeconds(settings.TimeoutSeconds);
+            });
 
             // ── Servicios ─────────────────────────────────────────
             builder.Services.AddSingleton<ITokenService, TokenService>();
