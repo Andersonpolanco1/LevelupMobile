@@ -1,0 +1,68 @@
+## --- Visual Studio & .NET ---
+*.user
+*.userosscache
+*.sln.docattachments
+.vs/
+[Bb]in/
+[Oo]bj/
+*.suo
+*.user
+*.userosscache
+*.sln.docattachments
+*.ghostdoc
+
+## --- .NET MAUI & Mobile Specific ---
+# Android
+*.apk
+*.aab
+*.dex
+*.class
+*.pyc
+
+# iOS / MacCatalyst
+[Dd]erivedData/
+[Ll]og/
+*.moved-aside
+*.xcuserstate
+*.xcworkspace/
+!default.xcworkspace
+xcuserdata/
+
+# Windows (WinUI)
+AppPackages/
+BundleArtifacts/
+Package.StoreAssociation.xml
+_PkgInfo.txt
+
+## --- Publish and Packages ---
+# NuGet Packages
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+
+# Publishing folders
+publish/
+release/
+
+## --- Tools & OS ---
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+
+# Windows
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# User-specific secrets (si usas User Secrets)
+secrets.json
+
+## --- IDEs (VS Code / JetBrains) ---
+.vscode/
+.idea/
+*.swp
+*.bak

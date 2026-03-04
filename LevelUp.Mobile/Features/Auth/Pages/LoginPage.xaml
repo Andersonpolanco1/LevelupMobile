@@ -1,0 +1,29 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LevelUp.Mobile.Features.Auth.Pages.LoginPage">
+    <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
+
+        <!-- Estado: No autenticado -->
+        <Image Source="google_logo.png" HeightRequest="60"
+               IsVisible="{Binding IsNotLoggedIn}"/>
+
+        <Button Text="Iniciar sesión con Google"
+                Command="{Binding LoginWithGoogleCommand}"
+                BackgroundColor="#4285F4"
+                TextColor="White"
+                CornerRadius="8"
+                IsEnabled="{Binding IsNotBusy}"
+                IsVisible="{Binding IsNotLoggedIn}"/>
+
+        <!-- Estado: Autenticado -->
+        <VerticalStackLayout IsVisible="{Binding IsLoggedIn}" Spacing="10">
+            <Label Text="{Binding UserName}"  FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
+            <Label Text="{Binding UserEmail}" FontSize="14" TextColor="Gray"      HorizontalOptions="Center"/>
+            <Button Text="Cerrar sesión" Command="{Binding LogoutCommand}"
+                    BackgroundColor="Red" TextColor="White" CornerRadius="8"/>
+        </VerticalStackLayout>
+
+        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="#4285F4"/>
+
+    </VerticalStackLayout>
+</ContentPage>
