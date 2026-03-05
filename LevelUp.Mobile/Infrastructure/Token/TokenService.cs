@@ -1,6 +1,7 @@
 ﻿namespace LevelUp.Mobile.Infrastructure.Token
 {
     using Microsoft.Maui.Storage;
+    using System.IdentityModel.Tokens.Jwt;
 
     public class TokenService : ITokenService
     {
@@ -37,6 +38,17 @@
             SecureStorage.Remove(RefreshTokenKey);
             SecureStorage.Remove(ExpirationKey);
             return Task.CompletedTask;
+        }
+
+        public async Task<IDictionary<string, string>> GetUserClaimsAsync()
+        {
+            var token = await GetAccessTokenAsync();
+            if (string.IsNullOrEmpty(token)) return new Dictionary<string, string>();
+
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadJwtToken(token);
+
+            return jsonToken.Claims.ToDictionary(c => c.Type, c => c.Value);
         }
     }
 }

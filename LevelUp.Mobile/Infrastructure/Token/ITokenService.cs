@@ -8,5 +8,7 @@
 
         Task SetTokensAsync(string accessToken, string refreshToken, DateTime expiresAt);
         Task ClearAsync();
+
+        Task<IDictionary<string, string>> GetUserClaimsAsync();
     }
 }
