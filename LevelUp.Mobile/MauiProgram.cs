@@ -43,6 +43,10 @@ namespace LevelUp.Mobile
 
                 builder.Configuration.AddConfiguration(config);
             }
+            else
+            {
+                throw new FileNotFoundException("No se pudo encontrar el archivo appsettings.json como EmbeddedResource");
+            }
 
             builder.Services.Configure<ApiSettings>(
                 builder.Configuration.GetSection(ApiSettings.SettingPath));

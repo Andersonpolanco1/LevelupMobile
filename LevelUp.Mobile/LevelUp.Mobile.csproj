@@ -63,18 +63,8 @@
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-		<MauiAsset Include="appsettings.json" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <None Remove="appsettings.json" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="appsettings.json">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.3" />
@@ -99,6 +89,10 @@
 	<ItemGroup>
 		<GoogleServicesJson Include="Platforms\Android\google-services.json" />
 	</ItemGroup>
+
+<ItemGroup>
+  <EmbeddedResource Include="appsettings.json" />
+</ItemGroup>
 
 	<ItemGroup>
 	  <MauiXaml Update="Features\Auth\Pages\LoginPage.xaml">
