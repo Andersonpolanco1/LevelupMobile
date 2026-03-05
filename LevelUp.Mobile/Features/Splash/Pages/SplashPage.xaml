@@ -1,14 +1,49 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
+    x:Class="LevelUp.Mobile.Features.Splash.Pages.SplashPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="LevelUp.Mobile.Features.Splash.Pages.SplashPage">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Grid>
+    <Grid BackgroundColor="{AppThemeBinding Dark=#121212, Light=#F2F2F7}">
+
+        <!-- Logo + Nombre centrado -->
+        <VerticalStackLayout
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Spacing="16">
+
+            <!-- Logo -->
+            <Image
+                Source="logo.png"
+                HeightRequest="90"
+                WidthRequest="90"
+                HorizontalOptions="Center" />
+
+            <!-- Nombre app -->
+            <Label
+                Text="LevelUp"
+                FontSize="32"
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                TextColor="{AppThemeBinding Dark=#FFFFFF, Light=#1C1C1E}" />
+
+            <!-- Tagline -->
+            <Label
+                Text="Track. Progress. Dominate."
+                FontSize="13"
+                HorizontalOptions="Center"
+                TextColor="{AppThemeBinding Dark=#A0A0A0, Light=#6C6C70}" />
+
+        </VerticalStackLayout>
+
+        <!-- Spinner en la parte inferior -->
         <ActivityIndicator
             IsRunning="True"
-            VerticalOptions="Center"
-            HorizontalOptions="Center" />
+            Color="#FF4500"
+            VerticalOptions="End"
+            HorizontalOptions="Center"
+            Margin="0,0,0,60" />
+
     </Grid>
 
 </ContentPage>

@@ -2,18 +2,21 @@
 using LevelUp.Mobile.Features.Auth.Pages;
 using LevelUp.Mobile.Features.Auth.Services;
 using LevelUp.Mobile.Features.Auth.ViewModels;
+using LevelUp.Mobile.Features.Exercises.Pages;
 using LevelUp.Mobile.Features.Home;
 using LevelUp.Mobile.Features.Home.Pages;
+using LevelUp.Mobile.Features.Plans.Pages;
+using LevelUp.Mobile.Features.Profile.Pages;
 using LevelUp.Mobile.Features.Splash.Pages;
 using LevelUp.Mobile.Features.Splash.ViewModels;
+using LevelUp.Mobile.Features.Workouts.Pages;
 using LevelUp.Mobile.Infrastructure.Api;
 using LevelUp.Mobile.Infrastructure.Session;
 using LevelUp.Mobile.Infrastructure.Token;
 using LevelUp.Mobile.Settings;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
 
 
 namespace LevelUp.Mobile
@@ -86,6 +89,23 @@ namespace LevelUp.Mobile
             builder.Services.AddTransient<LoginViewModel>();
             builder.Services.AddTransient<HomePage>();
             builder.Services.AddTransient<HomeViewModel>();
+
+            // Exercises
+            builder.Services.AddTransient<ExercisesPage>();
+            builder.Services.AddTransient<ExerciseDetailPage>();
+
+            // Workouts
+            builder.Services.AddTransient<WorkoutPage>();
+            builder.Services.AddTransient<ActiveWorkoutPage>();
+            builder.Services.AddTransient<WorkoutSummaryPage>();
+
+            // Plans
+            builder.Services.AddTransient<PlansPage>();
+            builder.Services.AddTransient<PlanDetailPage>();
+            builder.Services.AddTransient<CreatePlanPage>();
+
+            // Profile
+            builder.Services.AddTransient<ProfilePage>();
 
             // ── Shell y App ───────────────────────────────────────
             builder.Services.AddSingleton<AppShell>();

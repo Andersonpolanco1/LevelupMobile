@@ -6,6 +6,8 @@ namespace LevelUp.Mobile.Features.Splash.ViewModels
     {
         public async Task InitializeAsync()
         {
+            await Task.Delay(1200);
+
             var hasSession = await sessionService.HasValidSessionAsync();
 
             if (hasSession)
