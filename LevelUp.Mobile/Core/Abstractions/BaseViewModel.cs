@@ -1,5 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Mvvm.ComponentModel;
 using LevelUp.Mobile.Infrastructure.Api;
 
 namespace LevelUp.Mobile.Core.Abstractions
@@ -7,28 +8,65 @@ namespace LevelUp.Mobile.Core.Abstractions
     public partial class BaseViewModel : ObservableObject
     {
         [ObservableProperty] private bool isBusy;
-        [ObservableProperty] private string? errorMessage = null;
         [ObservableProperty] private Dictionary<string, string> fieldErrors = [];
 
-        public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
+        // ========================= 
+        // SNACKBAR OPTIONS         
+        // =========================
 
-        partial void OnErrorMessageChanged(string? value) => OnPropertyChanged(nameof(HasError));
-
-        [RelayCommand]
-        private void ClearError()
+        private static readonly SnackbarOptions ErrorOptions = new()
         {
-            ErrorMessage = null;
-            FieldErrors = [];
-        }
+            BackgroundColor = Color.FromArgb("#EF4444"),
+            TextColor = Color.FromArgb("#FFFFFF"),
+            ActionButtonTextColor = Color.FromArgb("#FFFFFF"),
+            CornerRadius = new CornerRadius(16),
+            Font = Microsoft.Maui.Font.SystemFontOfSize(14)
+        };
+
+        private static readonly SnackbarOptions SuccessOptions = new()
+        {
+            BackgroundColor = Color.FromArgb("#22C55E"),
+            TextColor = Color.FromArgb("#FFFFFF"),
+            ActionButtonTextColor = Color.FromArgb("#FFFFFF"),
+            CornerRadius = new CornerRadius(16),
+            Font = Microsoft.Maui.Font.SystemFontOfSize(14)
+        };
+
+        private static readonly SnackbarOptions WarningOptions = new ()
+        {
+            BackgroundColor = Color.FromArgb("#F59E0B"),
+            TextColor = Color.FromArgb("#FFFFFF"),
+            ActionButtonTextColor = Color.FromArgb("#FFFFFF"),
+            CornerRadius = new CornerRadius(16),
+            Font = Microsoft.Maui.Font.SystemFontOfSize(14)
+        };
+
+        // ========================= 
+        // SNACKBAR METHODS         
+        // =========================
+
+        protected static async Task ShowErrorAsync(string message) =>
+            await Snackbar.Make(message, duration: TimeSpan.FromSeconds(4), visualOptions: ErrorOptions).Show();
+
+        protected static async Task ShowSuccessAsync(string message) =>
+            await Snackbar.Make(message, duration: TimeSpan.FromSeconds(3), visualOptions: SuccessOptions).Show();
+
+        protected static async Task ShowWarningAsync(string message) =>
+            await Snackbar.Make(message, duration: TimeSpan.FromSeconds(3), visualOptions: WarningOptions).Show();
+
+        // ========================= 
+        // FIELD ERRORS             
+        // =========================
 
         protected bool HasFieldError(string field) => FieldErrors.ContainsKey(field);
         protected string? GetFieldError(string field) => FieldErrors.GetValueOrDefault(field);
+        protected void ClearErrors() => FieldErrors = [];
 
-        protected void ClearErrors()
-        {
-            ErrorMessage = null;
-            FieldErrors = [];
-        }
+        protected virtual void NotifyFieldErrorsChanged() { }
+
+        // ========================= 
+        // RUN ASYNC                
+        // =========================
 
         protected async Task RunAsync(Func<Task> action)
         {
@@ -42,7 +80,6 @@ namespace LevelUp.Mobile.Core.Abstractions
             {
                 if (ex.FieldErrors?.Count > 0)
                 {
-                    // Los field errors de la API vienen en minúscula, normalizamos a PascalCase
                     FieldErrors = ex.FieldErrors.ToDictionary(
                         f => char.ToUpper(f.Field[0]) + f.Field[1..],
                         f => f.Message);
@@ -50,20 +87,17 @@ namespace LevelUp.Mobile.Core.Abstractions
                 }
                 else
                 {
-                    ErrorMessage = ex.Message;
+                    await ShowErrorAsync(ex.Message ?? "Error inesperado");
                 }
             }
             catch (Exception)
             {
-                ErrorMessage = "Ocurrió un error inesperado";
+                await ShowErrorAsync("Ocurrió un error inesperado");
             }
             finally
             {
                 IsBusy = false;
             }
         }
-
-        // Cada ViewModel sobreescribe esto para notificar sus propiedades de error
-        protected virtual void NotifyFieldErrorsChanged() { }
     }
 }

@@ -15,7 +15,6 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
         [RelayCommand]
         private async Task CreatePlan()
         {
-            // Validación local
             if (string.IsNullOrWhiteSpace(Name))
             {
                 FieldErrors = new Dictionary<string, string> { { "Name", "El nombre es obligatorio" } };
@@ -26,10 +25,10 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
             await RunAsync(async () =>
             {
                 await planService.CreateWeeklyPlanAsync(Name, Notes);
+                await ShowSuccessAsync("Plan creado correctamente");
                 await Shell.Current.GoToAsync("///Plans");
             });
 
-            // Notifica errores de campo que pudo haber puesto RunAsync
             NotifyFieldErrorsChanged();
         }
 
