@@ -10,5 +10,6 @@
         Task ClearAsync();
 
         Task<IDictionary<string, string>> GetUserClaimsAsync();
+        Task<IDictionary<string, string>> GetUserClaimsAsync(string token);
     }
 }

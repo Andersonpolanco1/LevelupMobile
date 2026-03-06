@@ -39,7 +39,8 @@
                            HorizontalTextAlignment="Center"/>
                     <Button Text="Crear plan"
                             Style="{StaticResource PrimaryButton}"
-                            Margin="0,8,0,0"/>
+                            Margin="0,8,0,0"
+                            Command="{Binding CreatePlanCommand}"/>
                 </VerticalStackLayout>
             </Border>
 

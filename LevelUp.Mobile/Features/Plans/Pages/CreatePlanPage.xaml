@@ -3,10 +3,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="LevelUp.Mobile.Features.Plans.Pages.CreatePlanPage"
              Title="CreatePlanPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+    <VerticalStackLayout Padding="20" Spacing="20">
+
+        <Label
+        Text="Crear Plan Semanal"
+        FontSize="24"
+        FontAttributes="Bold"/>
+
+        <Entry
+        Placeholder="Nombre del plan"
+        Text="{Binding Name}" />
+
+        <Editor
+        Placeholder="Notas del plan (opcional)"
+        HeightRequest="120"
+        Text="{Binding Notes}" />
+
+        <Button
+        Text="Crear Plan"
+        Command="{Binding CreatePlanCommand}"
+        HeightRequest="50"/>
+
     </VerticalStackLayout>
 </ContentPage>

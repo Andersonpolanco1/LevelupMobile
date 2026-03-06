@@ -7,6 +7,7 @@ using LevelUp.Mobile.Features.Exercises.Pages;
 using LevelUp.Mobile.Features.Home.Pages;
 using LevelUp.Mobile.Features.Home.ViewModels;
 using LevelUp.Mobile.Features.Plans.Pages;
+using LevelUp.Mobile.Features.Plans.ViewModels;
 using LevelUp.Mobile.Features.Profile.Pages;
 using LevelUp.Mobile.Features.Splash.Pages;
 using LevelUp.Mobile.Features.Splash.ViewModels;
@@ -91,10 +92,15 @@ namespace LevelUp.Mobile
             // ── Páginas y ViewModels ──────────────────────────────
             builder.Services.AddTransient<SplashPage>();
             builder.Services.AddTransient<SplashViewModel>();
+
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<LoginViewModel>();
+
             builder.Services.AddTransient<HomePage>();
             builder.Services.AddTransient<HomeViewModel>();
+
+            builder.Services.AddTransient<PlansViewModel>();
+            builder.Services.AddTransient<PlansPage>();
 
             // Exercises
             builder.Services.AddTransient<ExercisesPage>();
@@ -109,12 +115,15 @@ namespace LevelUp.Mobile
             builder.Services.AddTransient<PlansPage>();
             builder.Services.AddTransient<PlanDetailPage>();
             builder.Services.AddTransient<CreatePlanPage>();
+            builder.Services.AddTransient<CreatePlanViewModel>();
 
             // Profile
             builder.Services.AddTransient<ProfilePage>();
 
             //services
             builder.Services.AddTransient<HomeService>();
+            builder.Services.AddSingleton<WeeklyPlanService>();
+
 
             // ── Shell y App ───────────────────────────────────────
             builder.Services.AddSingleton<AppShell>();

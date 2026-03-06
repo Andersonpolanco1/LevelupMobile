@@ -1,9 +1,12 @@
+using LevelUp.Mobile.Features.Plans.ViewModels;
+
 namespace LevelUp.Mobile.Features.Plans.Pages;
 
 public partial class CreatePlanPage : ContentPage
 {
-	public CreatePlanPage()
-	{
-		InitializeComponent();
-	}
+    public CreatePlanPage(CreatePlanViewModel vm)
+    {
+        InitializeComponent();
+        BindingContext = vm;
+    }
 }

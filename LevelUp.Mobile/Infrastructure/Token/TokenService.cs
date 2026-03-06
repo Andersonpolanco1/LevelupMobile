@@ -50,5 +50,19 @@
 
             return jsonToken.Claims.ToDictionary(c => c.Type, c => c.Value);
         }
+
+
+        /// <summary>
+        /// Para pruebas
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<IDictionary<string, string>> GetUserClaimsAsync(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadJwtToken(token);
+
+            return jsonToken.Claims.ToDictionary(c => c.Type, c => c.Value);
+        }
     }
 }

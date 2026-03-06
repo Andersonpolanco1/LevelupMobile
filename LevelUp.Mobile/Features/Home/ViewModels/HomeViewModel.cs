@@ -85,6 +85,12 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
             }
         }
 
+        [RelayCommand]
+        private async Task CreatePlanAsync()
+        {
+            await Shell.Current.GoToAsync("///Plans/Create");
+        }
+
         private static string GetGreeting()
         {
             var hour = DateTime.Now.Hour;

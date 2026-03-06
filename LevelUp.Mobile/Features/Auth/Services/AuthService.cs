@@ -37,7 +37,7 @@ namespace LevelUp.Mobile.Features.Auth.Services
                     {
                         Url = authUrl,
                         CallbackUrl = callbackUrl,
-                        PrefersEphemeralWebBrowserSession = true
+                        PrefersEphemeralWebBrowserSession = false
                     });
 
                 // Verificar error primero
@@ -70,6 +70,52 @@ namespace LevelUp.Mobile.Features.Auth.Services
             }
         }
 
+        /// <summary>
+        /// PAra pruebas
+        /// </summary>
+        /// <returns></returns>
+        public async Task<AuthResult> LoginWithGoogleAsync(string googleToken)
+        {
+            try
+            {
+                var request = new ApiTokenDto
+                {
+                    ProviderToken = googleToken,
+                    TimeZoneId = TimeZoneInfo.Local.Id
+                };
+
+                _httpClient.BaseAddress = new Uri("https://levelup.tryasp.net/");
+                var response = await _httpClient.PostAsJsonAsync("api/auth/google", request);
+
+                if (!response.IsSuccessStatusCode)
+                    return AuthResult.Failure("Error autenticando");
+
+                var data = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
+
+                if (data == null || string.IsNullOrEmpty(data.AccessToken))
+                    return AuthResult.Failure("No se recibió token");
+
+                var expiration = DateTime.TryParse(data.ExpiresAt, out var parsedExpiry)
+                    ? parsedExpiry
+                    : DateTime.UtcNow.AddHours(1);
+
+                await _tokenService.SetTokensAsync(
+                    data.AccessToken,
+                    data.RefreshToken ?? "",
+                    expiration);
+
+                return AuthResult.Success(data.AccessToken);
+            }
+            catch (TaskCanceledException)
+            {
+                return AuthResult.Failure("El usuario canceló");
+            }
+            catch (Exception ex)
+            {
+                return AuthResult.Failure(ex.Message);
+            }
+        }
+
         public async Task<bool> TryRefreshAsync()
         {
             var refreshToken = await _tokenService.GetRefreshTokenAsync();
@@ -78,7 +124,7 @@ namespace LevelUp.Mobile.Features.Auth.Services
             try
             {
                 var response = await _httpClient.PostAsJsonAsync(
-                    "auth/refresh",
+                    "api/auth/refresh",
                     new
                     {
                         tokenRefresh = refreshToken,
@@ -113,5 +159,22 @@ namespace LevelUp.Mobile.Features.Auth.Services
     {
         public static AuthResult Success(string token) => new(true, token, null);
         public static AuthResult Failure(string error) => new(false, null, error);
+    }
+
+
+    /// <summary>
+    /// Dtos de pruebas
+    /// </summary>
+    public class ApiTokenDto
+    {
+        public string ProviderToken { get; set; } = default!;
+        public string TimeZoneId { get; set; } = default!;
+    }
+
+    public class AuthResponseDto
+    {
+        public string AccessToken { get; set; } = default!;
+        public string? RefreshToken { get; set; }
+        public string? ExpiresAt { get; set; }
     }
 }
