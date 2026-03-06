@@ -1,6 +1,5 @@
-<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-	<rect width="512" height="512" fill="#0B0B0C"/>
-
+<svg width="456" height="456" viewBox="0 0 456 456" xmlns="http://www.w3.org/2000/svg">
+	<rect width="456" height="456" fill="#0B0B0C"/>
 	<defs>
 		<linearGradient id="levelupGradient" x1="0%" y1="100%" x2="0%" y2="0%">
 			<stop offset="0%" stop-color="#CC2200"/>
@@ -8,7 +7,6 @@
 			<stop offset="75%" stop-color="#FF8000"/>
 			<stop offset="100%" stop-color="#FFD000"/>
 		</linearGradient>
-
 		<linearGradient id="brilloFadeDoble" x1="0%" y1="0%" x2="100%" y2="0%">
 			<stop offset="0%" stop-color="white" stop-opacity="0"/>
 			<stop offset="15%" stop-color="white" stop-opacity="0.6"/>
@@ -17,20 +15,31 @@
 		</linearGradient>
 	</defs>
 
-	<g transform="translate(144, 126)">
+	<!-- Barras centradas horizontalmente, bloque vertical centrado -->
+	<g transform="translate(116, 50)">
 		<path d="M 0,176 C 0,165 5,160 16,160 L 64,160 L 64,260 L 0,260 Z"
               fill="url(#levelupGradient)"/>
 		<path d="M 1,176 C 1,165 6,161 16,161 L 63,161"
               stroke="url(#brilloFadeDoble)" stroke-width="1.8" fill="none"/>
-
 		<path d="M 80,96 C 80,85 85,80 96,80 L 144,80 L 144,260 L 80,260 Z"
               fill="url(#levelupGradient)"/>
 		<path d="M 81,96 C 81,85 86,81 96,81 L 143,81"
               stroke="url(#brilloFadeDoble)" stroke-width="1.8" fill="none"/>
-
 		<path d="M 160,16 C 160,5 165,0 176,0 L 224,0 L 224,260 L 160,260 Z"
               fill="url(#levelupGradient)"/>
 		<path d="M 161,16 C 161,5 166,1 176,1 L 223,1"
               stroke="url(#brilloFadeDoble)" stroke-width="1.8" fill="none"/>
 	</g>
+
+	<!-- LevelUp -->
+	<text
+		x="228"
+		y="400"
+		font-family="Arial, Helvetica, sans-serif"
+		font-size="88"
+		font-weight="bold"
+		fill="#FFFFFF"
+		text-anchor="middle"
+		letter-spacing="1">LevelUp</text>
+
 </svg>

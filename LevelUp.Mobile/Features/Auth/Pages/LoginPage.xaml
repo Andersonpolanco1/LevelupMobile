@@ -15,7 +15,7 @@
                 HorizontalOptions="Center"
                 VerticalOptions="Center"
                 Spacing="20"
-                Padding="40,0">
+                Padding="30,0">
 
                 <Image
                     Source="logo_splash"
