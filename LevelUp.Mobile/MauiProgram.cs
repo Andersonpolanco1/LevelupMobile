@@ -68,6 +68,7 @@ namespace LevelUp.Mobile
                 builder.Configuration.GetSection(AuthSettings.SettingPath));
 
             // ── HTTP ──────────────────────────────────────────────
+
             builder.Services.AddTransient<AuthHeaderHandler>();
             builder.Services.AddTransient<RefreshHandler>();
 

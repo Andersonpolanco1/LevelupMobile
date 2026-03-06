@@ -6,7 +6,6 @@
              x:Class="LevelUp.Mobile.Features.Plans.Pages.CreatePlanPage"
              x:DataType="vm:CreatePlanViewModel"
              Title="Nuevo Plan">
-
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="24">
 
@@ -18,16 +17,44 @@
                        Style="{StaticResource BodyLabel}" />
             </VerticalStackLayout>
 
+            <!-- ERROR GENERAL (solo errores de API sin campo específico) -->
+            <Border Style="{StaticResource CardBorder}"
+                    BackgroundColor="{StaticResource Error}"
+                    IsVisible="{Binding HasError}">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="{Binding ErrorMessage}"
+                           TextColor="White"
+                           FontSize="14"
+                           VerticalOptions="Center"/>
+                    <Label Grid.Column="1"
+                           Text="{x:Static constants:FA.Xmark}"
+                           FontFamily="FASolid"
+                           TextColor="White"
+                           FontSize="14"
+                           Margin="8,0,0,0"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ClearErrorCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+            </Border>
+
             <!-- FORMULARIO -->
             <Border Style="{StaticResource CardBorder}">
                 <VerticalStackLayout Spacing="16">
 
                     <!-- Nombre -->
-                    <VerticalStackLayout Spacing="6">
+                    <VerticalStackLayout Spacing="4">
                         <Label Text="Nombre del plan"
                                Style="{StaticResource CaptionLabel}" />
                         <Entry Placeholder="Ej. Fuerza 5 días"
                                Text="{Binding Name}" />
+                        <Label Text="{Binding NameError}"
+                               TextColor="{StaticResource Error}"
+                               FontSize="12"
+                               IsVisible="{Binding NameError, Converter={StaticResource IsNotNullConverter}}"/>
                     </VerticalStackLayout>
 
                     <BoxView Style="{StaticResource Divider}" />
@@ -58,5 +85,4 @@
 
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>

@@ -5,52 +5,37 @@ using LevelUp.Mobile.Services;
 
 namespace LevelUp.Mobile.Features.Plans.ViewModels
 {
-    public partial class CreatePlanViewModel : BaseViewModel
+    public partial class CreatePlanViewModel(WeeklyPlanService planService) : BaseViewModel
     {
-        private readonly WeeklyPlanService _planService;
+        [ObservableProperty] private string name = string.Empty;
+        [ObservableProperty] private string? notes;
 
-        public CreatePlanViewModel(WeeklyPlanService planService)
-        {
-            _planService = planService;
-        }
-
-        [ObservableProperty]
-        private string name = string.Empty;
-
-        [ObservableProperty]
-        private string? notes;
+        public string? NameError => GetFieldError("Name");
 
         [RelayCommand]
         private async Task CreatePlan()
         {
+            // Validación local
             if (string.IsNullOrWhiteSpace(Name))
             {
-                await Shell.Current.DisplayAlert("Error", "El nombre es obligatorio", "OK");
+                FieldErrors = new Dictionary<string, string> { { "Name", "El nombre es obligatorio" } };
+                NotifyFieldErrorsChanged();
                 return;
             }
 
-            IsBusy = true;
-
-            try
+            await RunAsync(async () =>
             {
-                var plan = await _planService.CreateWeeklyPlanAsync(Name, Notes);
-
-                if (plan == null)
-                {
-                    await Shell.Current.DisplayAlert("Error", "No se pudo crear el plan", "OK");
-                    return;
-                }
-
-                await Shell.Current.DisplayAlert("Plan creado", "Ahora agrega los días del plan", "OK");
-
-                // navegar a agregar días
-                //await Shell.Current.GoToAsync($"plandays?planId={plan.Id}");
+                await planService.CreateWeeklyPlanAsync(Name, Notes);
                 await Shell.Current.GoToAsync("///Plans");
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+            });
+
+            // Notifica errores de campo que pudo haber puesto RunAsync
+            NotifyFieldErrorsChanged();
+        }
+
+        protected override void NotifyFieldErrorsChanged()
+        {
+            OnPropertyChanged(nameof(NameError));
         }
     }
 }
