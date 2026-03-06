@@ -1,10 +1,11 @@
-﻿using LevelUp.Mobile.Core.Abstractions;
+﻿using CommunityToolkit.Maui;
+using LevelUp.Mobile.Core.Abstractions;
 using LevelUp.Mobile.Features.Auth.Pages;
 using LevelUp.Mobile.Features.Auth.Services;
 using LevelUp.Mobile.Features.Auth.ViewModels;
 using LevelUp.Mobile.Features.Exercises.Pages;
-using LevelUp.Mobile.Features.Home;
 using LevelUp.Mobile.Features.Home.Pages;
+using LevelUp.Mobile.Features.Home.ViewModels;
 using LevelUp.Mobile.Features.Plans.Pages;
 using LevelUp.Mobile.Features.Profile.Pages;
 using LevelUp.Mobile.Features.Splash.Pages;
@@ -13,6 +14,7 @@ using LevelUp.Mobile.Features.Workouts.Pages;
 using LevelUp.Mobile.Infrastructure.Api;
 using LevelUp.Mobile.Infrastructure.Session;
 using LevelUp.Mobile.Infrastructure.Token;
+using LevelUp.Mobile.Services;
 using LevelUp.Mobile.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -29,6 +31,7 @@ namespace LevelUp.Mobile
 
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -106,6 +109,9 @@ namespace LevelUp.Mobile
 
             // Profile
             builder.Services.AddTransient<ProfilePage>();
+
+            //services
+            builder.Services.AddTransient<HomeService>();
 
             // ── Shell y App ───────────────────────────────────────
             builder.Services.AddSingleton<AppShell>();

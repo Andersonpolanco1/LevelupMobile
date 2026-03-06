@@ -2,15 +2,16 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- BRAND -->
+    <!-- BRAND (Exact gradient used in logo) -->
+    <Color x:Key="BrandDeep">#CC2200</Color>
     <Color x:Key="BrandStart">#FF4D00</Color>
-    <Color x:Key="BrandMid">#FF7A00</Color>
-    <Color x:Key="BrandEnd">#FFC400</Color>
+    <Color x:Key="BrandMid">#FF8000</Color>
+    <Color x:Key="BrandEnd">#FFD000</Color>
 
     <!-- PRIMARY -->
-    <Color x:Key="Primary">#FF6A00</Color>
-    <Color x:Key="PrimaryHover">#FF7F1F</Color>
-    <Color x:Key="PrimaryPressed">#E85F00</Color>
+    <Color x:Key="Primary">#FF7A00</Color>
+    <Color x:Key="PrimaryHover">#FF8F1F</Color>
+    <Color x:Key="PrimaryPressed">#E56700</Color>
 
     <!-- DARK THEME -->
     <Color x:Key="BackgroundDark">#0B0B0C</Color>
@@ -22,13 +23,13 @@
     <Color x:Key="TextSecondaryDark">#A1A1AA</Color>
     <Color x:Key="TextDisabledDark">#52525B</Color>
 
-    <Color x:Key="DividerDark">#2F2F33</Color>
+    <Color x:Key="DividerDark">#2A2A2E</Color>
 
     <!-- LIGHT THEME -->
     <Color x:Key="BackgroundLight">#F7F7F9</Color>
     <Color x:Key="SurfaceLight">#FFFFFF</Color>
     <Color x:Key="SurfaceElevatedLight">#F1F1F4</Color>
-    <!-- CardLight eliminado, usar SurfaceLight -->
+    <Color x:Key="CardLight">#FFFFFF</Color>
 
     <Color x:Key="TextPrimaryLight">#18181B</Color>
     <Color x:Key="TextSecondaryLight">#71717A</Color>

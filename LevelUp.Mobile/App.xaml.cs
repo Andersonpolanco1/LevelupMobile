@@ -2,21 +2,25 @@
 {
     public partial class App : Application
     {
+        private readonly AppShell _shell;
+
         public App(AppShell shell)
         {
             InitializeComponent();
+            _shell = shell;
 
-            // Dark por defecto, pero si el usuario ya eligió uno, respetarlo
             var saved = Preferences.Get("AppTheme", "Dark");
-
-            Application.Current!.UserAppTheme = saved switch
+            UserAppTheme = saved switch
             {
                 "Light" => AppTheme.Light,
                 "System" => AppTheme.Unspecified,
                 _ => AppTheme.Dark
             };
+        }
 
-            MainPage = shell;
+        protected override Window CreateWindow(IActivationState? activationState)
+        {
+            return new Window(_shell);
         }
     }
 }

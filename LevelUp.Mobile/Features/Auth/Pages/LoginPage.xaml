@@ -2,60 +2,52 @@
 <ContentPage
     x:Class="LevelUp.Mobile.Features.Auth.Pages.LoginPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="{AppThemeBinding Dark=#0B0B0C, Light=#F7F7F9}">
 
-    <Grid BackgroundColor="{AppThemeBinding Dark=#121212, Light=#F2F2F7}">
-
-        <!-- ═══════════════════════════════════════ -->
-        <!--  ESTADO: NO AUTENTICADO                  -->
-        <!-- ═══════════════════════════════════════ -->
-        <VerticalStackLayout
+    <Grid>
+        <Grid
             IsVisible="{Binding IsNotLoggedIn}"
-            VerticalOptions="Fill"
-            Spacing="0">
+            RowDefinitions="0.6*,0.4*">
 
-            <!-- Parte superior: Logo y branding (60% de la pantalla) -->
             <VerticalStackLayout
-                VerticalOptions="FillAndExpand"
+                Grid.Row="0"
                 HorizontalOptions="Center"
+                VerticalOptions="Center"
                 Spacing="20"
-                Padding="40,80,40,40">
+                Padding="40,0">
 
-                <!-- Logo -->
                 <Image
-                    Source="logo.png"
+                    Source="logo_splash"
                     HeightRequest="100"
                     WidthRequest="100"
                     HorizontalOptions="Center" />
 
-                <!-- Nombre -->
                 <Label
                     Text="LevelUp"
                     FontSize="40"
                     FontAttributes="Bold"
                     HorizontalOptions="Center"
-                    TextColor="{AppThemeBinding Dark=#FFFFFF, Light=#1C1C1E}" />
+                    TextColor="{AppThemeBinding Dark=#FFFFFF, Light=#18181B}" />
 
-                <!-- Tagline -->
                 <Label
                     Text="Track. Progress. Dominate."
                     FontSize="15"
                     HorizontalOptions="Center"
-                    TextColor="{AppThemeBinding Dark=#A0A0A0, Light=#6C6C70}" />
+                    TextColor="{AppThemeBinding Dark=#A1A1AA, Light=#71717A}" />
 
             </VerticalStackLayout>
 
-            <!-- Parte inferior: Botón de login -->
             <VerticalStackLayout
+                Grid.Row="1"
                 Padding="32,0,32,60"
                 Spacing="16"
                 VerticalOptions="End">
 
-                <!-- Botón Google -->
                 <Border
-                    BackgroundColor="{AppThemeBinding Dark=#1E2022, Light=#FFFFFF}"
+                    BackgroundColor="{AppThemeBinding Dark=#232327, Light=#FFFFFF}"
                     StrokeThickness="1"
-                    Stroke="{AppThemeBinding Dark=#2C2F33, Light=#E5E5EA}"
+                    Stroke="{AppThemeBinding Dark=#2A2A2E, Light=#E4E4E7}"
                     StrokeShape="RoundRectangle 14"
                     IsEnabled="{Binding IsNotBusy}">
                     <Border.GestureRecognizers>
@@ -77,32 +69,26 @@
                             FontSize="16"
                             FontAttributes="Bold"
                             VerticalOptions="Center"
-                            TextColor="{AppThemeBinding Dark=#FFFFFF, Light=#1C1C1E}" />
+                            TextColor="{AppThemeBinding Dark=#FFFFFF, Light=#18181B}" />
                     </Grid>
                 </Border>
 
-                <!-- Loading indicator -->
                 <ActivityIndicator
                     IsRunning="{Binding IsBusy}"
                     IsVisible="{Binding IsBusy}"
-                    Color="#FF4500"
+                    Color="#FF7A00"
                     HorizontalOptions="Center" />
 
-                <!-- Términos -->
                 <Label
                     Text="By continuing, you agree to our Terms of Service and Privacy Policy."
                     FontSize="11"
                     HorizontalOptions="Center"
                     HorizontalTextAlignment="Center"
-                    TextColor="{AppThemeBinding Dark=#606060, Light=#AEAEB2}" />
+                    TextColor="{AppThemeBinding Dark=#52525B, Light=#A1A1AA}" />
 
             </VerticalStackLayout>
+        </Grid>
 
-        </VerticalStackLayout>
-
-        <!-- ═══════════════════════════════════════ -->
-        <!--  ESTADO: AUTENTICADO (vista de logout)   -->
-        <!-- ═══════════════════════════════════════ -->
         <VerticalStackLayout
             IsVisible="{Binding IsLoggedIn}"
             VerticalOptions="Center"
@@ -110,38 +96,35 @@
             Spacing="20"
             Padding="32,0">
 
-            <!-- Avatar -->
             <Border
                 WidthRequest="90"
                 HeightRequest="90"
                 StrokeShape="RoundRectangle 999"
                 StrokeThickness="3"
-                Stroke="#FF4500"
+                Stroke="#FF7A00"
                 HorizontalOptions="Center">
                 <Image
                     Source="{Binding ProfilePhotoUrl}"
                     Aspect="AspectFill" />
             </Border>
 
-            <!-- Nombre y email -->
             <Label
                 Text="{Binding UserName}"
                 FontSize="22"
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
-                TextColor="{AppThemeBinding Dark=#FFFFFF, Light=#1C1C1E}" />
+                TextColor="{AppThemeBinding Dark=#FFFFFF, Light=#18181B}" />
 
             <Label
                 Text="{Binding UserEmail}"
                 FontSize="14"
                 HorizontalOptions="Center"
-                TextColor="{AppThemeBinding Dark=#A0A0A0, Light=#6C6C70}" />
+                TextColor="{AppThemeBinding Dark=#A1A1AA, Light=#71717A}" />
 
-            <!-- Botón logout -->
             <Border
                 BackgroundColor="Transparent"
                 StrokeThickness="1.5"
-                Stroke="#FF4500"
+                Stroke="#FF7A00"
                 StrokeShape="RoundRectangle 12"
                 Padding="0"
                 HorizontalOptions="Fill">
@@ -152,13 +135,10 @@
                     Text="Sign out"
                     FontSize="15"
                     FontAttributes="Bold"
-                    TextColor="#FF4500"
+                    TextColor="#FF7A00"
                     HorizontalOptions="Center"
                     Padding="0,14" />
             </Border>
-
         </VerticalStackLayout>
-
     </Grid>
-
 </ContentPage>

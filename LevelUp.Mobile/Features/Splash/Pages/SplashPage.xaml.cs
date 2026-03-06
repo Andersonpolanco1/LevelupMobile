@@ -19,6 +19,12 @@ public partial class SplashPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+
+        await Task.WhenAll(
+            MainLogo.FadeToAsync(1, 800),
+            MainLogo.ScaleToAsync(1.0, 1000, Easing.CubicOut)
+        );
+
         await _vm.InitializeAsync();
     }
 }

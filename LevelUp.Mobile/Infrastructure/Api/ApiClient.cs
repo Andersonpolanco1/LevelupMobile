@@ -26,5 +26,16 @@ namespace LevelUp.Mobile.Infrastructure.Api
 
             return await response.Content.ReadFromJsonAsync<TResponse>();
         }
+
+        public async Task<TResponse?> GetOptionalAsync<TResponse>(string endpoint)
+        {
+            var response = await _httpClient.GetAsync(endpoint);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                return default;
+
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<TResponse>();
+        }
     }
 }

@@ -4,46 +4,47 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Grid BackgroundColor="{AppThemeBinding Dark=#121212, Light=#F2F2F7}">
+    <Grid BackgroundColor="{AppThemeBinding Dark=#0B0B0C, Light=#F7F7F9}">
 
-        <!-- Logo + Nombre centrado -->
         <VerticalStackLayout
             HorizontalOptions="Center"
             VerticalOptions="Center"
             Spacing="16">
 
-            <!-- Logo -->
             <Image
-                Source="logo.png"
-                HeightRequest="90"
-                WidthRequest="90"
-                HorizontalOptions="Center" />
+                x:Name="MainLogo"
+                Source="logo_splash"
+                HeightRequest="120" 
+                WidthRequest="120"
+                HorizontalOptions="Center"
+                Opacity="0"
+                Scale="0.9">
+                <Image.Shadow>
+                    <Shadow Brush="Black" Offset="0,10" Radius="20" Opacity="0.2" />
+                </Image.Shadow>
+            </Image>
 
-            <!-- Nombre app -->
             <Label
                 Text="LevelUp"
                 FontSize="32"
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
-                TextColor="{AppThemeBinding Dark=#FFFFFF, Light=#1C1C1E}" />
+                TextColor="{AppThemeBinding Dark=#FFFFFF, Light=#18181B}" />
 
-            <!-- Tagline -->
             <Label
                 Text="Track. Progress. Dominate."
                 FontSize="13"
                 HorizontalOptions="Center"
-                TextColor="{AppThemeBinding Dark=#A0A0A0, Light=#6C6C70}" />
+                TextColor="{AppThemeBinding Dark=#A1A1AA, Light=#71717A}" />
 
         </VerticalStackLayout>
 
-        <!-- Spinner en la parte inferior -->
         <ActivityIndicator
             IsRunning="True"
-            Color="#FF4500"
+            Color="#FF4D00"
             VerticalOptions="End"
             HorizontalOptions="Center"
             Margin="0,0,0,60" />
 
     </Grid>
-
 </ContentPage>

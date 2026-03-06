@@ -1,12 +1,145 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Home"
+             xmlns:models="clr-namespace:LevelUp.Mobile.Features.Home.Models"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="LevelUp.Mobile.Features.Home.Pages.HomePage"
-             Title="HomePage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             x:DataType="vm:ViewModels.HomeViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="24">
+
+            <!-- ── Saludo ─────────────────────────────────────────── -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="{Binding Greeting, StringFormat='{0},'}"
+                       Style="{StaticResource CaptionLabel}"/>
+                <Label Text="{Binding UserName}"
+                       Style="{StaticResource TitleLabel}"/>
+            </VerticalStackLayout>
+
+            <!-- ── Loading ───────────────────────────────────────── -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="{StaticResource Primary}"
+                               HorizontalOptions="Center"/>
+
+            <!-- ── Sin plan activo ───────────────────────────────── -->
+            <Border Style="{StaticResource CardBorder}"
+                    IsVisible="{Binding HasNoPlan}">
+                <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                    <Label Text="💪" FontSize="40" HorizontalOptions="Center"/>
+                    <Label Text="No tienes un plan activo"
+                           Style="{StaticResource SubtitleLabel}"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Crea un plan semanal para comenzar tu entrenamiento"
+                           Style="{StaticResource BodyLabel}"
+                           HorizontalTextAlignment="Center"/>
+                    <Button Text="Crear plan"
+                            Style="{StaticResource PrimaryButton}"
+                            Margin="0,8,0,0"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ── Día de descanso ───────────────────────────────── -->
+            <Border Style="{StaticResource CardBorder}"
+                    IsVisible="{Binding HasRestDay}">
+                <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                    <Label Text="😴" FontSize="40" HorizontalOptions="Center"/>
+                    <Label Text="Hoy es día de descanso"
+                           Style="{StaticResource SubtitleLabel}"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Descansa y recupera energía para mañana"
+                           Style="{StaticResource BodyLabel}"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ── Plan de hoy ───────────────────────────────────── -->
+            <VerticalStackLayout Spacing="16"
+                                 IsVisible="{Binding TodayPlan, Converter={StaticResource IsNotNullConverter}}">
+
+                <!-- Header del plan -->
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Plan de hoy"
+                           Style="{StaticResource CaptionLabel}"/>
+                    <Label Text="{Binding TodayPlan.PlanName}"
+                           Style="{StaticResource SubtitleLabel}"/>
+                    <Label Text="{Binding TodayPlan.DayName}"
+                           Style="{StaticResource BodyLabel}"/>
+                </VerticalStackLayout>
+
+                <!-- Lista de ejercicios -->
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding TodayPlan.Exercises}"
+                                     Spacing="12">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:TodayExerciseDto">
+                            <Border Style="{StaticResource CardBorder}">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+
+                                    <!-- Número de orden -->
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="{StaticResource Primary}"
+                                            StrokeShape="Ellipse"
+                                            WidthRequest="36"
+                                            HeightRequest="36"
+                                            VerticalOptions="Center">
+                                        <Label Text="{Binding Order}"
+                                               TextColor="White"
+                                               FontAttributes="Bold"
+                                               FontSize="14"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+
+                                    <!-- Nombre y detalles -->
+                                    <VerticalStackLayout Grid.Column="1"
+                                                         Spacing="4"
+                                                         VerticalOptions="Center">
+                                        <Label Text="{Binding ExerciseName}"
+                                               Style="{StaticResource SubtitleLabel}"
+                                               FontSize="15"/>
+                                        <HorizontalStackLayout Spacing="12">
+                                            <Label IsVisible="{Binding SetsPlanned, Converter={StaticResource IsNotNullConverter}}"
+                                                   Style="{StaticResource CaptionLabel}">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="{Binding SetsPlanned}"
+                                                              TextColor="{StaticResource Primary}"
+                                                              FontAttributes="Bold"/>
+                                                        <Span Text=" series"/>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                            <Label IsVisible="{Binding RepsPlanned, Converter={StaticResource IsNotNullConverter}}"
+                                                   Style="{StaticResource CaptionLabel}">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="{Binding RepsPlanned}"
+                                                              TextColor="{StaticResource Primary}"
+                                                              FontAttributes="Bold"/>
+                                                        <Span Text=" reps"/>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
+
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <!-- Botón iniciar workout -->
+                <Button Text="Iniciar Workout"
+                        Style="{StaticResource PrimaryButton}"
+                        HorizontalOptions="Fill"
+                        Margin="0,8,0,0"/>
+
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>
