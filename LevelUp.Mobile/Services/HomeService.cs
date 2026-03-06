@@ -7,7 +7,7 @@ namespace LevelUp.Mobile.Services
     {
         public async Task<TodayPlanDto?> GetTodayPlanAsync()
         {
-            return await apiClient.GetOptionalAsync<TodayPlanDto>("/weekly-plans/today");
+            return await apiClient.GetOptionalAsync<TodayPlanDto>("api/weekly-plans/today");
         }
     }
 

@@ -5,7 +5,7 @@
         public const string SettingPath = "AuthSettings";
         public string CallbackScheme { get; set; } = "levelup";
         public string CallbackHost { get; set; } = "callback";
-        public string GoogleAuthPath { get; set; } = "/mobileauth/google";
+        public string GoogleAuthPath { get; set; } = "api/mobileauth/google";
 
         // URL completa construida
         public string GoogleAuthUrl(string baseUrl) => $"{baseUrl}{GoogleAuthPath}";

@@ -1,4 +1,5 @@
-﻿using LevelUp.Mobile.Features.Auth.Pages;
+﻿using LevelUp.Mobile.Core.Constants;
+using LevelUp.Mobile.Features.Auth.Pages;
 using LevelUp.Mobile.Features.Exercises.Pages;
 using LevelUp.Mobile.Features.Home.Pages;
 using LevelUp.Mobile.Features.Plans.Pages;
@@ -20,7 +21,6 @@ public partial class AppShell : Shell
             Route = "Splash",
             Content = services.GetRequiredService<SplashPage>()
         });
-
         Items.Add(new ShellContent
         {
             Route = "Login",
@@ -33,12 +33,17 @@ public partial class AppShell : Shell
         tabBar.Items.Add(new Tab
         {
             Title = "Home",
-            Icon = "tab_home.png",
+            Icon = new FontImageSource
+            {
+                FontFamily = "FASolid",
+                Glyph = FA.House,
+                Size = 20
+            },
             Items =
             {
                 new ShellContent
                 {
-                    Route           = "Home",
+                    Route = "Home",
                     ContentTemplate = new DataTemplate(services.GetRequiredService<HomePage>)
                 }
             }
@@ -47,12 +52,17 @@ public partial class AppShell : Shell
         tabBar.Items.Add(new Tab
         {
             Title = "Exercises",
-            Icon = "tab_exercises.png",
+            Icon = new FontImageSource
+            {
+                FontFamily = "FASolid",
+                Glyph = FA.Dumbbell,
+                Size = 20
+            },
             Items =
             {
                 new ShellContent
                 {
-                    Route           = "Exercises",
+                    Route = "Exercises",
                     ContentTemplate = new DataTemplate(services.GetRequiredService<ExercisesPage>)
                 }
             }
@@ -61,12 +71,17 @@ public partial class AppShell : Shell
         tabBar.Items.Add(new Tab
         {
             Title = "Workout",
-            Icon = "tab_workout.png",
+            Icon = new FontImageSource
+            {
+                FontFamily = "FASolid",
+                Glyph = FA.Play,
+                Size = 20
+            },
             Items =
             {
                 new ShellContent
                 {
-                    Route           = "Workout",
+                    Route = "Workout",
                     ContentTemplate = new DataTemplate(services.GetRequiredService<WorkoutPage>)
                 }
             }
@@ -75,12 +90,17 @@ public partial class AppShell : Shell
         tabBar.Items.Add(new Tab
         {
             Title = "Plans",
-            Icon = "tab_plans.png",
+            Icon = new FontImageSource
+            {
+                FontFamily = "FASolid",
+                Glyph = FA.CalendarDays,
+                Size = 20
+            },
             Items =
             {
                 new ShellContent
                 {
-                    Route           = "Plans",
+                    Route = "Plans",
                     ContentTemplate = new DataTemplate(services.GetRequiredService<PlansPage>)
                 }
             }
@@ -89,12 +109,17 @@ public partial class AppShell : Shell
         tabBar.Items.Add(new Tab
         {
             Title = "Profile",
-            Icon = "tab_profile.png",
+            Icon = new FontImageSource
+            {
+                FontFamily = "FASolid",
+                Glyph = FA.User,
+                Size = 20
+            },
             Items =
             {
                 new ShellContent
                 {
-                    Route           = "Profile",
+                    Route = "Profile",
                     ContentTemplate = new DataTemplate(services.GetRequiredService<ProfilePage>)
                 }
             }
@@ -102,7 +127,7 @@ public partial class AppShell : Shell
 
         Items.Add(tabBar);
 
-        // ── Sub-rutas (pantallas que se apilan sobre los tabs) ─────────
+        // ── Sub-rutas ─────────────────────────────────────────────────
         Routing.RegisterRoute("Exercises/Detail", typeof(ExerciseDetailPage));
         Routing.RegisterRoute("Workout/Active", typeof(ActiveWorkoutPage));
         Routing.RegisterRoute("Workout/Summary", typeof(WorkoutSummaryPage));

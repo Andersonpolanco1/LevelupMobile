@@ -20,11 +20,23 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
 
         // ── Estado ────────────────────────────────────────────────────────
         [ObservableProperty] private string? _userName;
-        [ObservableProperty] private TodayPlanDto? _todayPlan;
-        [ObservableProperty] private bool _hasRestDay;
-        [ObservableProperty] private bool _hasNoPlan;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsWorkoutVisible))]
+        private TodayPlanDto? _todayPlan;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsWorkoutVisible))]
+        private bool _hasRestDay;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsWorkoutVisible))]
+        private bool _hasNoPlan;
 
         public string Greeting => GetGreeting();
+
+        // Propiedad calculada que decide si se muestra la sección "Plan de hoy"
+        public bool IsWorkoutVisible => TodayPlan != null && !HasRestDay && !HasNoPlan;
 
         // ── Init ──────────────────────────────────────────────────────────
         [RelayCommand]
@@ -35,12 +47,14 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
 
             try
             {
-                // Nombre desde JWT — sin llamada extra a la API
+                // Nombre desde JWT
                 var claims = await _tokenService.GetUserClaimsAsync();
-                claims.TryGetValue("userName", out var name);
-                UserName = name;
+                if (claims.TryGetValue("userName", out var name))
+                {
+                    UserName = name;
+                }
 
-                // Plan de hoy
+                // Obtener Plan (Maneja el 204 devolviendo null)
                 TodayPlan = await _homeService.GetTodayPlanAsync();
 
                 if (TodayPlan is null)
@@ -48,21 +62,21 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
                     HasNoPlan = true;
                     HasRestDay = false;
                 }
-                else if (TodayPlan.Exercises.Count == 0)
+                else if (TodayPlan.Exercises == null || TodayPlan.Exercises.Count == 0)
                 {
+                    // Si el objeto existe pero no hay ejercicios, es día de descanso
                     HasRestDay = true;
                     HasNoPlan = false;
-                    TodayPlan = null; // limpiar para que el IsNotNullConverter oculte esa sección
                 }
                 else
                 {
+                    // Todo en orden, hay ejercicios que mostrar
                     HasRestDay = false;
                     HasNoPlan = false;
                 }
             }
             catch (Exception ex)
             {
-                // Manejo de error — puedes mostrar un mensaje
                 System.Diagnostics.Debug.WriteLine($"HomeViewModel error: {ex.Message}");
             }
             finally

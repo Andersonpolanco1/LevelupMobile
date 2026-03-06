@@ -36,6 +36,9 @@ namespace LevelUp.Mobile
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("Font Awesome 7 Brands-Regular-400.otf", "FABrands");
+                    fonts.AddFont("Font Awesome 7 Free-Regular-400.otf", "FARegular");
+                    fonts.AddFont("Font Awesome 7 Free-Solid-900.otf", "FASolid");
                 });
 
             var assembly = typeof(MauiProgram).Assembly;

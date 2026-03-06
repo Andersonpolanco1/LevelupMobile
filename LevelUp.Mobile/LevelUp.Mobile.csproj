@@ -49,8 +49,7 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg"
-				  ForegroundFile="Resources\AppIcon\appiconfg.svg" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#121212" />
 		
 		
 		<!-- Splash Screen -->
@@ -80,7 +79,6 @@
 
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Core\Constants\" />
 	  <Folder Include="Core\Helpers\" />
 	  <Folder Include="Core\Settings\" />
 	  <Folder Include="Features\Workouts\Models\" />
@@ -155,5 +153,11 @@
         <Generator>MSBuild:Compile</Generator>
 	  </None>
 </ItemGroup>
+
+	<ItemGroup>
+		<MauiFont Include="Resources\Fonts\Font Awesome 7 Brands-Regular-400.otf" />
+		<MauiFont Include="Resources\Fonts\Font Awesome 7 Free-Regular-400.otf" />
+		<MauiFont Include="Resources\Fonts\Font Awesome 7 Free-Solid-900.otf" />
+	</ItemGroup>
 
 </Project>
