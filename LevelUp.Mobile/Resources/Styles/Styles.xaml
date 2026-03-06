@@ -151,10 +151,10 @@
 
     <Style TargetType="Entry">
 
-        <Setter Property="BackgroundColor"
+        <!--<Setter Property="BackgroundColor"
                 Value="{AppThemeBinding 
                 Light={StaticResource SurfaceElevatedLight}, 
-                Dark={StaticResource SurfaceElevatedDark}}" />
+                Dark={StaticResource SurfaceElevatedDark}}" />-->
 
         <Setter Property="TextColor"
                 Value="{AppThemeBinding 

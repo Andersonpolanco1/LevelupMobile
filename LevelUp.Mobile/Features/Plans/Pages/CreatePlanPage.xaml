@@ -1,28 +1,62 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Plans.ViewModels"
+             xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants"
              x:Class="LevelUp.Mobile.Features.Plans.Pages.CreatePlanPage"
-             Title="CreatePlanPage">
-    <VerticalStackLayout Padding="20" Spacing="20">
+             x:DataType="vm:CreatePlanViewModel"
+             Title="Nuevo Plan">
 
-        <Label
-        Text="Crear Plan Semanal"
-        FontSize="24"
-        FontAttributes="Bold"/>
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="24">
 
-        <Entry
-        Placeholder="Nombre del plan"
-        Text="{Binding Name}" />
+            <!-- HEADER -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Nuevo plan"
+                       Style="{StaticResource TitleLabel}" />
+                <Label Text="Define el nombre y las notas de tu plan semanal"
+                       Style="{StaticResource BodyLabel}" />
+            </VerticalStackLayout>
 
-        <Editor
-        Placeholder="Notas del plan (opcional)"
-        HeightRequest="120"
-        Text="{Binding Notes}" />
+            <!-- FORMULARIO -->
+            <Border Style="{StaticResource CardBorder}">
+                <VerticalStackLayout Spacing="16">
 
-        <Button
-        Text="Crear Plan"
-        Command="{Binding CreatePlanCommand}"
-        HeightRequest="50"/>
+                    <!-- Nombre -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Nombre del plan"
+                               Style="{StaticResource CaptionLabel}" />
+                        <Entry Placeholder="Ej. Fuerza 5 días"
+                               Text="{Binding Name}" />
+                    </VerticalStackLayout>
 
-    </VerticalStackLayout>
+                    <BoxView Style="{StaticResource Divider}" />
+
+                    <!-- Notas -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Notas (opcional)"
+                               Style="{StaticResource CaptionLabel}" />
+                        <Editor Placeholder="Descripción, objetivos, notas..."
+                                Text="{Binding Notes}"
+                                HeightRequest="120"
+                                TextColor="{AppThemeBinding 
+                                    Light={StaticResource TextPrimaryLight}, 
+                                    Dark={StaticResource TextPrimaryDark}}"
+                                PlaceholderColor="{AppThemeBinding 
+                                    Light={StaticResource TextDisabledLight}, 
+                                    Dark={StaticResource TextDisabledDark}}"
+                                FontSize="14" />
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- BOTÓN CREAR -->
+            <Button Text="Crear plan"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding CreatePlanCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>

@@ -20,6 +20,10 @@ using LevelUp.Mobile.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Maui.Handlers;
+#if ANDROID
+using Android.Content.Res;
+#endif
 
 
 namespace LevelUp.Mobile
@@ -131,6 +135,44 @@ namespace LevelUp.Mobile
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
+
+
+            //elimina linea azul por defecto de android en los inputs
+            builder.ConfigureMauiHandlers(handlers =>
+            {
+#if ANDROID
+                EntryHandler.Mapper.AppendToMapping("BrandUnderline", (handler, view) =>
+                {
+                    var editText = handler.PlatformView;
+                    var states = new[]
+                    {
+            new[] { Android.Resource.Attribute.StateFocused },
+            new[] { -Android.Resource.Attribute.StateFocused }
+        };
+                    var colors = new int[]
+                    {
+            Android.Graphics.Color.ParseColor("#FF7A00").ToArgb(),
+            Android.Graphics.Color.ParseColor("#52525B").ToArgb()
+                    };
+                    editText.BackgroundTintList = new Android.Content.Res.ColorStateList(states, colors);
+                });
+                EditorHandler.Mapper.AppendToMapping("BrandUnderline", (handler, view) =>
+                {
+                    var editText = handler.PlatformView;
+                    var states = new[]
+                    {
+            new[] { Android.Resource.Attribute.StateFocused },
+            new[] { -Android.Resource.Attribute.StateFocused }
+        };
+                    var colors = new int[]
+                    {
+            Android.Graphics.Color.ParseColor("#FF7A00").ToArgb(),
+            Android.Graphics.Color.ParseColor("#52525B").ToArgb()
+                    };
+                    editText.BackgroundTintList = new Android.Content.Res.ColorStateList(states, colors);
+                });
+#endif
+            });
 
             return builder.Build();
         }

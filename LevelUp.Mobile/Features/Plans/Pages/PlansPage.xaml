@@ -1,97 +1,96 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Plans.ViewModels"
     xmlns:models="clr-namespace:LevelUp.Mobile.Features.Plans.Models"
+    xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants"
     x:Class="LevelUp.Mobile.Features.Plans.Pages.PlansPage"
     x:DataType="vm:PlansViewModel"
     Title="Plans">
 
-    <Grid Padding="20"
-          RowDefinitions="Auto,*">
+    <Grid Padding="20" RowDefinitions="Auto,*">
 
         <!-- HEADER -->
-
         <Grid Grid.Row="0"
               ColumnDefinitions="*,Auto"
               Margin="0,0,0,16">
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Mis planes"
+                       Style="{StaticResource TitleLabel}" />
+                <Label Text="Gestiona tus planes semanales"
+                       Style="{StaticResource BodyLabel}" />
+            </VerticalStackLayout>
 
-            <Label
-                Text="Tus planes"
-                Style="{StaticResource TitleLabel}" />
-
-            <Button
-                Grid.Column="1"
-                Text="+"
-                WidthRequest="40"
-                HeightRequest="40"
-                Style="{StaticResource PrimaryButton}"
-                Command="{Binding CreatePlanCommand}" />
-
+            <Label Grid.Column="1"
+       Text="{x:Static constants:FA.CirclePlus}"
+       FontFamily="FASolid"
+       FontSize="28"
+       TextColor="{StaticResource Primary}"
+       VerticalOptions="Start"
+       HorizontalOptions="End">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding CreatePlanCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
         </Grid>
 
         <!-- LISTA DE PLANES -->
-
         <CollectionView
-    Grid.Row="1"
-    ItemsSource="{Binding Plans}"
-    SelectionMode="None"
-    EmptyView="Aún no tienes planes">
+            Grid.Row="1"
+            ItemsSource="{Binding Plans}"
+            SelectionMode="None">
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                    <Label Text="{x:Static constants:FA.CalendarDays}"
+                           FontFamily="FASolid"
+                           FontSize="40"
+                           TextColor="{StaticResource Primary}"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Aún no tienes planes"
+                           Style="{StaticResource SubtitleLabel}"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Crea tu primer plan semanal"
+                           Style="{StaticResource BodyLabel}"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
 
             <CollectionView.ItemTemplate>
-
                 <DataTemplate x:DataType="models:WeeklyPlanListItemDto">
-
-                    <Border Style="{StaticResource CardBorder}">
-
-                        <Grid ColumnDefinitions="*,Auto"
-                      ColumnSpacing="10">
-
+                    <Border Style="{StaticResource CardBorder}" Margin="0,0,0,12">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
                             <VerticalStackLayout Spacing="4">
-
-                                <Label
-                            Text="{Binding Name}"
-                            Style="{StaticResource SubtitleLabel}" />
-
-                                <Label
-                            Text="{Binding DaysText}"
-                            Style="{StaticResource CaptionLabel}" />
-
-                                <Label
-                            Text="Activo"
-                            TextColor="{StaticResource Primary}"
-                            FontAttributes="Bold"
-                            FontSize="12"
-                            IsVisible="{Binding IsActive}" />
-
+                                <Label Text="{Binding Name}"
+                                       Style="{StaticResource SubtitleLabel}" />
+                                <Label Text="{Binding DaysText}"
+                                       Style="{StaticResource CaptionLabel}" />
+                                <Label Text="Activo"
+                                       TextColor="{StaticResource Primary}"
+                                       FontAttributes="Bold"
+                                       FontSize="12"
+                                       IsVisible="{Binding IsActive}" />
                             </VerticalStackLayout>
 
-                            <Label
-                        Grid.Column="1"
-                        Text="›"
-                        FontSize="22"
-                        VerticalOptions="Center" />
-
+                            <Label Grid.Column="1"
+                                   Text="{x:Static constants:FA.AngleRight}"
+                                   FontFamily="FASolid"
+                                   FontSize="18"
+                                   TextColor="{AppThemeBinding 
+                                       Light={StaticResource TextDisabledLight}, 
+                                       Dark={StaticResource TextDisabledDark}}"
+                                   VerticalOptions="Center" />
                         </Grid>
-
                         <Border.GestureRecognizers>
-
                             <TapGestureRecognizer
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenPlanCommand}"
-                        CommandParameter="{Binding .}" />
-
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenPlanCommand}"
+                                CommandParameter="{Binding .}" />
                         </Border.GestureRecognizers>
-
                     </Border>
-
                 </DataTemplate>
-
             </CollectionView.ItemTemplate>
-
         </CollectionView>
 
     </Grid>
-
 </ContentPage>
