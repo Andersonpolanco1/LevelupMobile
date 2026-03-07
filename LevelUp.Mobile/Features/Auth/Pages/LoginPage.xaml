@@ -39,6 +39,7 @@
             </VerticalStackLayout>
 
             <VerticalStackLayout
+                x:Name="LoginControlsStack"
                 Grid.Row="1"
                 Padding="32,0,32,60"
                 Spacing="16"
