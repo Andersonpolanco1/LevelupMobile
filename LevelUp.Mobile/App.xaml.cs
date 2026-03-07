@@ -1,6 +1,7 @@
 ﻿using LevelUp.Mobile.Core.Settings;
-using LevelUp.Mobile.Models;
+using LevelUp.Mobile.Infrastructure.Database;
 using LevelUp.Mobile.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace LevelUp.Mobile
 {
@@ -8,7 +9,7 @@ namespace LevelUp.Mobile
     {
         private readonly AppShell _shell;
 
-        public App(AppShell shell)
+        public App(AppShell shell, DatabaseService database)
         {
             InitializeComponent();
             _shell = shell;
@@ -24,6 +25,12 @@ namespace LevelUp.Mobile
             // Restaurar idioma guardado al arrancar
             var language = AppPreferences.GetLanguage();
             LocalizationService.Instance.SetLanguage(language);
+
+            Task.Run(async () =>
+            {
+                await database.InitializeAsync();
+            });
+
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

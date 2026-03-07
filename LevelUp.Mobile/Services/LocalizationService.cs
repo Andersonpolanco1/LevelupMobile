@@ -1,4 +1,4 @@
-﻿using LevelUp.Mobile.Models;
+﻿using LevelUp.Mobile.Core.Enums;
 using System.ComponentModel;
 using System.Globalization;
 using System.Resources;

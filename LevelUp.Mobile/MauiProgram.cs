@@ -21,6 +21,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Maui.Handlers;
+using LevelUp.Mobile.Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
+
+
+
+
+
 #if ANDROID
 using Android.Content.Res;
 #endif
@@ -66,6 +73,11 @@ namespace LevelUp.Mobile
                 builder.Configuration.GetSection(ApiSettings.SettingPath));
             builder.Services.Configure<AuthSettings>(
                 builder.Configuration.GetSection(AuthSettings.SettingPath));
+
+
+            //data
+            builder.Services.AddSingleton<DatabaseService>();
+
 
             // ── HTTP ──────────────────────────────────────────────
 

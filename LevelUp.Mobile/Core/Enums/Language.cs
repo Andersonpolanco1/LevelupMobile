@@ -1,4 +1,4 @@
-﻿namespace LevelUp.Mobile.Models
+﻿namespace LevelUp.Mobile.Core.Enums
 {
     public enum Language
     {

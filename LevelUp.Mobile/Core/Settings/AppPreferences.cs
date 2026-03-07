@@ -1,4 +1,4 @@
-﻿using LevelUp.Mobile.Models;
+﻿using LevelUp.Mobile.Core.Enums;
 
 namespace LevelUp.Mobile.Core.Settings
 {
