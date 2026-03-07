@@ -17,7 +17,7 @@ public partial class LoginPage : ContentPage
 
         if (BindingContext is LoginViewModel vm && vm.IsNotLoggedIn)
         {
-            var stack = this.FindByName<VerticalStackLayout>("LoginControlsStack"); // Ponle un x:Name
+            var stack = this.FindByName<VerticalStackLayout>("LoginControlsStack"); 
             stack.Opacity = 0;
             stack.TranslationY = 30;
 

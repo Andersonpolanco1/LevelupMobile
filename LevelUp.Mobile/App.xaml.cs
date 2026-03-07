@@ -1,4 +1,8 @@
-﻿namespace LevelUp.Mobile
+﻿using LevelUp.Mobile.Core.Settings;
+using LevelUp.Mobile.Models;
+using LevelUp.Mobile.Services;
+
+namespace LevelUp.Mobile
 {
     public partial class App : Application
     {
@@ -16,6 +20,10 @@
                 "System" => AppTheme.Unspecified,
                 _ => AppTheme.Dark
             };
+
+            // Restaurar idioma guardado al arrancar
+            var language = AppPreferences.GetLanguage();
+            LocalizationService.Instance.SetLanguage(language);
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

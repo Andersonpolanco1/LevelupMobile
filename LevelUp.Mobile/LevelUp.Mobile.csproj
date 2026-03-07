@@ -79,7 +79,6 @@
 	<ItemGroup>
 	  <Folder Include="Core\Helpers\" />
 	  <Folder Include="Core\Controls\" />
-	  <Folder Include="Core\Settings\" />
 	  <Folder Include="Features\Workouts\Models\" />
 	  <Folder Include="Features\Workouts\Services\" />
 	  <Folder Include="Features\Workouts\ViewModels\" />

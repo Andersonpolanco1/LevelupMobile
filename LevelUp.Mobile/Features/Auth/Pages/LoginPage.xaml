@@ -3,6 +3,7 @@
     x:Class="LevelUp.Mobile.Features.Auth.Pages.LoginPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:LevelUp.Mobile.Core.Extensions"
     BackgroundColor="{AppThemeBinding Dark=#0B0B0C, Light=#F7F7F9}">
 
     <Grid>
@@ -31,7 +32,7 @@
                     TextColor="{AppThemeBinding Dark=#FFFFFF, Light=#18181B}" />
 
                 <Label
-                    Text="Track. Progress. Dominate."
+                    Text="{local:Localize AppTagline}"
                     FontSize="15"
                     HorizontalOptions="Center"
                     TextColor="{AppThemeBinding Dark=#A1A1AA, Light=#71717A}" />
@@ -66,7 +67,7 @@
                             VerticalOptions="Center" />
                         <Label
                             Grid.Column="1"
-                            Text="Continue with Google"
+                            Text="{local:Localize ContinueWithGoogle}"
                             FontSize="16"
                             FontAttributes="Bold"
                             VerticalOptions="Center"
@@ -81,7 +82,7 @@
                     HorizontalOptions="Center" />
 
                 <Label
-                    Text="By continuing, you agree to our Terms of Service and Privacy Policy."
+                    Text="{local:Localize TermsAgreement}"
                     FontSize="11"
                     HorizontalOptions="Center"
                     HorizontalTextAlignment="Center"
@@ -133,7 +134,7 @@
                     <TapGestureRecognizer Command="{Binding LogoutCommand}" />
                 </Border.GestureRecognizers>
                 <Label
-                    Text="Sign out"
+                    Text="{local:Localize SignOut}"
                     FontSize="15"
                     FontAttributes="Bold"
                     TextColor="#FF7A00"
