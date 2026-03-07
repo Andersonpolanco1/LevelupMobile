@@ -6,11 +6,18 @@ using LevelUp.Mobile.Features.Plans.Pages;
 using LevelUp.Mobile.Features.Profile.Pages;
 using LevelUp.Mobile.Features.Splash.Pages;
 using LevelUp.Mobile.Features.Workouts.Pages;
+using LevelUp.Mobile.Services;
 
 namespace LevelUp.Mobile;
 
 public partial class AppShell : Shell
 {
+    private Tab _homeTab = null!;
+    private Tab _exercisesTab = null!;
+    private Tab _workoutTab = null!;
+    private Tab _plansTab = null!;
+    private Tab _profileTab = null!;
+
     public AppShell(IServiceProvider services)
     {
         InitializeComponent();
@@ -30,100 +37,41 @@ public partial class AppShell : Shell
         // ── Área autenticada con TabBar ───────────────────────────────
         var tabBar = new TabBar();
 
-        tabBar.Items.Add(new Tab
+        _homeTab = new Tab
         {
-            Title = "Home",
-            Icon = new FontImageSource
-            {
-                FontFamily = "FASolid",
-                Glyph = FA.House,
-                Size = 20
-            },
-            Items =
-            {
-                new ShellContent
-                {
-                    Route = "Home",
-                    ContentTemplate = new DataTemplate(services.GetRequiredService<HomePage>)
-                }
-            }
-        });
+            Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.House, Size = 20 },
+            Items = { new ShellContent { Route = "Home", ContentTemplate = new DataTemplate(services.GetRequiredService<HomePage>) } }
+        };
 
-        tabBar.Items.Add(new Tab
+        _exercisesTab = new Tab
         {
-            Title = "Exercises",
-            Icon = new FontImageSource
-            {
-                FontFamily = "FASolid",
-                Glyph = FA.Dumbbell,
-                Size = 20
-            },
-            Items =
-            {
-                new ShellContent
-                {
-                    Route = "Exercises",
-                    ContentTemplate = new DataTemplate(services.GetRequiredService<ExercisesPage>)
-                }
-            }
-        });
+            Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.Dumbbell, Size = 20 },
+            Items = { new ShellContent { Route = "Exercises", ContentTemplate = new DataTemplate(services.GetRequiredService<ExercisesPage>) } }
+        };
 
-        tabBar.Items.Add(new Tab
+        _workoutTab = new Tab
         {
-            Title = "Workout",
-            Icon = new FontImageSource
-            {
-                FontFamily = "FASolid",
-                Glyph = FA.Play,
-                Size = 20
-            },
-            Items =
-            {
-                new ShellContent
-                {
-                    Route = "Workout",
-                    ContentTemplate = new DataTemplate(services.GetRequiredService<WorkoutPage>)
-                }
-            }
-        });
+            Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.Play, Size = 20 },
+            Items = { new ShellContent { Route = "Workout", ContentTemplate = new DataTemplate(services.GetRequiredService<WorkoutPage>) } }
+        };
 
-        tabBar.Items.Add(new Tab
+        _plansTab = new Tab
         {
-            Title = "Plans",
-            Icon = new FontImageSource
-            {
-                FontFamily = "FASolid",
-                Glyph = FA.CalendarDays,
-                Size = 20
-            },
-            Items =
-            {
-                new ShellContent
-                {
-                    Route = "Plans",
-                    ContentTemplate = new DataTemplate(services.GetRequiredService<PlansPage>)
-                }
-            }
-        });
+            Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.CalendarDays, Size = 20 },
+            Items = { new ShellContent { Route = "Plans", ContentTemplate = new DataTemplate(services.GetRequiredService<PlansPage>) } }
+        };
 
-        tabBar.Items.Add(new Tab
+        _profileTab = new Tab
         {
-            Title = "Profile",
-            Icon = new FontImageSource
-            {
-                FontFamily = "FASolid",
-                Glyph = FA.User,
-                Size = 20
-            },
-            Items =
-            {
-                new ShellContent
-                {
-                    Route = "Profile",
-                    ContentTemplate = new DataTemplate(services.GetRequiredService<ProfilePage>)
-                }
-            }
-        });
+            Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.User, Size = 20 },
+            Items = { new ShellContent { Route = "Profile", ContentTemplate = new DataTemplate(services.GetRequiredService<ProfilePage>) } }
+        };
+
+        tabBar.Items.Add(_homeTab);
+        tabBar.Items.Add(_exercisesTab);
+        tabBar.Items.Add(_workoutTab);
+        tabBar.Items.Add(_plansTab);
+        tabBar.Items.Add(_profileTab);
 
         Items.Add(tabBar);
 
@@ -133,5 +81,17 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("Workout/Summary", typeof(WorkoutSummaryPage));
         Routing.RegisterRoute("Plans/Detail", typeof(PlanDetailPage));
         Routing.RegisterRoute("Plans/Create", typeof(CreatePlanPage));
+
+        UpdateTabTitles();
+        LocalizationService.Instance.PropertyChanged += (_, _) => UpdateTabTitles();
+    }
+
+    private void UpdateTabTitles()
+    {
+        _homeTab.Title = LocalizationService.Instance["TabHome"];
+        _exercisesTab.Title = LocalizationService.Instance["TabExercises"];
+        _workoutTab.Title = LocalizationService.Instance["TabWorkout"];
+        _plansTab.Title = LocalizationService.Instance["TabPlans"];
+        _profileTab.Title = LocalizationService.Instance["TabProfile"];
     }
 }

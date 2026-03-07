@@ -5,6 +5,7 @@
     xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Plans.ViewModels"
     xmlns:models="clr-namespace:LevelUp.Mobile.Features.Plans.Models"
     xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants"
+    xmlns:local="clr-namespace:LevelUp.Mobile.Core.Extensions"
     x:Class="LevelUp.Mobile.Features.Plans.Pages.PlansPage"
     x:DataType="vm:PlansViewModel"
     Title="Plans">
@@ -16,19 +17,19 @@
               ColumnDefinitions="*,Auto"
               Margin="0,0,0,16">
             <VerticalStackLayout Spacing="4">
-                <Label Text="Mis planes"
+                <Label Text="{local:Localize MyPlans}"
                        Style="{StaticResource TitleLabel}" />
-                <Label Text="Gestiona tus planes semanales"
+                <Label Text="{local:Localize ManageWeeklyPlans}"
                        Style="{StaticResource BodyLabel}" />
             </VerticalStackLayout>
 
             <Label Grid.Column="1"
-       Text="{x:Static constants:FA.CirclePlus}"
-       FontFamily="FASolid"
-       FontSize="28"
-       TextColor="{StaticResource Primary}"
-       VerticalOptions="Start"
-       HorizontalOptions="End">
+                   Text="{x:Static constants:FA.CirclePlus}"
+                   FontFamily="FASolid"
+                   FontSize="28"
+                   TextColor="{StaticResource Primary}"
+                   VerticalOptions="Start"
+                   HorizontalOptions="End">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding CreatePlanCommand}"/>
                 </Label.GestureRecognizers>
@@ -48,10 +49,10 @@
                            FontSize="40"
                            TextColor="{StaticResource Primary}"
                            HorizontalOptions="Center"/>
-                    <Label Text="Aún no tienes planes"
+                    <Label Text="{local:Localize NoPlansYet}"
                            Style="{StaticResource SubtitleLabel}"
                            HorizontalOptions="Center"/>
-                    <Label Text="Crea tu primer plan semanal"
+                    <Label Text="{local:Localize CreateFirstPlan}"
                            Style="{StaticResource BodyLabel}"
                            HorizontalOptions="Center"/>
                 </VerticalStackLayout>
@@ -66,7 +67,7 @@
                                        Style="{StaticResource SubtitleLabel}" />
                                 <Label Text="{Binding DaysText}"
                                        Style="{StaticResource CaptionLabel}" />
-                                <Label Text="Activo"
+                                <Label Text="{local:Localize Active}"
                                        TextColor="{StaticResource Primary}"
                                        FontAttributes="Bold"
                                        FontSize="12"

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Plans.ViewModels"
              xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants"
+             xmlns:local="clr-namespace:LevelUp.Mobile.Core.Extensions"
              x:Class="LevelUp.Mobile.Features.Plans.Pages.CreatePlanPage"
              x:DataType="vm:CreatePlanViewModel"
              Title="Nuevo Plan">
@@ -11,9 +12,9 @@
 
             <!-- HEADER -->
             <VerticalStackLayout Spacing="4">
-                <Label Text="Nuevo plan"
+                <Label Text="{local:Localize NewPlan}"
                        Style="{StaticResource TitleLabel}" />
-                <Label Text="Define el nombre y las notas de tu plan semanal"
+                <Label Text="{local:Localize NewPlanSubtitle}"
                        Style="{StaticResource BodyLabel}" />
             </VerticalStackLayout>
 
@@ -23,9 +24,9 @@
 
                     <!-- Nombre -->
                     <VerticalStackLayout Spacing="4">
-                        <Label Text="Nombre del plan"
+                        <Label Text="{local:Localize PlanName}"
                                Style="{StaticResource CaptionLabel}" />
-                        <Entry Placeholder="Ej. Fuerza 5 días"
+                        <Entry Placeholder="{local:Localize PlanNamePlaceholder}"
                                Text="{Binding Name}" />
                         <Label Text="{Binding NameError}"
                                TextColor="{StaticResource Error}"
@@ -37,9 +38,9 @@
 
                     <!-- Notas -->
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="Notas (opcional)"
+                        <Label Text="{local:Localize NotesOptional}"
                                Style="{StaticResource CaptionLabel}" />
-                        <Editor Placeholder="Descripción, objetivos, notas..."
+                        <Editor Placeholder="{local:Localize NotesPlaceholder}"
                                 Text="{Binding Notes}"
                                 HeightRequest="120"
                                 TextColor="{AppThemeBinding 
@@ -55,7 +56,7 @@
             </Border>
 
             <!-- BOTÓN CREAR -->
-            <Button Text="Crear plan"
+            <Button Text="{local:Localize CreatePlan}"
                     Style="{StaticResource PrimaryButton}"
                     Command="{Binding CreatePlanCommand}" />
 

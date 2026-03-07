@@ -16,6 +16,7 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
         {
             _homeService = homeService;
             _tokenService = tokenService;
+            LocalizationService.Instance.PropertyChanged += (_, _) => OnPropertyChanged(nameof(Greeting));
         }
 
         // ── Estado ────────────────────────────────────────────────────────
@@ -94,12 +95,13 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
         private static string GetGreeting()
         {
             var hour = DateTime.Now.Hour;
-            return hour switch
+            var key = hour switch
             {
-                < 12 => "Buenos días",
-                < 18 => "Buenas tardes",
-                _ => "Buenas noches"
+                < 12 => "GoodMorning",
+                < 18 => "GoodAfternoon",
+                _ => "GoodEvening"
             };
+            return LocalizationService.Instance[key];
         }
     }
 }

@@ -117,11 +117,74 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Active" xml:space="preserve">
+    <value>Activo</value>
+  </data>
   <data name="AppTagline" xml:space="preserve">
     <value>Entrena. Progresa. Domina.</value>
   </data>
   <data name="ContinueWithGoogle" xml:space="preserve">
     <value>Continuar con Google</value>
+  </data>
+  <data name="CreateFirstPlan" xml:space="preserve">
+    <value>Crea tu primer plan semanal</value>
+  </data>
+  <data name="CreatePlan" xml:space="preserve">
+    <value>Crear plan</value>
+  </data>
+  <data name="GoodAfternoon" xml:space="preserve">
+    <value>Buenas tardes</value>
+  </data>
+  <data name="GoodEvening" xml:space="preserve">
+    <value>Buenas noches</value>
+  </data>
+  <data name="GoodMorning" xml:space="preserve">
+    <value>Buenos días</value>
+  </data>
+  <data name="ManageWeeklyPlans" xml:space="preserve">
+    <value>Gestiona tus planes semanales</value>
+  </data>
+  <data name="MyPlans" xml:space="preserve">
+    <value>Mis planes</value>
+  </data>
+  <data name="NewPlan" xml:space="preserve">
+    <value>Nuevo plan</value>
+  </data>
+  <data name="NewPlanSubtitle" xml:space="preserve">
+    <value>Define el nombre y las notas de tu plan semanal</value>
+  </data>
+  <data name="NoActivePlan" xml:space="preserve">
+    <value>No tienes un plan activo</value>
+  </data>
+  <data name="NoActivePlanSub" xml:space="preserve">
+    <value>Crea un plan semanal para comenzar tu entrenamiento</value>
+  </data>
+  <data name="NoPlansYet" xml:space="preserve">
+    <value>Aún no tienes planes</value>
+  </data>
+  <data name="NotesOptional" xml:space="preserve">
+    <value>Notas (opcional)</value>
+  </data>
+  <data name="NotesPlaceholder" xml:space="preserve">
+    <value>Descripción, objetivos, notas...</value>
+  </data>
+  <data name="PlanName" xml:space="preserve">
+    <value>Nombre del plan</value>
+  </data>
+  <data name="PlanNamePlaceholder" xml:space="preserve">
+    <value>Ej. Fuerza 5 días</value>
+  </data>
+  <data name="Reps" xml:space="preserve">
+    <value>reps</value>
+  </data>
+  <data name="RestDay" xml:space="preserve">
+    <value>Hoy es día de descanso</value>
+  </data>
+  <data name="RestDaySub" xml:space="preserve">
+    <value>Descansa y recupera energía para mañana</value>
+  </data>
+  <data name="Sets" xml:space="preserve">
+    <value>series</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Configuración</value>
@@ -129,8 +192,29 @@
   <data name="SignOut" xml:space="preserve">
     <value>Cerrar sesión</value>
   </data>
+  <data name="StartWorkout" xml:space="preserve">
+    <value>Iniciar Workout</value>
+  </data>
+  <data name="TabExercises" xml:space="preserve">
+    <value>Ejercicios</value>
+  </data>
+  <data name="TabHome" xml:space="preserve">
+    <value>Inicio</value>
+  </data>
+  <data name="TabPlans" xml:space="preserve">
+    <value>Planes</value>
+  </data>
+  <data name="TabProfile" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="TabWorkout" xml:space="preserve">
+    <value>Entreno</value>
+  </data>
   <data name="TermsAgreement" xml:space="preserve">
     <value>Al continuar, aceptas nuestros Términos de Servicio y Política de Privacidad.</value>
+  </data>
+  <data name="TodayPlanCaption" xml:space="preserve">
+    <value>Plan de hoy</value>
   </data>
   <data name="Weekly Plan" xml:space="preserve">
     <value>Plan Semanal</value>

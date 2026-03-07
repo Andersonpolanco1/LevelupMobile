@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Home"
              xmlns:models="clr-namespace:LevelUp.Mobile.Features.Home.Models"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:local="clr-namespace:LevelUp.Mobile.Core.Extensions"
              x:Class="LevelUp.Mobile.Features.Home.Pages.HomePage"
              x:DataType="vm:ViewModels.HomeViewModel"
              xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants">
@@ -31,13 +32,13 @@
                            FontSize="40"
                            TextColor="{StaticResource Primary}"
                            HorizontalOptions="Center"/>
-                    <Label Text="No tienes un plan activo"
+                    <Label Text="{local:Localize NoActivePlan}"
                            Style="{StaticResource SubtitleLabel}"
                            HorizontalOptions="Center"/>
-                    <Label Text="Crea un plan semanal para comenzar tu entrenamiento"
+                    <Label Text="{local:Localize NoActivePlanSub}"
                            Style="{StaticResource BodyLabel}"
                            HorizontalTextAlignment="Center"/>
-                    <Button Text="Crear plan"
+                    <Button Text="{local:Localize CreatePlan}"
                             Style="{StaticResource PrimaryButton}"
                             Margin="0,8,0,0"
                             Command="{Binding CreatePlanCommand}"/>
@@ -51,11 +52,11 @@
                            FontFamily="FASolid"
                            FontSize="40"
                            TextColor="{StaticResource Primary}"
-                           HorizontalOptions="Center"/>     
-                    <Label Text="Hoy es día de descanso"
+                           HorizontalOptions="Center"/>
+                    <Label Text="{local:Localize RestDay}"
                            Style="{StaticResource SubtitleLabel}"
                            HorizontalOptions="Center"/>
-                    <Label Text="Descansa y recupera energía para mañana"
+                    <Label Text="{local:Localize RestDaySub}"
                            Style="{StaticResource BodyLabel}"
                            HorizontalTextAlignment="Center"/>
                 </VerticalStackLayout>
@@ -65,7 +66,7 @@
                                  IsVisible="{Binding IsWorkoutVisible}">
 
                 <VerticalStackLayout Spacing="2">
-                    <Label Text="Plan de hoy"
+                    <Label Text="{local:Localize TodayPlanCaption}"
                            Style="{StaticResource CaptionLabel}"/>
                     <Label Text="{Binding TodayPlan.PlanName}"
                            Style="{StaticResource SubtitleLabel}"/>
@@ -80,13 +81,12 @@
                             <Border Style="{StaticResource CardBorder}">
                                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
 
-                                    <!-- Número de orden del ejercicio con ícono de check al completar -->
                                     <Border Grid.Column="0"
-                                        BackgroundColor="{StaticResource Primary}"
-                                        StrokeShape="Ellipse"
-                                        WidthRequest="36" HeightRequest="36"
-                                        VerticalOptions="Center">
-                                            <Label Text="{Binding Order}"
+                                            BackgroundColor="{StaticResource Primary}"
+                                            StrokeShape="Ellipse"
+                                            WidthRequest="36" HeightRequest="36"
+                                            VerticalOptions="Center">
+                                        <Label Text="{Binding Order}"
                                                FontFamily="FASolid"
                                                TextColor="White"
                                                FontAttributes="Bold"
@@ -109,7 +109,8 @@
                                                         <Span Text="{Binding SetsPlanned}"
                                                               TextColor="{StaticResource Primary}"
                                                               FontAttributes="Bold"/>
-                                                        <Span Text=" series"/>
+                                                        <Span Text=" "/>
+                                                        <Span Text="{local:Localize Sets}"/>
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>
@@ -120,7 +121,8 @@
                                                         <Span Text="{Binding RepsPlanned}"
                                                               TextColor="{StaticResource Primary}"
                                                               FontAttributes="Bold"/>
-                                                        <Span Text=" reps"/>
+                                                        <Span Text=" "/>
+                                                        <Span Text="{local:Localize Reps}"/>
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>
@@ -132,25 +134,24 @@
                     </BindableLayout.ItemTemplate>
                 </VerticalStackLayout>
 
-                <!-- Botón Iniciar Workout con ícono -->
                 <Border Style="{StaticResource CardBorder}"
-        BackgroundColor="{StaticResource Primary}">
+                        BackgroundColor="{StaticResource Primary}">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding StartWorkoutCommand}"/>
                     </Border.GestureRecognizers>
-                    <HorizontalStackLayout Spacing="10" 
-                           HorizontalOptions="Center"
-                           Padding="16,12">
+                    <HorizontalStackLayout Spacing="10"
+                                           HorizontalOptions="Center"
+                                           Padding="16,12">
                         <Label Text="&#xf04b;"
-               FontFamily="FASolid"
-               TextColor="White"
-               FontSize="16"
-               VerticalOptions="Center"/>
-                        <Label Text="Iniciar Workout"
-               TextColor="White"
-               FontAttributes="Bold"
-               FontSize="16"
-               VerticalOptions="Center"/>
+                               FontFamily="FASolid"
+                               TextColor="White"
+                               FontSize="16"
+                               VerticalOptions="Center"/>
+                        <Label Text="{local:Localize StartWorkout}"
+                               TextColor="White"
+                               FontAttributes="Bold"
+                               FontSize="16"
+                               VerticalOptions="Center"/>
                     </HorizontalStackLayout>
                 </Border>
 
