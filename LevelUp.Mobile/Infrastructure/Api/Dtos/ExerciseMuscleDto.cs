@@ -1,13 +1,10 @@
 ﻿using LevelUp.Mobile.Core.Enums;
 
-namespace LevelUp.Mobile.Core.Entities
+namespace LevelUp.Mobile.Infrastructure.Api.Dtos
 {
-    public class ExerciseMuscle : LocalEntity
+    public class ExerciseMuscleDto
     {
-        public Guid ExerciseId { get; set; }
-
         public Guid MuscleId { get; set; }
-
         public MuscleRole Role { get; set; }
     }
 }

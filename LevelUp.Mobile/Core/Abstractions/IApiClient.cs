@@ -1,4 +1,4 @@
-﻿namespace LevelUp.Mobile.Infrastructure.Api
+﻿namespace LevelUp.Mobile.Core.Abstractions
 {
     public interface IApiClient
     {

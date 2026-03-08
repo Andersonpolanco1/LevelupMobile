@@ -1,7 +1,6 @@
 ﻿namespace LevelUp.Mobile.Core.Entities
 {
-    public class MuscleGroup
+    public class MuscleGroup : LocalEntity
     {
-        public Guid Id { get; set; }
     }
 }

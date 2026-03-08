@@ -2,10 +2,8 @@
 
 namespace LevelUp.Mobile.Core.Entities
 {
-    public class MuscleGroupTranslation
+    public class MuscleGroupTranslation : LocalEntity
     {
-        public Guid Id { get; set; }
-
         public Guid MuscleGroupId { get; set; }
 
         public Language Language { get; set; }

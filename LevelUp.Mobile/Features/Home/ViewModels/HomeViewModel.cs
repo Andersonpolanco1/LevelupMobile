@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LevelUp.Mobile.Core.Abstractions;
+using LevelUp.Mobile.Core.Enums;
 using LevelUp.Mobile.Features.Home.Models;
 using LevelUp.Mobile.Infrastructure.Token;
 using LevelUp.Mobile.Services;
@@ -21,6 +22,7 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
 
         // ── Estado ────────────────────────────────────────────────────────
         [ObservableProperty] private string? _userName;
+        [ObservableProperty] private Guid? _userId;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsWorkoutVisible))]
@@ -55,8 +57,13 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
                     UserName = name;
                 }
 
+                if (claims.TryGetValue("sub", out var id))
+                {
+                    UserId = Guid.Parse(id);
+                }
+
                 // Obtener Plan (Maneja el 204 devolviendo null)
-                TodayPlan = await _homeService.GetTodayPlanAsync();
+                var today = await _homeService.GetTodayAsync(UserId.Value, Language.Spanish);
 
                 if (TodayPlan is null)
                 {

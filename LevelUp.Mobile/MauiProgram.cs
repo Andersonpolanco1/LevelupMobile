@@ -21,12 +21,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Maui.Handlers;
-using LevelUp.Mobile.Infrastructure.Database;
-using Microsoft.EntityFrameworkCore;
-
-
-
-
+using LevelUp.Mobile.Infrastructure.Repositories;
+using LevelUp.Mobile.Infrastructure.Sync;
+using LevelUp.Mobile.Infrastructure.LocalDb;
 
 #if ANDROID
 using Android.Content.Res;
@@ -75,10 +72,6 @@ namespace LevelUp.Mobile
                 builder.Configuration.GetSection(AuthSettings.SettingPath));
 
 
-            //data
-            builder.Services.AddSingleton<DatabaseService>();
-
-
             // ── HTTP ──────────────────────────────────────────────
 
             builder.Services.AddTransient<AuthHeaderHandler>();
@@ -119,6 +112,7 @@ namespace LevelUp.Mobile
             builder.Services.AddTransient<PlansViewModel>();
             builder.Services.AddTransient<PlansPage>();
 
+
             // Exercises
             builder.Services.AddTransient<ExercisesPage>();
             builder.Services.AddTransient<ExerciseDetailPage>();
@@ -137,13 +131,28 @@ namespace LevelUp.Mobile
             // Profile
             builder.Services.AddTransient<ProfilePage>();
 
-            //services
-            builder.Services.AddTransient<HomeService>();
-            builder.Services.AddSingleton<WeeklyPlanService>();
+            // Base de datos — singleton porque la conexión debe ser compartida
+            builder.Services.AddSingleton<LocalDatabase>();
 
+
+            // Repositorios
+            builder.Services.AddSingleton<ExerciseRepository>();
+            builder.Services.AddSingleton<WeeklyPlanRepository>();
+            builder.Services.AddSingleton<WorkoutRepository>();
+
+            // Sync
+            builder.Services.AddSingleton<ISyncQueue, SyncQueue>();
+            builder.Services.AddSingleton<ISyncService, SyncService>();
+
+            // Servicios de negocio
+            builder.Services.AddSingleton<WeeklyPlanService>();
+            builder.Services.AddSingleton<HomeService>();
 
             // ── Shell y App ───────────────────────────────────────
             builder.Services.AddSingleton<AppShell>();
+
+            // Trigger automático de sync por conectividad
+            builder.Services.AddSingleton<ConnectivitySyncTrigger>();
 
 #if DEBUG
             builder.Logging.AddDebug();
@@ -187,7 +196,18 @@ namespace LevelUp.Mobile
 #endif
             });
 
-            return builder.Build();
+            try
+            {
+                var app = builder.Build();
+                return app;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"DI BUILD FAILED: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"INNER: {ex.InnerException?.Message}");
+                System.Diagnostics.Debug.WriteLine($"STACK: {ex.StackTrace}");
+                throw;
+            }
         }
     }
 }

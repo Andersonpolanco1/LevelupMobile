@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using LevelUp.Mobile.Core.Abstractions;
+using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace LevelUp.Mobile.Infrastructure.Api

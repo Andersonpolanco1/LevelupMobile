@@ -1,12 +1,23 @@
 ﻿using LevelUp.Mobile.Core.Entities;
 using SQLite;
 
-namespace LevelUp.Mobile.Infrastructure.Database
+namespace LevelUp.Mobile.Infrastructure.LocalDb
 {
 
-    public class DatabaseService
+    public class LocalDatabase
     {
         private SQLiteAsyncConnection? _database;
+        private Task? _initTask;
+        private readonly object _lock = new();
+
+        public Task EnsureInitializedAsync()
+        {
+            lock (_lock)
+            {
+                _initTask ??= InitializeAsync();
+                return _initTask;
+            }
+        }
 
         public async Task InitializeAsync()
         {
@@ -45,7 +56,7 @@ namespace LevelUp.Mobile.Infrastructure.Database
             await _database.CreateTableAsync<ExerciseSet>();
 
             await _database.CreateTableAsync<SyncQueueItem>();
-            await _database.CreateTableAsync<SyncState>();
+            await _database.CreateTableAsync<Core.Entities.SyncState>();
         }
 
         private async Task CreateIndexes()
@@ -62,6 +73,9 @@ namespace LevelUp.Mobile.Infrastructure.Database
 
             await _database.ExecuteAsync(
                 "CREATE INDEX IF NOT EXISTS idx_musclegroup_translation_lang ON MuscleGroupTranslation(MuscleGroupId, Language)");
+
+            await _database.ExecuteAsync(
+                "CREATE UNIQUE INDEX IF NOT EXISTS idx_exercise_translation_unique ON ExerciseTranslation(ExerciseId, Language)");
 
 
             // ==========================
@@ -83,7 +97,7 @@ namespace LevelUp.Mobile.Infrastructure.Database
                 "CREATE INDEX IF NOT EXISTS idx_workout_user ON Workout(UserId)");
 
             await _database.ExecuteAsync(
-                "CREATE INDEX IF NOT EXISTS idx_workout_date ON Workout(Date)");
+                "CREATE INDEX IF NOT EXISTS idx_workout_date ON Workout(FinishedAt)");
 
             await _database.ExecuteAsync(
                 "CREATE INDEX IF NOT EXISTS idx_workoutexercise_workout ON WorkoutExercise(WorkoutId)");
@@ -118,6 +132,7 @@ namespace LevelUp.Mobile.Infrastructure.Database
 
             await _database.ExecuteAsync(
                 "CREATE INDEX IF NOT EXISTS idx_syncqueue_entity ON SyncQueueItem(EntityType)");
+
         }
     }
 }

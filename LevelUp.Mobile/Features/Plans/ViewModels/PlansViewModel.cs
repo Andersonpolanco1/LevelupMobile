@@ -1,4 +1,5 @@
-﻿using LevelUp.Mobile.Features.Plans.Models;
+﻿using LevelUp.Mobile.Core.Entities;
+using LevelUp.Mobile.Features.Plans.Models;
 using LevelUp.Mobile.Services;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -9,7 +10,7 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
     {
         private readonly WeeklyPlanService _service;
 
-        public ObservableCollection<WeeklyPlanListItemDto> Plans { get; } = new();
+        public ObservableCollection<WeeklyPlan> Plans { get; } = new();
 
         public ICommand LoadPlansCommand { get; }
 
@@ -28,7 +29,7 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
                 await Shell.Current.GoToAsync("///Plans/Create");
             });
 
-            OpenPlanCommand = new Command<WeeklyPlanListItemDto>(async plan =>
+            OpenPlanCommand = new Command<WeeklyPlan>(async plan =>
             {
                 await Shell.Current.GoToAsync($"///Plans/Detail?id={plan.Id}");
             });

@@ -1,5 +1,5 @@
-﻿using LevelUp.Mobile.Core.Entities;
-using LevelUp.Mobile.Infrastructure.Api;
+﻿using LevelUp.Mobile.Core.Abstractions;
+using LevelUp.Mobile.Core.Entities;
 
 namespace LevelUp.Mobile.Services
 {

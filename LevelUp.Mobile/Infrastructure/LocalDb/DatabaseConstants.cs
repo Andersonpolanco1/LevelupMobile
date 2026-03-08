@@ -1,4 +1,4 @@
-﻿namespace LevelUp.Mobile.Infrastructure.Database
+﻿namespace LevelUp.Mobile.Infrastructure.LocalDb
 {
     public static class DatabaseConstants
     {
