@@ -4,7 +4,8 @@ using SQLite;
 
 namespace LevelUp.Mobile.Infrastructure.Repositories;
 
-public class BaseRepository<T>(LocalDatabase databaseService) where T : LocalEntity, new()
+public class BaseRepository<T>(LocalDatabase databaseService) where T : class, ILocalEntity, new()
+
 {
     protected async Task<SQLiteAsyncConnection> GetDbAsync()
     {

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Home"
+             xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Home.ViewModels"
              xmlns:models="clr-namespace:LevelUp.Mobile.Features.Home.Models"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:local="clr-namespace:LevelUp.Mobile.Core.Extensions"
+             xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants"
              x:Class="LevelUp.Mobile.Features.Home.Pages.HomePage"
-             x:DataType="vm:ViewModels.HomeViewModel"
-             xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants">
+             x:DataType="vm:HomeViewModel">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="24">
@@ -24,6 +24,7 @@
                                Color="{StaticResource Primary}"
                                HorizontalOptions="Center"/>
 
+            <!-- Sin plan activo -->
             <Border Style="{StaticResource CardBorder}"
                     IsVisible="{Binding HasNoPlan}">
                 <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
@@ -45,6 +46,7 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Día de descanso -->
             <Border Style="{StaticResource CardBorder}"
                     IsVisible="{Binding HasRestDay}">
                 <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
@@ -62,6 +64,7 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Plan de hoy -->
             <VerticalStackLayout Spacing="16"
                                  IsVisible="{Binding IsWorkoutVisible}">
 
@@ -87,7 +90,6 @@
                                             WidthRequest="36" HeightRequest="36"
                                             VerticalOptions="Center">
                                         <Label Text="{Binding Order}"
-                                               FontFamily="FASolid"
                                                TextColor="White"
                                                FontAttributes="Bold"
                                                FontSize="14"

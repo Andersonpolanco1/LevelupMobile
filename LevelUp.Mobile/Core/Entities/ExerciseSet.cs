@@ -1,9 +1,17 @@
 ﻿using LevelUp.Mobile.Core.Enums;
+using SQLite;
 
 namespace LevelUp.Mobile.Core.Entities
 {
-    public class ExerciseSet : LocalEntity
+    public class ExerciseSet : ILocalEntity
     {
+        [PrimaryKey]
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public bool IsSynced { get; set; }
+        public bool IsDeleted { get; set; }
+
         public Guid WorkoutExerciseId { get; set; }
 
         public int? Reps { get; set; }

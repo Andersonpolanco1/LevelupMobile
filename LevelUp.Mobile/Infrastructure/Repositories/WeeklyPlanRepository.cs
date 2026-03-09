@@ -35,13 +35,14 @@ public class WeeklyPlanRepository : BaseRepository<WeeklyPlan>
 
     public async Task<WeeklyPlanDay?> GetTodayDayAsync(Guid userId)
     {
-        var db = await GetDbAsync();
-        var plan = await GetActivePlanAsync(userId);
-        if (plan is null) return null;
-
         var today = DateTime.Now.DayOfWeek;
+        var db = await GetDbAsync();
+
+        var activePlan = await GetActivePlanAsync(userId);
+        if (activePlan is null) return null;
+
         return await db.Table<WeeklyPlanDay>()
-            .Where(d => d.WeeklyPlanId == plan.Id
+            .Where(d => d.WeeklyPlanId == activePlan.Id
                      && d.DayOfWeek == today
                      && !d.IsDeleted)
             .FirstOrDefaultAsync();

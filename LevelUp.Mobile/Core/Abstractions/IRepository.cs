@@ -2,7 +2,7 @@
 
 namespace LevelUp.Mobile.Core.Abstractions
 {
-    public interface IRepository<T> where T : LocalEntity
+    public interface IRepository<T> where T : ILocalEntity
     {
         Task<List<T>> GetAllAsync();
         Task<T?> GetByIdAsync(Guid id);

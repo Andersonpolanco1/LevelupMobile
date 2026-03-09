@@ -6,6 +6,6 @@ namespace LevelUp.Mobile.Core.Abstractions
     public interface ISyncQueue
     {
         Task EnqueueAsync<T>(T entity, SyncOperation operation)
-            where T : LocalEntity;
+            where T : ILocalEntity;
     }
 }

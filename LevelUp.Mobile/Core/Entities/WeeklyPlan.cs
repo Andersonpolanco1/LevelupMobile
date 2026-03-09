@@ -2,9 +2,15 @@
 
 namespace LevelUp.Mobile.Core.Entities
 {
-    public class WeeklyPlan : LocalEntity
+    public class WeeklyPlan : ILocalEntity
     {
-        public Guid UserId { get; set; }
+        [PrimaryKey]
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public bool IsSynced { get; set; }
+        public bool IsDeleted { get; set; }
+
         public string Name { get; set; } = "";
         public string? Notes { get; set; }
         public bool IsActive { get; set; }
@@ -27,5 +33,7 @@ namespace LevelUp.Mobile.Core.Entities
         public string DaysText => DaysOfWeekShortName.Length > 0
             ? string.Join(" • ", DaysOfWeekShortName)
             : "Sin días";
+
+        public Guid UserId { get;  set; }
     }
 }

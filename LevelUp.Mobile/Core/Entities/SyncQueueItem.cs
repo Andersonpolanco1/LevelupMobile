@@ -1,10 +1,12 @@
 ﻿using LevelUp.Mobile.Core.Enums;
+using SQLite;
 
 namespace LevelUp.Mobile.Core.Entities
 {
     public class SyncQueueItem
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }  // int autoincrement, no Guid
 
         // Nombre de la entidad: "WeeklyPlan", "Workout", "ExerciseSet", etc.
         public string EntityType { get; set; } = "";  // tu índice usa EntityType ✓

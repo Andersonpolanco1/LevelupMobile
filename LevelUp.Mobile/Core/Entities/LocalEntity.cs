@@ -1,15 +1,13 @@
-﻿namespace LevelUp.Mobile.Core.Entities
+﻿using SQLite;
+
+namespace LevelUp.Mobile.Core.Entities
 {
-    public abstract class LocalEntity
+    public interface ILocalEntity
     {
-        public Guid Id { get; set; }
-
-        public DateTime CreatedAt { get; set; }
-
-        public DateTime? UpdatedAt { get; set; }
-
-        public bool IsSynced { get; set; }
-
-        public bool IsDeleted { get; set; }
+        Guid Id { get; set; }
+        DateTime CreatedAt { get; set; }
+        DateTime? UpdatedAt { get; set; }
+        bool IsSynced { get; set; }
+        bool IsDeleted { get; set; }
     }
 }

@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Plans.ViewModels"
-    xmlns:models="clr-namespace:LevelUp.Mobile.Features.Plans.Models"
+    xmlns:models="clr-namespace:LevelUp.Mobile.Core.Entities"
     xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants"
     xmlns:local="clr-namespace:LevelUp.Mobile.Core.Extensions"
     x:Class="LevelUp.Mobile.Features.Plans.Pages.PlansPage"
@@ -59,7 +59,7 @@
             </CollectionView.EmptyView>
 
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:WeeklyPlanListItemDto">
+                <DataTemplate x:DataType="models:WeeklyPlan">
                     <Border Style="{StaticResource CardBorder}" Margin="0,0,0,12">
                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
                             <VerticalStackLayout Spacing="4">

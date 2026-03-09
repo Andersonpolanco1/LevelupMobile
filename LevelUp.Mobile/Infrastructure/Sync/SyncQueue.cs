@@ -9,11 +9,10 @@ namespace LevelUp.Mobile.Infrastructure.Sync;
 public class SyncQueue(LocalDatabase db) : ISyncQueue
 {
     public async Task EnqueueAsync<T>(T entity, SyncOperation operation)
-        where T : LocalEntity
+        where T : ILocalEntity
     {
         var item = new SyncQueueItem
         {
-            Id = Guid.NewGuid(),
             EntityType = typeof(T).Name,
             EntityId = entity.Id,
             Operation = operation,
@@ -21,7 +20,6 @@ public class SyncQueue(LocalDatabase db) : ISyncQueue
             Status = SyncItemStatus.Pending,
             CreatedAt = DateTime.UtcNow
         };
-
         await db.Connection.InsertAsync(item);
     }
 }

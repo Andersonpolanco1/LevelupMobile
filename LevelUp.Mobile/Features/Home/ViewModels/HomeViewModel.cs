@@ -20,7 +20,6 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
             LocalizationService.Instance.PropertyChanged += (_, _) => OnPropertyChanged(nameof(Greeting));
         }
 
-        // ── Estado ────────────────────────────────────────────────────────
         [ObservableProperty] private string? _userName;
         [ObservableProperty] private Guid? _userId;
 
@@ -37,11 +36,8 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
         private bool _hasNoPlan;
 
         public string Greeting => GetGreeting();
-
-        // Propiedad calculada que decide si se muestra la sección "Plan de hoy"
         public bool IsWorkoutVisible => TodayPlan != null && !HasRestDay && !HasNoPlan;
 
-        // ── Init ──────────────────────────────────────────────────────────
         [RelayCommand]
         private async Task InitializeAsync()
         {
@@ -50,42 +46,49 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
 
             try
             {
-                // Nombre desde JWT
                 var claims = await _tokenService.GetUserClaimsAsync();
-                if (claims.TryGetValue("userName", out var name))
-                {
-                    UserName = name;
-                }
+                if (claims.TryGetValue("userName", out var name)) UserName = name;
+                if (claims.TryGetValue("sub", out var id)) UserId = Guid.Parse(id);
 
-                if (claims.TryGetValue("sub", out var id))
-                {
-                    UserId = Guid.Parse(id);
-                }
+                if (UserId is null) return;
 
-                // Obtener Plan (Maneja el 204 devolviendo null)
                 var today = await _homeService.GetTodayAsync(UserId.Value, Language.Spanish);
+
+                TodayPlan = today is null ? null : new TodayPlanDto
+                {
+                    PlanName = today.PlanName,
+                    DayName = today.DayName,
+                    DayOfWeek = today.DayOfWeek,
+                    Notes = today.Notes,
+                    Exercises = today.Exercises.Select(e => new TodayExerciseDto
+                    {
+                        ExerciseId = e.ExerciseId,
+                        ExerciseName = e.ExerciseName,
+                        SetsPlanned = e.SetsPlanned,
+                        RepsPlanned = e.RepsPlanned,
+                        Order = e.Order
+                    }).ToList()
+                };
 
                 if (TodayPlan is null)
                 {
                     HasNoPlan = true;
                     HasRestDay = false;
                 }
-                else if (TodayPlan.Exercises == null || TodayPlan.Exercises.Count == 0)
+                else if (TodayPlan.Exercises.Count == 0)
                 {
-                    // Si el objeto existe pero no hay ejercicios, es día de descanso
                     HasRestDay = true;
                     HasNoPlan = false;
                 }
                 else
                 {
-                    // Todo en orden, hay ejercicios que mostrar
                     HasRestDay = false;
                     HasNoPlan = false;
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"HomeViewModel error: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[HomeViewModel] ERROR: {ex.Message}");
             }
             finally
             {
@@ -95,14 +98,11 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
 
         [RelayCommand]
         private async Task CreatePlanAsync()
-        {
-            await Shell.Current.GoToAsync("///Plans/Create");
-        }
+            => await Shell.Current.GoToAsync("///Plans/Create");
 
         private static string GetGreeting()
         {
-            var hour = DateTime.Now.Hour;
-            var key = hour switch
+            var key = DateTime.Now.Hour switch
             {
                 < 12 => "GoodMorning",
                 < 18 => "GoodAfternoon",

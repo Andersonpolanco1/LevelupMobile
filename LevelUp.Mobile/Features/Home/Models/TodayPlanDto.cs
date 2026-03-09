@@ -5,12 +5,13 @@
         public Guid PlanId { get; set; }
         public string PlanName { get; set; } = string.Empty;
         public string DayName { get; set; } = string.Empty;
+        public DayOfWeek DayOfWeek { get; set; }
+        public string? Notes { get; set; }
         public List<TodayExerciseDto> Exercises { get; set; } = [];
     }
 
     public class TodayExerciseDto
     {
-        public Guid Id { get; set; }
         public Guid ExerciseId { get; set; }
         public string ExerciseName { get; set; } = string.Empty;
         public string? ImageUrl { get; set; }

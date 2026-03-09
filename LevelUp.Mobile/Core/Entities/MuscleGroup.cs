@@ -1,6 +1,14 @@
-﻿namespace LevelUp.Mobile.Core.Entities
+﻿using SQLite;
+
+namespace LevelUp.Mobile.Core.Entities
 {
-    public class MuscleGroup : LocalEntity
+    public class MuscleGroup : ILocalEntity
     {
+        [PrimaryKey]
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public bool IsSynced { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
