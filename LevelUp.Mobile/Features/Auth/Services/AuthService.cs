@@ -84,7 +84,7 @@ namespace LevelUp.Mobile.Features.Auth.Services
                     TimeZoneId = TimeZoneInfo.Local.Id
                 };
 
-                _httpClient.BaseAddress = new Uri("https://levelup.tryasp.net/");
+                _httpClient.BaseAddress = new Uri(_apiSettings.BaseUrl);
                 var response = await _httpClient.PostAsJsonAsync("auth/google", request);
 
                 if (!response.IsSuccessStatusCode)

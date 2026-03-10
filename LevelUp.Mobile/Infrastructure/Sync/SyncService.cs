@@ -54,8 +54,8 @@ public class SyncService : ISyncService
 
         var lastSync = await GetLastSyncAsync("Catalog");
         var url = lastSync.HasValue
-            ? $"api/sync/catalog?since={lastSync.Value:O}"
-            : "api/sync/catalog";
+            ? $"sync/catalog?since={lastSync.Value:O}"
+            : "sync/catalog";
 
         Log($"SyncCatalog START | since={FormatDate(lastSync)} | url={url}");
 
@@ -165,8 +165,8 @@ public class SyncService : ISyncService
 
         var lastSync = await GetLastSyncAsync("UserData");
         var url = lastSync.HasValue
-            ? $"api/sync/user-data?since={lastSync.Value:O}"
-            : "api/sync/user-data";
+            ? $"sync/user-data?since={lastSync.Value:O}"
+            : "sync/user-data";
 
         Log($"SyncUserData START | since={FormatDate(lastSync)} | url={url}");
 
@@ -365,22 +365,22 @@ public class SyncService : ISyncService
         switch (item.EntityType)
         {
             case nameof(WeeklyPlan):
-                await PushEntityAsync<WeeklyPlan>(item, "api/sync/weekly-plans");
+                await PushEntityAsync<WeeklyPlan>(item, "sync/weekly-plans");
                 break;
             case nameof(WeeklyPlanDay):
-                await PushEntityAsync<WeeklyPlanDay>(item, "api/sync/weekly-plan-days");
+                await PushEntityAsync<WeeklyPlanDay>(item, "sync/weekly-plan-days");
                 break;
             case nameof(WeeklyPlanExercise):
-                await PushEntityAsync<WeeklyPlanExercise>(item, "api/sync/weekly-plan-exercises");
+                await PushEntityAsync<WeeklyPlanExercise>(item, "sync/weekly-plan-exercises");
                 break;
             case nameof(Workout):
-                await PushEntityAsync<Workout>(item, "api/sync/workouts");
+                await PushEntityAsync<Workout>(item, "sync/workouts");
                 break;
             case nameof(WorkoutExercise):
-                await PushEntityAsync<WorkoutExercise>(item, "api/sync/workout-exercises");
+                await PushEntityAsync<WorkoutExercise>(item, "sync/workout-exercises");
                 break;
             case nameof(ExerciseSet):
-                await PushEntityAsync<ExerciseSet>(item, "api/sync/exercise-sets");
+                await PushEntityAsync<ExerciseSet>(item, "sync/exercise-sets");
                 break;
             default:
                 Log($"  ⚠ EntityType desconocido: {item.EntityType}");
