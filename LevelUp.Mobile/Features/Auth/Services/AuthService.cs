@@ -85,7 +85,7 @@ namespace LevelUp.Mobile.Features.Auth.Services
                 };
 
                 _httpClient.BaseAddress = new Uri("https://levelup.tryasp.net/");
-                var response = await _httpClient.PostAsJsonAsync("api/auth/google", request);
+                var response = await _httpClient.PostAsJsonAsync("auth/google", request);
 
                 if (!response.IsSuccessStatusCode)
                     return AuthResult.Failure("Error autenticando");
@@ -124,7 +124,7 @@ namespace LevelUp.Mobile.Features.Auth.Services
             try
             {
                 var response = await _httpClient.PostAsJsonAsync(
-                    "api/auth/refresh",
+                    "auth/refresh",
                     new
                     {
                         tokenRefresh = refreshToken,
