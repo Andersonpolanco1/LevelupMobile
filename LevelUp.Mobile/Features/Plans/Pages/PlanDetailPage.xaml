@@ -1,12 +1,313 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="LevelUp.Mobile.Features.Plans.Pages.PlanDetailPage"
-             Title="PlanDetailPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Plans.ViewModels"
+    xmlns:entities="clr-namespace:LevelUp.Mobile.Core.Entities"
+    xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants"
+    xmlns:local="clr-namespace:LevelUp.Mobile.Core.Extensions"
+    x:Class="LevelUp.Mobile.Features.Plans.Pages.PlanDetailPage"
+    x:DataType="vm:PlanDetailViewModel"
+    Shell.NavBarIsVisible="False"
+    Title="Plan">
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  Root: Header fijo · Scroll content · Action bar       -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- ─────────────────────────────────────────────────── -->
+        <!--  ROW 0  ·  Navbar + Plan hero                      -->
+        <!-- ─────────────────────────────────────────────────── -->
+        <Grid
+            Grid.Row="0"
+            RowDefinitions="Auto,Auto"
+            Padding="20,56,20,20"
+            BackgroundColor="{AppThemeBinding
+                Light={StaticResource SurfaceLight},
+                Dark={StaticResource SurfaceDark}}">
+
+            <!-- ── Navbar ── -->
+            <Grid
+                Grid.Row="0"
+                ColumnDefinitions="40,*,40"
+                Margin="0,0,0,20">
+
+                <!-- Page title -->
+                <Label
+                    Grid.Column="1"
+                    Text="Detalle del plan"
+                    Style="{StaticResource SubtitleLabel}"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center" />
+
+                <!-- Delete shortcut -->
+                <Border
+                    Grid.Column="2"
+                    WidthRequest="36"
+                    HeightRequest="36"
+                    StrokeThickness="1"
+                    VerticalOptions="Center"
+                    BackgroundColor="{AppThemeBinding
+                        Light={StaticResource SurfaceElevatedLight},
+                        Dark={StaticResource SurfaceElevatedDark}}"
+                    Stroke="{AppThemeBinding
+                        Light={StaticResource DividerLight},
+                        Dark={StaticResource DividerDark}}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding DeletePlanCommand}" />
+                    </Border.GestureRecognizers>
+                    <Label
+                        Text="{x:Static constants:FA.Trash}"
+                        FontFamily="FASolid"
+                        FontSize="15"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        TextColor="{StaticResource Error}" />
+                </Border>
+
+            </Grid>
+
+            <!-- ── Plan hero ── -->
+            <Grid
+                Grid.Row="1"
+                RowDefinitions="Auto,Auto,Auto"
+                ColumnDefinitions="*,Auto">
+
+                <!-- Name -->
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Text="{Binding Plan.Name}"
+                    Style="{StaticResource TitleLabel}"
+                    LineBreakMode="TailTruncation"
+                    VerticalOptions="Center" />
+
+                <!-- Active badge -->
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Padding="10,5"
+                    VerticalOptions="Center"
+                    Margin="8,4,0,0"
+                    IsVisible="{Binding Plan.IsActive}"
+                    StrokeThickness="0"
+                    BackgroundColor="{AppThemeBinding
+                        Light=#DCFCE7,
+                        Dark=#14321C}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20" />
+                    </Border.StrokeShape>
+                    <Label
+                        Text="{local:Localize Active}"
+                        FontSize="11"
+                        FontAttributes="Bold"
+                        TextColor="{StaticResource Success}" />
+                </Border>
+
+                <!-- Notes -->
+                <Label
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Text="{Binding Plan.Notes}"
+                    Style="{StaticResource BodyLabel}"
+                    Margin="0,6,0,0"
+                    IsVisible="{Binding Plan.Notes, Converter={StaticResource IsNotNullConverter}}" />
+
+                <!-- Days chips -->
+                <FlexLayout
+                    Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    Wrap="Wrap"
+                    Direction="Row"
+                    Margin="0,12,0,0"
+                    BindableLayout.ItemsSource="{Binding Plan.DaysOfWeekShortName}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Border
+                                Padding="10,5"
+                                Margin="0,0,6,4"
+                                StrokeThickness="1"
+                                BackgroundColor="{AppThemeBinding
+                                    Light={StaticResource SurfaceElevatedLight},
+                                    Dark={StaticResource CardDark}}"
+                                Stroke="{AppThemeBinding
+                                    Light={StaticResource DividerLight},
+                                    Dark={StaticResource DividerDark}}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8" />
+                                </Border.StrokeShape>
+                                <Label
+                                    Text="{Binding .}"
+                                    FontSize="12"
+                                    FontAttributes="Bold"
+                                    TextColor="{AppThemeBinding
+                                        Light={StaticResource TextSecondaryLight},
+                                        Dark={StaticResource TextSecondaryDark}}" />
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+
+            </Grid>
+
+            <!-- Divider under header -->
+            <BoxView
+                Grid.RowSpan="2"
+                Style="{StaticResource Divider}"
+                VerticalOptions="End" />
+
+        </Grid>
+
+        <!-- ─────────────────────────────────────────────────── -->
+        <!--  ROW 1  ·  Scrollable content: days list           -->
+        <!-- ─────────────────────────────────────────────────── -->
+        <ScrollView Grid.Row="1" Padding="20,20,20,8">
+            <Grid>
+
+                <!-- Loading -->
+                <ActivityIndicator
+                    IsRunning="{Binding IsBusy}"
+                    IsVisible="{Binding IsBusy}"
+                    Color="{StaticResource Primary}"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Start"
+                    Margin="0,32,0,0" />
+
+                <!-- Content -->
+                <VerticalStackLayout
+                    Spacing="12"
+                    IsVisible="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}">
+
+                    <!-- Section label -->
+                    <Label
+                        Text="DÍAS DEL PLAN"
+                        Style="{StaticResource CaptionLabel}"
+                        FontAttributes="Bold"
+                        CharacterSpacing="2"
+                        Margin="0,0,0,4" />
+
+                    <!-- Empty state -->
+                    <VerticalStackLayout
+                        IsVisible="{Binding Days.Count, Converter={StaticResource IntEqualsZeroBoolConverter}}"
+                        HorizontalOptions="Center"
+                        Spacing="8"
+                        Margin="0,40,0,0">
+                        <Label
+                            Text="{x:Static constants:FA.CalendarDays}"
+                            FontFamily="FASolid"
+                            FontSize="40"
+                            TextColor="{StaticResource Primary}"
+                            HorizontalOptions="Center" />
+                        <Label
+                            Text="Sin días configurados"
+                            Style="{StaticResource SubtitleLabel}"
+                            HorizontalOptions="Center" />
+                        <Label
+                            Text="Agrega días desde la edición del plan."
+                            Style="{StaticResource BodyLabel}"
+                            HorizontalOptions="Center"
+                            HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+
+                    <!-- Day cards -->
+                    <VerticalStackLayout
+                        Spacing="12"
+                        BindableLayout.ItemsSource="{Binding Days}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="entities:WeeklyPlanDay">
+
+                                <Border
+                                    Style="{StaticResource CardBorder}"
+                                    Padding="0"
+                                    Margin="0,0,0,0">
+
+                                    <Grid ColumnDefinitions="4,*" Padding="0,14,14,14">
+
+                                        <!-- Orange accent bar -->
+                                        <BoxView
+                                            Grid.Column="0"
+                                            WidthRequest="4"
+                                            BackgroundColor="{StaticResource Primary}"
+                                            VerticalOptions="Fill"
+                                            Margin="0,0,14,0" />
+
+                                        <!-- Day content -->
+                                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+
+                                            <Label
+                                                Text="{Binding DayOfWeek}"
+                                                Style="{StaticResource SubtitleLabel}" />
+
+                                            <Label
+                                                Text="{Binding Notes}"
+                                                Style="{StaticResource BodyLabel}"
+                                                IsVisible="{Binding Notes, Converter={StaticResource IsNotNullConverter}}" />
+
+                                            <HorizontalStackLayout Spacing="3" Margin="0,4,0,0">
+                                                <Label
+                                                    Text="Ver ejercicios"
+                                                    FontSize="12"
+                                                    TextColor="{StaticResource Primary}" />
+                                                <Label
+                                                    Text="{x:Static constants:FA.AngleRight}"
+                                                    FontFamily="FASolid"
+                                                    FontSize="12"
+                                                    TextColor="{StaticResource Primary}" />
+                                            </HorizontalStackLayout>
+
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>
+
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <BoxView HeightRequest="16" Color="Transparent" />
+
+                </VerticalStackLayout>
+            </Grid>
+        </ScrollView>
+
+        <!-- ─────────────────────────────────────────────────── -->
+        <!--  ROW 2  ·  Action bar                              -->
+        <!-- ─────────────────────────────────────────────────── -->
+        <Grid
+            Grid.Row="2"
+            ColumnDefinitions="*,*"
+            Padding="20,12,20,36"
+            ColumnSpacing="12"
+            BackgroundColor="{AppThemeBinding
+                Light={StaticResource SurfaceLight},
+                Dark={StaticResource SurfaceDark}}">
+
+            <!-- Top divider -->
+            <BoxView
+                Grid.ColumnSpan="2"
+                Style="{StaticResource Divider}"
+                VerticalOptions="Start"
+                Margin="0,-12,0,0" />
+
+            <!-- Activar / Plan activo -->
+            <Button
+                Grid.Column="0"
+                Text="{Binding ActivateButtonText}"
+                Style="{StaticResource PrimaryButton}"
+                Command="{Binding ActivatePlanCommand}"
+                IsEnabled="{Binding IsNotActive}" />
+
+            <!-- Editar plan -->
+            <Button
+                Grid.Column="1"
+                Text="Editar plan"
+                Style="{StaticResource SecondaryButton}"
+                Command="{Binding EditPlanCommand}" />
+
+        </Grid>
+
+    </Grid>
 </ContentPage>

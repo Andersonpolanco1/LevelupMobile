@@ -1,6 +1,4 @@
-﻿using SQLite;
-
-namespace LevelUp.Mobile.Core.Entities
+﻿namespace LevelUp.Mobile.Core.Entities
 {
     public interface ILocalEntity
     {

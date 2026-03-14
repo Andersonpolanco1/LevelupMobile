@@ -43,7 +43,6 @@ namespace LevelUp.Mobile
         protected override Window CreateWindow(IActivationState? activationState)
             => new Window(_shell);
 
-        // App.xaml.cs
         protected override void OnStart()
         {
             base.OnStart();

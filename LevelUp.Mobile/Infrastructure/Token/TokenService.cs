@@ -19,7 +19,7 @@
         {
             var value = await SecureStorage.GetAsync(ExpirationKey);
 
-            if (DateTime.TryParse(value, out var date))
+            if (DateTime.TryParse(value, null, System.Globalization.DateTimeStyles.RoundtripKind, out var date))
                 return date;
 
             return null;

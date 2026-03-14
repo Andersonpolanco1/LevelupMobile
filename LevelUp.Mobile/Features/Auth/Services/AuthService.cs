@@ -52,7 +52,7 @@ namespace LevelUp.Mobile.Features.Auth.Services
                 if (string.IsNullOrEmpty(accessToken))
                     return AuthResult.Failure("No se recibió token");
 
-                var expiration = DateTime.TryParse(expiresAt, out var parsedExpiry)
+                var expiration = DateTime.TryParse(expiresAt, null, System.Globalization.DateTimeStyles.RoundtripKind, out var parsedExpiry)
                     ? parsedExpiry
                     : DateTime.UtcNow.AddHours(1);
 
@@ -84,7 +84,6 @@ namespace LevelUp.Mobile.Features.Auth.Services
                     TimeZoneId = TimeZoneInfo.Local.Id
                 };
 
-                _httpClient.BaseAddress = new Uri(_apiSettings.BaseUrl);
                 var response = await _httpClient.PostAsJsonAsync("auth/google", request);
 
                 if (!response.IsSuccessStatusCode)

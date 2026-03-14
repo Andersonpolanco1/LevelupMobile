@@ -31,7 +31,7 @@ namespace LevelUp.Mobile.Infrastructure.Session
             if (string.IsNullOrWhiteSpace(accessToken) || expiration == null)
                 return false;
 
-            if (expiration <= DateTime.UtcNow.AddMinutes(1))
+            if (expiration <= DateTime.UtcNow.AddMinutes(20))
                 return false;
 
             return true;

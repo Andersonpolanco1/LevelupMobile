@@ -13,7 +13,6 @@ namespace LevelUp.Mobile.Extensions
         {
             services.AddSingleton<ITokenService, TokenService>();
             services.AddSingleton<ISessionService, SessionService>();
-            services.AddTransient<AuthService>();
 
             services.AddSingleton<WeeklyPlanService>();
             services.AddSingleton<HomeService>();

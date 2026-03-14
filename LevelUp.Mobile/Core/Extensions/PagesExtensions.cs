@@ -34,7 +34,10 @@ namespace LevelUp.Mobile.Extensions
 
             services.AddTransient<PlansPage>();
             services.AddTransient<PlansViewModel>();
+
+            services.AddTransient<PlanDetailViewModel>();
             services.AddTransient<PlanDetailPage>();
+
             services.AddTransient<CreatePlanPage>();
             services.AddTransient<CreatePlanViewModel>();
 
