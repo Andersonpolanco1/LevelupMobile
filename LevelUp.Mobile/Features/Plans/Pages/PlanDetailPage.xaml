@@ -20,40 +20,51 @@
                   Light={StaticResource SurfaceLight},
                   Dark={StaticResource SurfaceDark}}">
 
-            <!-- Navbar -->
-            <Grid Grid.Row="0" ColumnDefinitions="40,*,40" Margin="0,0,0,20">
+            <!-- Navbar: volver · título · engranaje -->
+            <Grid Grid.Row="0"
+                  ColumnDefinitions="40,*,40"
+                  Margin="0,0,0,20">
+
+                <Label Grid.Column="0"
+                       Text="{x:Static constants:FA.AngleLeft}"
+                       FontFamily="FASolid" FontSize="22"
+                       TextColor="{StaticResource Primary}"
+                       VerticalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+
                 <Label Grid.Column="1"
                        Text="Detalle del plan"
                        Style="{StaticResource SubtitleLabel}"
-                       HorizontalOptions="Center" VerticalOptions="Center"/>
-                <Border Grid.Column="2"
-                        WidthRequest="36" HeightRequest="36"
-                        StrokeThickness="1" VerticalOptions="Center"
-                        BackgroundColor="{AppThemeBinding
-                            Light={StaticResource SurfaceElevatedLight},
-                            Dark={StaticResource SurfaceElevatedDark}}"
-                        Stroke="{AppThemeBinding
-                            Light={StaticResource DividerLight},
-                            Dark={StaticResource DividerDark}}">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="10"/>
-                    </Border.StrokeShape>
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding DeletePlanCommand}"/>
-                    </Border.GestureRecognizers>
-                    <Label Text="{x:Static constants:FA.Trash}"
-                           FontFamily="FASolid" FontSize="15"
-                           HorizontalOptions="Center" VerticalOptions="Center"
-                           TextColor="{StaticResource Error}"/>
-                </Border>
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+
+                <!-- Engranaje plano sin pill -->
+                <Label Grid.Column="2"
+                       Text="{x:Static constants:FA.Gear}"
+                       FontFamily="FASolid" FontSize="22"
+                       HorizontalOptions="End"
+                       VerticalOptions="Center"
+                       TextColor="{AppThemeBinding
+                           Light={StaticResource TextSecondaryLight},
+                           Dark={StaticResource TextSecondaryDark}}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding EditPlanCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
             </Grid>
 
             <!-- Plan hero -->
-            <Grid Grid.Row="1" RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto">
+            <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+
                 <Label Grid.Row="0" Grid.Column="0"
                        Text="{Binding Plan.Name}"
                        Style="{StaticResource TitleLabel}"
-                       LineBreakMode="TailTruncation" VerticalOptions="Center"/>
+                       LineBreakMode="TailTruncation"
+                       VerticalOptions="Center"/>
+
                 <Border Grid.Row="0" Grid.Column="1"
                         Padding="10,5" VerticalOptions="Center" Margin="8,4,0,0"
                         IsVisible="{Binding Plan.IsActive}"
@@ -66,12 +77,40 @@
                            FontSize="11" FontAttributes="Bold"
                            TextColor="{StaticResource Success}"/>
                 </Border>
+
                 <Label Grid.Row="1" Grid.ColumnSpan="2"
                        Text="{Binding Plan.Notes}"
                        Style="{StaticResource BodyLabel}"
                        Margin="0,6,0,0"
                        IsVisible="{Binding Plan.Notes,
                            Converter={StaticResource IsNotNullConverter}}"/>
+
+                <FlexLayout Grid.Row="2" Grid.ColumnSpan="2"
+                            Wrap="Wrap" Direction="Row"
+                            Margin="0,12,0,0"
+                            BindableLayout.ItemsSource="{Binding Plan.DaysOfWeekShortName}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Border Padding="10,5" Margin="0,0,6,4"
+                                    StrokeThickness="1"
+                                    BackgroundColor="{AppThemeBinding
+                                        Light={StaticResource SurfaceElevatedLight},
+                                        Dark={StaticResource SurfaceElevatedDark}}"
+                                    Stroke="{AppThemeBinding
+                                        Light={StaticResource DividerLight},
+                                        Dark={StaticResource DividerDark}}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Label Text="{Binding .}"
+                                       FontSize="12" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding
+                                           Light={StaticResource TextSecondaryLight},
+                                           Dark={StaticResource TextSecondaryDark}}"/>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
             </Grid>
 
             <BoxView Grid.RowSpan="2" Style="{StaticResource Divider}" VerticalOptions="End"/>
@@ -96,7 +135,6 @@
                            FontAttributes="Bold" CharacterSpacing="2"
                            Margin="0,0,0,12"/>
 
-                    <!-- Empty state -->
                     <VerticalStackLayout
                         IsVisible="{Binding Days.Count,
                             Converter={StaticResource IntEqualsZeroBoolConverter}}"
@@ -109,13 +147,12 @@
                         <Label Text="Sin días configurados"
                                Style="{StaticResource SubtitleLabel}"
                                HorizontalOptions="Center"/>
-                        <Label Text="Edita el plan para agregar días de entrenamiento."
+                        <Label Text="Aún no hay días configurados para este plan."
                                Style="{StaticResource BodyLabel}"
                                HorizontalOptions="Center"
                                HorizontalTextAlignment="Center"/>
                     </VerticalStackLayout>
 
-                    <!-- Day cards -->
                     <VerticalStackLayout
                         Spacing="10"
                         BindableLayout.ItemsSource="{Binding Days}">
@@ -128,18 +165,12 @@
                                                 Path=BindingContext.OpenDayCommand}"
                                             CommandParameter="{Binding .}"/>
                                     </Border.GestureRecognizers>
-
-                                    <Grid ColumnDefinitions="4,*,Auto" Padding="0,14,16,14">
-
-                                        <!-- Accent bar -->
+                                    <Grid ColumnDefinitions="4,16,*,Auto" Padding="0,14,16,14">
                                         <BoxView Grid.Column="0"
                                                  WidthRequest="4"
                                                  BackgroundColor="{StaticResource Primary}"
-                                                 VerticalOptions="Fill"
-                                                 Margin="0,0,14,0"/>
-
-                                        <!-- Nombre + notas -->
-                                        <VerticalStackLayout Grid.Column="1" Spacing="3">
+                                                 VerticalOptions="Fill"/>
+                                        <VerticalStackLayout Grid.Column="2" Spacing="3">
                                             <Label Text="{Binding DayName}"
                                                    Style="{StaticResource SubtitleLabel}"
                                                    FontSize="16"/>
@@ -147,27 +178,18 @@
                                                    Style="{StaticResource BodyLabel}"
                                                    IsVisible="{Binding Day.Notes,
                                                        Converter={StaticResource IsNotNullConverter}}"/>
-
-                                            <!-- Contador ejercicios -->
                                             <HorizontalStackLayout Spacing="5" Margin="0,2,0,0">
                                                 <Label Text="{x:Static constants:FA.Dumbbell}"
                                                        FontFamily="FASolid" FontSize="11"
                                                        TextColor="{StaticResource Primary}"
                                                        VerticalOptions="Center"/>
-                                                <Label FontSize="12"
+                                                <Label Text="{Binding ExerciseCount, StringFormat='{0} ejercicios'}"
+                                                       FontSize="12"
                                                        TextColor="{StaticResource Primary}"
-                                                       VerticalOptions="Center">
-                                                    <Label.Text>
-                                                        <MultiBinding StringFormat="{}{0} ejercicio(s)">
-                                                            <Binding Path="ExerciseCount"/>
-                                                        </MultiBinding>
-                                                    </Label.Text>
-                                                </Label>
+                                                       VerticalOptions="Center"/>
                                             </HorizontalStackLayout>
                                         </VerticalStackLayout>
-
-                                        <!-- Chevron -->
-                                        <Label Grid.Column="2"
+                                        <Label Grid.Column="3"
                                                Text="{x:Static constants:FA.AngleRight}"
                                                FontFamily="FASolid" FontSize="16"
                                                VerticalOptions="Center"
@@ -185,26 +207,19 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- ── ACTION BAR ── -->
+        <!-- ── ACTION BAR — solo visible si el plan no está activo ── -->
         <Grid Grid.Row="2"
-              ColumnDefinitions="*,*"
               Padding="20,12,20,36"
-              ColumnSpacing="12"
               BackgroundColor="{AppThemeBinding
                   Light={StaticResource SurfaceLight},
-                  Dark={StaticResource SurfaceDark}}">
-            <BoxView Grid.ColumnSpan="2"
-                     Style="{StaticResource Divider}"
+                  Dark={StaticResource SurfaceDark}}"
+              IsVisible="{Binding IsNotActive}">
+            <BoxView Style="{StaticResource Divider}"
                      VerticalOptions="Start" Margin="0,-12,0,0"/>
-            <Button Grid.Column="0"
-                    Text="{Binding ActivateButtonText}"
+            <Button Text="Activar plan"
                     Style="{StaticResource PrimaryButton}"
                     Command="{Binding ActivatePlanCommand}"
-                    IsEnabled="{Binding IsNotActive}"/>
-            <Button Grid.Column="1"
-                    Text="Editar plan"
-                    Style="{StaticResource SecondaryButton}"
-                    Command="{Binding EditPlanCommand}"/>
+                    Margin="0,12,0,0"/>
         </Grid>
 
     </Grid>

@@ -1,4 +1,3 @@
-using LevelUp.Mobile.Features.Plans.Models;
 using LevelUp.Mobile.Features.Plans.ViewModels;
 
 namespace LevelUp.Mobile.Features.Plans.Pages;
@@ -15,6 +14,13 @@ public partial class PlanEditPage : ContentPage
     {
         base.OnAppearing();
         if (BindingContext is PlanEditViewModel vm)
-            vm.LoadCommand.Execute(null);
+            vm.LoadIfNeeded();
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        if (BindingContext is PlanEditViewModel vm)
+            vm.ResetLoad();
     }
 }

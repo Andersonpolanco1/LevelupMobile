@@ -154,23 +154,4 @@ public class WeeklyPlanService(
 
     public Task<int> GetExerciseCountForDayAsync(Guid dayId)
         => repo.GetExerciseCountForDayAsync(dayId);
-
-    // WeeklyPlanService.cs — método temporal de limpieza
-    public async Task DeduplicateDaysAsync(Guid planId)
-    {
-        var days = await repo.GetDaysAsync(planId);
-        var seen = new HashSet<DayOfWeek>();
-
-        foreach (var day in days.OrderBy(d => d.CreatedAt))
-        {
-            if (!seen.Add(day.DayOfWeek))
-            {
-                // Eliminar de la tabla WeeklyPlanDay
-                await repo.DeleteDayAsync(day.Id);
-
-                // Eliminar de la cola de sync — no queremos sincronizar basura
-                await queue.RemoveByEntityIdAsync(day.Id);
-            }
-        }
-    }
 }

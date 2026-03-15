@@ -34,7 +34,6 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
             await RunAsync(async () =>
             {
                 await planService.CreateAsync(userId, Name, Notes);
-                await ShowSuccessAsync("Plan creado correctamente");
                 await Shell.Current.GoToAsync("///Plans");
             });
 

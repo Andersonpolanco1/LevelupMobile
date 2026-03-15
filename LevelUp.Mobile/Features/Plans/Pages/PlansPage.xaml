@@ -16,19 +16,21 @@
         <Grid Grid.Row="0"
               ColumnDefinitions="*,Auto"
               Margin="0,0,0,16">
+
             <VerticalStackLayout Spacing="4">
                 <Label Text="{local:Localize MyPlans}"
-                       Style="{StaticResource TitleLabel}" />
+                       Style="{StaticResource TitleLabel}"/>
                 <Label Text="{local:Localize ManageWeeklyPlans}"
-                       Style="{StaticResource BodyLabel}" />
+                       Style="{StaticResource BodyLabel}"/>
             </VerticalStackLayout>
 
+            <!-- Cruz naranja plana, sin círculo ni borde -->
             <Label Grid.Column="1"
-                   Text="{x:Static constants:FA.CirclePlus}"
+                   Text="{x:Static constants:FA.Plus}"
                    FontFamily="FASolid"
-                   FontSize="28"
+                   FontSize="24"
                    TextColor="{StaticResource Primary}"
-                   VerticalOptions="Start"
+                   VerticalOptions="Center"
                    HorizontalOptions="End">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding CreatePlanCommand}"/>
@@ -43,10 +45,11 @@
             SelectionMode="None">
 
             <CollectionView.EmptyView>
-                <VerticalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                <VerticalStackLayout Spacing="8"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center">
                     <Label Text="{x:Static constants:FA.CalendarDays}"
-                           FontFamily="FASolid"
-                           FontSize="40"
+                           FontFamily="FASolid" FontSize="40"
                            TextColor="{StaticResource Primary}"
                            HorizontalOptions="Center"/>
                     <Label Text="{local:Localize NoPlansYet}"
@@ -64,29 +67,35 @@
                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
                             <VerticalStackLayout Spacing="4">
                                 <Label Text="{Binding Name}"
-                                       Style="{StaticResource SubtitleLabel}" />
+                                       Style="{StaticResource SubtitleLabel}"/>
+
+                                <!-- Días más visibles con TextSecondary -->
                                 <Label Text="{Binding DaysText}"
-                                       Style="{StaticResource CaptionLabel}" />
+                                       FontSize="12"
+                                       TextColor="{AppThemeBinding
+                                           Light={StaticResource TextSecondaryLight},
+                                           Dark={StaticResource TextSecondaryDark}}"/>
+
                                 <Label Text="{local:Localize Active}"
                                        TextColor="{StaticResource Primary}"
                                        FontAttributes="Bold"
                                        FontSize="12"
-                                       IsVisible="{Binding IsActive}" />
+                                       IsVisible="{Binding IsActive}"/>
                             </VerticalStackLayout>
 
                             <Label Grid.Column="1"
                                    Text="{x:Static constants:FA.AngleRight}"
-                                   FontFamily="FASolid"
-                                   FontSize="18"
-                                   TextColor="{AppThemeBinding 
-                                       Light={StaticResource TextDisabledLight}, 
+                                   FontFamily="FASolid" FontSize="18"
+                                   TextColor="{AppThemeBinding
+                                       Light={StaticResource TextDisabledLight},
                                        Dark={StaticResource TextDisabledDark}}"
-                                   VerticalOptions="Center" />
+                                   VerticalOptions="Center"/>
                         </Grid>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenPlanCommand}"
-                                CommandParameter="{Binding .}" />
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                    Path=BindingContext.OpenPlanCommand}"
+                                CommandParameter="{Binding .}"/>
                         </Border.GestureRecognizers>
                     </Border>
                 </DataTemplate>

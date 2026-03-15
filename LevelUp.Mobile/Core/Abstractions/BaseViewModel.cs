@@ -76,22 +76,26 @@ namespace LevelUp.Mobile.Core.Abstractions
             {
                 await action();
             }
-            catch (ApiException ex)
+            catch (ApiException e)
             {
-                if (ex.FieldErrors?.Count > 0)
+                if (e.FieldErrors?.Count > 0)
                 {
-                    FieldErrors = ex.FieldErrors.ToDictionary(
+                    FieldErrors = e.FieldErrors.ToDictionary(
                         f => char.ToUpper(f.Field[0]) + f.Field[1..],
                         f => f.Message);
                     NotifyFieldErrorsChanged();
                 }
                 else
                 {
-                    await ShowErrorAsync(ex.Message ?? "Error inesperado");
+                    await ShowErrorAsync(e.Message ?? "Error inesperado");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"[ERROR] {ex.GetType().Name}: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[STACK] {ex.StackTrace}");
+                if (ex.InnerException is not null)
+                    System.Diagnostics.Debug.WriteLine($"[RunAsync INNER] {ex.InnerException.GetType().Name}: {ex.InnerException.Message}");
                 await ShowErrorAsync("Ocurrió un error inesperado");
             }
             finally

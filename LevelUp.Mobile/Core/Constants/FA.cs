@@ -37,5 +37,7 @@
         public const string NoteSticky = "\uf249";         // Notas / sticky note
         public const string TriangleExclamation = "\uf071"; // Advertencia
         public const string CalendarXmark = "\ue07f";      // Calendario sin días
+        public const string PenToSquare = "\uf044";  // Editar / lápiz
+        public const string Plus = "\uf067"; // Cruz simple sin círculo
     }
 }
