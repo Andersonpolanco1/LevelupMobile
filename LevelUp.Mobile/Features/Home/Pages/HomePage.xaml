@@ -12,6 +12,7 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="24">
 
+            <!-- Saludo -->
             <VerticalStackLayout Spacing="4">
                 <Label Text="{Binding Greeting, StringFormat='{0},'}"
                        Style="{StaticResource CaptionLabel}"/>
@@ -29,8 +30,7 @@
                     IsVisible="{Binding HasNoPlan}">
                 <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
                     <Label Text="{x:Static constants:FA.Dumbbell}"
-                           FontFamily="FASolid"
-                           FontSize="40"
+                           FontFamily="FASolid" FontSize="40"
                            TextColor="{StaticResource Primary}"
                            HorizontalOptions="Center"/>
                     <Label Text="{local:Localize NoActivePlan}"
@@ -51,8 +51,7 @@
                     IsVisible="{Binding HasRestDay}">
                 <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
                     <Label Text="{x:Static constants:FA.Moon}"
-                           FontFamily="FASolid"
-                           FontSize="40"
+                           FontFamily="FASolid" FontSize="40"
                            TextColor="{StaticResource Primary}"
                            HorizontalOptions="Center"/>
                     <Label Text="{local:Localize RestDay}"
@@ -63,6 +62,25 @@
                            HorizontalTextAlignment="Center"/>
                 </VerticalStackLayout>
             </Border>
+
+            <!-- Día configurado pero sin ejercicios — sin card, ícono naranja -->
+            <VerticalStackLayout
+                Spacing="8"
+                HorizontalOptions="Center"
+                IsVisible="{Binding HasDayWithNoExercises}"
+                Margin="0,24,0,0">
+                <Label Text="{x:Static constants:FA.Dumbbell}"
+                       FontFamily="FASolid" FontSize="40"
+                       TextColor="{StaticResource Primary}"
+                       HorizontalOptions="Center"/>
+                <Label Text="Sin ejercicios para hoy"
+                       Style="{StaticResource SubtitleLabel}"
+                       HorizontalOptions="Center"/>
+                <Label Text="El plan activo, hoy no tiene ejercicios asignados."
+                       Style="{StaticResource BodyLabel}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
 
             <!-- Plan de hoy -->
             <VerticalStackLayout Spacing="16"
@@ -77,8 +95,9 @@
                            Style="{StaticResource BodyLabel}"/>
                 </VerticalStackLayout>
 
-                <VerticalStackLayout BindableLayout.ItemsSource="{Binding TodayPlan.Exercises}"
-                                     Spacing="12">
+                <VerticalStackLayout
+                    BindableLayout.ItemsSource="{Binding TodayPlan.Exercises}"
+                    Spacing="12">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="models:TodayExerciseDto">
                             <Border Style="{StaticResource CardBorder}">
@@ -91,8 +110,7 @@
                                             VerticalOptions="Center">
                                         <Label Text="{Binding Order}"
                                                TextColor="White"
-                                               FontAttributes="Bold"
-                                               FontSize="14"
+                                               FontAttributes="Bold" FontSize="14"
                                                HorizontalOptions="Center"
                                                VerticalOptions="Center"/>
                                     </Border>
@@ -104,7 +122,8 @@
                                                Style="{StaticResource SubtitleLabel}"
                                                FontSize="15"/>
                                         <HorizontalStackLayout Spacing="12">
-                                            <Label IsVisible="{Binding SetsPlanned, Converter={StaticResource IsNotNullConverter}}"
+                                            <Label IsVisible="{Binding SetsPlanned,
+                                                       Converter={StaticResource IsNotNullConverter}}"
                                                    Style="{StaticResource CaptionLabel}">
                                                 <Label.FormattedText>
                                                     <FormattedString>
@@ -116,7 +135,8 @@
                                                     </FormattedString>
                                                 </Label.FormattedText>
                                             </Label>
-                                            <Label IsVisible="{Binding RepsPlanned, Converter={StaticResource IsNotNullConverter}}"
+                                            <Label IsVisible="{Binding RepsPlanned,
+                                                       Converter={StaticResource IsNotNullConverter}}"
                                                    Style="{StaticResource CaptionLabel}">
                                                 <Label.FormattedText>
                                                     <FormattedString>
@@ -136,26 +156,10 @@
                     </BindableLayout.ItemTemplate>
                 </VerticalStackLayout>
 
-                <Border Style="{StaticResource CardBorder}"
-                        BackgroundColor="{StaticResource Primary}">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding StartWorkoutCommand}"/>
-                    </Border.GestureRecognizers>
-                    <HorizontalStackLayout Spacing="10"
-                                           HorizontalOptions="Center"
-                                           Padding="16,12">
-                        <Label Text="&#xf04b;"
-                               FontFamily="FASolid"
-                               TextColor="White"
-                               FontSize="16"
-                               VerticalOptions="Center"/>
-                        <Label Text="{local:Localize StartWorkout}"
-                               TextColor="White"
-                               FontAttributes="Bold"
-                               FontSize="16"
-                               VerticalOptions="Center"/>
-                    </HorizontalStackLayout>
-                </Border>
+                <!-- Botón iniciar workout -->
+                <Button Text="{local:Localize StartWorkout}"
+                        Style="{StaticResource PrimaryButton}"
+                        Command="{Binding StartWorkoutCommand}"/>
 
             </VerticalStackLayout>
 
