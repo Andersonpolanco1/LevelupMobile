@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using LevelUp.Mobile.Core.Abstractions;
 using LevelUp.Mobile.Core.Enums;
+using LevelUp.Mobile.Core.Settings;
 using LevelUp.Mobile.Features.Home.Models;
 using LevelUp.Mobile.Infrastructure.Token;
 using LevelUp.Mobile.Services;
@@ -17,11 +18,17 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
         {
             _homeService = homeService;
             _tokenService = tokenService;
-            LocalizationService.Instance.PropertyChanged += (_, _) => OnPropertyChanged(nameof(Greeting));
+            LocalizationService.Instance.PropertyChanged += (_, _) =>
+                OnPropertyChanged(nameof(Greeting));
+
+            // Cargar estado inicial del tema
+            _isDarkTheme = (Application.Current?.UserAppTheme ?? AppTheme.Dark) != AppTheme.Light;
         }
 
         [ObservableProperty] private string? _userName;
+        [ObservableProperty] private string? _profilePictureUrl;
         [ObservableProperty] private Guid? _userId;
+        [ObservableProperty] private bool _isDarkTheme;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsWorkoutVisible))]
@@ -35,7 +42,6 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
         [NotifyPropertyChangedFor(nameof(IsWorkoutVisible))]
         private bool _hasNoPlan;
 
-        // ← Nuevo estado: hay día configurado pero sin ejercicios
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsWorkoutVisible))]
         private bool _hasDayWithNoExercises;
@@ -49,6 +55,26 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
             !HasDayWithNoExercises &&
             TodayPlan.Exercises.Count > 0;
 
+        // ── Toggle tema ───────────────────────────────────────────────
+
+        [RelayCommand]
+        private void ToggleTheme()
+        {
+            var newTheme = !IsDarkTheme ? AppTheme.Dark : AppTheme.Light;
+
+            // 1. Aplicar tema al sistema primero
+            if (Application.Current is not null)
+                Application.Current.UserAppTheme = newTheme;
+
+            // 2. Persistir preferencia
+            AppPreferences.SetTheme(newTheme);
+
+            // 3. Notificar al ViewModel al final → dispara PropertyChanged → animación
+            IsDarkTheme = !IsDarkTheme;
+        }
+
+        // ── Inicializar ───────────────────────────────────────────────
+
         [RelayCommand]
         private async Task InitializeAsync()
         {
@@ -57,8 +83,17 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
             try
             {
                 var claims = await _tokenService.GetUserClaimsAsync();
-                if (claims.TryGetValue("userName", out var name)) UserName = name;
-                if (claims.TryGetValue("sub", out var id)) UserId = Guid.Parse(id);
+
+                if (claims.TryGetValue("userName", out var name))
+                    UserName = name;
+
+                if (claims.TryGetValue("sub", out var id))
+                    UserId = Guid.Parse(id);
+
+                if (claims.TryGetValue("picture", out var pic) &&
+                    !string.IsNullOrEmpty(pic))
+                    ProfilePictureUrl = pic;
+
                 if (UserId is null) return;
 
                 var today = await _homeService.GetTodayAsync(UserId.Value, Language.Spanish);
@@ -79,19 +114,14 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
                     }).ToList()
                 };
 
-                // ── Resetear todos los estados ────────────────────────
                 HasNoPlan = false;
                 HasRestDay = false;
                 HasDayWithNoExercises = false;
 
                 if (TodayPlan is null)
-                {
                     HasNoPlan = true;
-                }
                 else if (TodayPlan.Exercises.Count == 0)
-                {
                     HasDayWithNoExercises = true;
-                }
             }
             catch (Exception ex)
             {
@@ -104,16 +134,25 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
         }
 
         [RelayCommand]
+        private async Task OpenSettingsAsync()
+            => await Shell.Current.GoToAsync("///Profile");
+
+        [RelayCommand]
         private async Task CreatePlanAsync()
-            => await Shell.Current.GoToAsync("///Plans");
+            => await Shell.Current.GoToAsync("Plans/Create");
+
+        [RelayCommand]
+        private async Task StartWorkoutAsync()
+            => await Shell.Current.GoToAsync("Workout/Active");
+
         private static string GetGreeting()
         {
             var key = DateTime.Now.Hour switch
             {
-                >= 5 and < 12 => "GoodMorning",   // 5am - 11:59am
-                >= 12 and < 17 => "GoodAfternoon", // 12pm - 4:59pm
-                >= 17 and < 21 => "GoodEvening",   // 5pm - 8:59pm
-                _ => "GoodNight"      // 9pm - 4:59am
+                >= 5 and < 12 => "GoodMorning",
+                >= 12 and < 17 => "GoodAfternoon",
+                >= 17 and < 21 => "GoodEvening",
+                _ => "GoodNight"
             };
             return LocalizationService.Instance[key];
         }

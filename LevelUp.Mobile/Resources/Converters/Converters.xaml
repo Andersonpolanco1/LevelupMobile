@@ -10,5 +10,9 @@
     <converters:IsNotNullConverter                x:Key="IsNotNullConverter" />
     <converters:AllTrueBoolConverter              x:Key="AllTrueBoolConverter"/>
     <converters:IntGreaterThanZeroBoolConverter   x:Key="IntGreaterThanZeroBoolConverter"/>
+    <converters:InitialsConverter   x:Key="InitialsConverter" />
+    <converters:IsNullConverter     x:Key="IsNullConverter" />
+    <converters:BoolToStringConverter x:Key="BoolToStringConverter" />
+    <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
 
 </ResourceDictionary>

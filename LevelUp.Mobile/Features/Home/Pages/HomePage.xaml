@@ -3,166 +3,273 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Home.ViewModels"
              xmlns:models="clr-namespace:LevelUp.Mobile.Features.Home.Models"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:local="clr-namespace:LevelUp.Mobile.Core.Extensions"
              xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants"
              x:Class="LevelUp.Mobile.Features.Home.Pages.HomePage"
              x:DataType="vm:HomeViewModel">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="24">
+    <Grid RowDefinitions="Auto,*">
 
-            <!-- Saludo -->
-            <VerticalStackLayout Spacing="4">
-                <Label Text="{Binding Greeting, StringFormat='{0},'}"
-                       Style="{StaticResource CaptionLabel}"/>
-                <Label Text="{Binding UserName}"
-                       Style="{StaticResource TitleLabel}"/>
-            </VerticalStackLayout>
+        <!-- ── HEADER ── -->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="Auto,*,Auto"
+              Padding="20,16,20,14"
+              BackgroundColor="{AppThemeBinding
+                  Light={StaticResource SurfaceLight},
+                  Dark={StaticResource SurfaceDark}}">
 
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               Color="{StaticResource Primary}"
+            <!-- Avatar + saludo → tap abre settings -->
+            <HorizontalStackLayout Grid.Column="0"
+                                   Spacing="10"
+                                   VerticalOptions="Center">
+                <HorizontalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OpenSettingsCommand}"/>
+                </HorizontalStackLayout.GestureRecognizers>
+
+                <!-- Foto de perfil circular -->
+                <Border WidthRequest="38" HeightRequest="38"
+                        StrokeThickness="0"
+                        BackgroundColor="{StaticResource Primary}">
+                    <Border.StrokeShape>
+                        <Ellipse/>
+                    </Border.StrokeShape>
+                    <Grid>
+                        <Label Text="{Binding UserName,
+                                   Converter={StaticResource InitialsConverter}}"
+                               TextColor="White"
+                               FontSize="14" FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding ProfilePictureUrl,
+                                   Converter={StaticResource IsNullConverter}}"/>
+                        <Image Source="{Binding ProfilePictureUrl}"
+                               Aspect="AspectFill"
+                               IsVisible="{Binding ProfilePictureUrl,
+                                   Converter={StaticResource IsNotNullConverter}}"/>
+                    </Grid>
+                </Border>
+
+                <!-- Saludo + nombre de usuario -->
+                <VerticalStackLayout Spacing="1" VerticalOptions="Center">
+                    <Label Text="{Binding Greeting}"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{AppThemeBinding
+                               Light={StaticResource TextPrimaryLight},
+                               Dark={StaticResource TextPrimaryDark}}"/>
+                    <Label Text="{Binding UserName}"
+                           FontSize="11"
+                           TextColor="{AppThemeBinding
+                               Light={StaticResource TextSecondaryLight},
+                               Dark={StaticResource TextSecondaryDark}}"/>
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+
+            <!-- ── TOGGLE TEMA (pill moderno) ── -->
+            <Border Grid.Column="2"
+                    x:Name="ThemeTogglePill"
+                    WidthRequest="56" HeightRequest="28"
+                    StrokeThickness="1.5"
+                    Stroke="{AppThemeBinding
+                        Light={StaticResource TextSecondaryLight},
+                        Dark={StaticResource TextSecondaryDark}}"
+                    BackgroundColor="{AppThemeBinding
+                        Light={StaticResource SurfaceLight},
+                        Dark={StaticResource SurfaceDark}}"
+                    VerticalOptions="Center"
+                    HorizontalOptions="End">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14"/>
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleThemeCommand}"/>
+                </Border.GestureRecognizers>
+
+                <Grid ColumnDefinitions="28,28">
+                    <!-- Ícono Sol -->
+                    <Label Grid.Column="0"
+                           Text="☀️"
+                           FontSize="12"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+
+                    <!-- Ícono Luna -->
+                    <Label Grid.Column="1"
+                           Text="🌙"
+                           FontSize="12"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+
+                    <!-- Thumb deslizante -->
+                    <Border x:Name="ThumbIndicator"
+                            Grid.Column="0"
+                            WidthRequest="22" HeightRequest="22"
+                            StrokeThickness="0"
+                            BackgroundColor="{StaticResource Primary}"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            TranslationX="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="11"/>
+                        </Border.StrokeShape>
+                        <Label x:Name="ThumbIcon"
+                               FontSize="11"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <BoxView Grid.ColumnSpan="3"
+                     Style="{StaticResource Divider}"
+                     VerticalOptions="End"/>
+        </Grid>
+
+        <!-- ── CONTENIDO ── -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20" Spacing="24">
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   Color="{StaticResource Primary}"
+                                   HorizontalOptions="Center"/>
+
+                <!-- Sin plan activo -->
+                <Border Style="{StaticResource CardBorder}"
+                        IsVisible="{Binding HasNoPlan}">
+                    <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                        <Label Text="{x:Static constants:FA.Dumbbell}"
+                               FontFamily="FASolid" FontSize="40"
+                               TextColor="{StaticResource Primary}"
                                HorizontalOptions="Center"/>
+                        <Label Text="{local:Localize NoActivePlan}"
+                               Style="{StaticResource SubtitleLabel}"
+                               HorizontalOptions="Center"/>
+                        <Label Text="{local:Localize NoActivePlanSub}"
+                               Style="{StaticResource BodyLabel}"
+                               HorizontalTextAlignment="Center"/>
+                        <Button Text="{local:Localize CreatePlan}"
+                                Style="{StaticResource PrimaryButton}"
+                                Margin="0,8,0,0"
+                                Command="{Binding CreatePlanCommand}"/>
+                    </VerticalStackLayout>
+                </Border>
 
-            <!-- Sin plan activo -->
-            <Border Style="{StaticResource CardBorder}"
-                    IsVisible="{Binding HasNoPlan}">
-                <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                <!-- Día de descanso -->
+                <Border Style="{StaticResource CardBorder}"
+                        IsVisible="{Binding HasRestDay}">
+                    <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                        <Label Text="{x:Static constants:FA.Moon}"
+                               FontFamily="FASolid" FontSize="40"
+                               TextColor="{StaticResource Primary}"
+                               HorizontalOptions="Center"/>
+                        <Label Text="{local:Localize RestDay}"
+                               Style="{StaticResource SubtitleLabel}"
+                               HorizontalOptions="Center"/>
+                        <Label Text="{local:Localize RestDaySub}"
+                               Style="{StaticResource BodyLabel}"
+                               HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Sin ejercicios para hoy -->
+                <VerticalStackLayout
+                    Spacing="8"
+                    HorizontalOptions="Center"
+                    IsVisible="{Binding HasDayWithNoExercises}"
+                    Margin="0,24,0,0">
                     <Label Text="{x:Static constants:FA.Dumbbell}"
                            FontFamily="FASolid" FontSize="40"
                            TextColor="{StaticResource Primary}"
                            HorizontalOptions="Center"/>
-                    <Label Text="{local:Localize NoActivePlan}"
+                    <Label Text="{local:Localize NoExercisesToday}"
                            Style="{StaticResource SubtitleLabel}"
                            HorizontalOptions="Center"/>
-                    <Label Text="{local:Localize NoActivePlanSub}"
+                    <Label Text="{local:Localize NoExercisesTodaySub}"
                            Style="{StaticResource BodyLabel}"
+                           HorizontalOptions="Center"
                            HorizontalTextAlignment="Center"/>
-                    <Button Text="{local:Localize CreatePlan}"
+                </VerticalStackLayout>
+
+                <!-- Plan de hoy -->
+                <VerticalStackLayout Spacing="16"
+                                     IsVisible="{Binding IsWorkoutVisible}">
+
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="{local:Localize TodayPlanCaption}"
+                               Style="{StaticResource CaptionLabel}"/>
+                        <Label Text="{Binding TodayPlan.PlanName}"
+                               Style="{StaticResource SubtitleLabel}"/>
+                        <Label Text="{Binding TodayPlan.DayName}"
+                               Style="{StaticResource BodyLabel}"/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout
+                        BindableLayout.ItemsSource="{Binding TodayPlan.Exercises}"
+                        Spacing="12">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:TodayExerciseDto">
+                                <Border Style="{StaticResource CardBorder}">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                        <Border Grid.Column="0"
+                                                BackgroundColor="{StaticResource Primary}"
+                                                StrokeShape="Ellipse"
+                                                WidthRequest="36" HeightRequest="36"
+                                                VerticalOptions="Center">
+                                            <Label Text="{Binding Order}"
+                                                   TextColor="White"
+                                                   FontAttributes="Bold" FontSize="14"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"/>
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1"
+                                                             Spacing="4"
+                                                             VerticalOptions="Center">
+                                            <Label Text="{Binding ExerciseName}"
+                                                   Style="{StaticResource SubtitleLabel}"
+                                                   FontSize="15"/>
+                                            <HorizontalStackLayout Spacing="12">
+                                                <Label IsVisible="{Binding SetsPlanned,
+                                                           Converter={StaticResource IsNotNullConverter}}"
+                                                       Style="{StaticResource CaptionLabel}">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="{Binding SetsPlanned}"
+                                                                  TextColor="{StaticResource Primary}"
+                                                                  FontAttributes="Bold"/>
+                                                            <Span Text=" "/>
+                                                            <Span Text="{local:Localize Sets}"/>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                                <Label IsVisible="{Binding RepsPlanned,
+                                                           Converter={StaticResource IsNotNullConverter}}"
+                                                       Style="{StaticResource CaptionLabel}">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="{Binding RepsPlanned}"
+                                                                  TextColor="{StaticResource Primary}"
+                                                                  FontAttributes="Bold"/>
+                                                            <Span Text=" "/>
+                                                            <Span Text="{local:Localize Reps}"/>
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <Button Text="{local:Localize StartWorkout}"
                             Style="{StaticResource PrimaryButton}"
-                            Margin="0,8,0,0"
-                            Command="{Binding CreatePlanCommand}"/>
+                            Command="{Binding StartWorkoutCommand}"/>
+
                 </VerticalStackLayout>
-            </Border>
-
-            <!-- Día de descanso -->
-            <Border Style="{StaticResource CardBorder}"
-                    IsVisible="{Binding HasRestDay}">
-                <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
-                    <Label Text="{x:Static constants:FA.Moon}"
-                           FontFamily="FASolid" FontSize="40"
-                           TextColor="{StaticResource Primary}"
-                           HorizontalOptions="Center"/>
-                    <Label Text="{local:Localize RestDay}"
-                           Style="{StaticResource SubtitleLabel}"
-                           HorizontalOptions="Center"/>
-                    <Label Text="{local:Localize RestDaySub}"
-                           Style="{StaticResource BodyLabel}"
-                           HorizontalTextAlignment="Center"/>
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- Día configurado pero sin ejercicios -->
-            <VerticalStackLayout
-                Spacing="8"
-                HorizontalOptions="Center"
-                IsVisible="{Binding HasDayWithNoExercises}"
-                Margin="0,24,0,0">
-                <Label Text="{x:Static constants:FA.Dumbbell}"
-                       FontFamily="FASolid" FontSize="40"
-                       TextColor="{StaticResource Primary}"
-                       HorizontalOptions="Center"/>
-                <Label Text="{local:Localize NoExercisesToday}"
-                       Style="{StaticResource SubtitleLabel}"
-                       HorizontalOptions="Center"/>
-                <Label Text="{local:Localize NoExercisesTodaySub}"
-                       Style="{StaticResource BodyLabel}"
-                       HorizontalOptions="Center"
-                       HorizontalTextAlignment="Center"/>
-            </VerticalStackLayout>
-
-            <!-- Plan de hoy -->
-            <VerticalStackLayout Spacing="16"
-                                 IsVisible="{Binding IsWorkoutVisible}">
-
-                <VerticalStackLayout Spacing="2">
-                    <Label Text="{local:Localize TodayPlanCaption}"
-                           Style="{StaticResource CaptionLabel}"/>
-                    <Label Text="{Binding TodayPlan.PlanName}"
-                           Style="{StaticResource SubtitleLabel}"/>
-                    <Label Text="{Binding TodayPlan.DayName}"
-                           Style="{StaticResource BodyLabel}"/>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout
-                    BindableLayout.ItemsSource="{Binding TodayPlan.Exercises}"
-                    Spacing="12">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="models:TodayExerciseDto">
-                            <Border Style="{StaticResource CardBorder}">
-                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-
-                                    <Border Grid.Column="0"
-                                            BackgroundColor="{StaticResource Primary}"
-                                            StrokeShape="Ellipse"
-                                            WidthRequest="36" HeightRequest="36"
-                                            VerticalOptions="Center">
-                                        <Label Text="{Binding Order}"
-                                               TextColor="White"
-                                               FontAttributes="Bold" FontSize="14"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center"/>
-                                    </Border>
-
-                                    <VerticalStackLayout Grid.Column="1"
-                                                         Spacing="4"
-                                                         VerticalOptions="Center">
-                                        <Label Text="{Binding ExerciseName}"
-                                               Style="{StaticResource SubtitleLabel}"
-                                               FontSize="15"/>
-                                        <HorizontalStackLayout Spacing="12">
-                                            <Label IsVisible="{Binding SetsPlanned,
-                                                       Converter={StaticResource IsNotNullConverter}}"
-                                                   Style="{StaticResource CaptionLabel}">
-                                                <Label.FormattedText>
-                                                    <FormattedString>
-                                                        <Span Text="{Binding SetsPlanned}"
-                                                              TextColor="{StaticResource Primary}"
-                                                              FontAttributes="Bold"/>
-                                                        <Span Text=" "/>
-                                                        <Span Text="{local:Localize Sets}"/>
-                                                    </FormattedString>
-                                                </Label.FormattedText>
-                                            </Label>
-                                            <Label IsVisible="{Binding RepsPlanned,
-                                                       Converter={StaticResource IsNotNullConverter}}"
-                                                   Style="{StaticResource CaptionLabel}">
-                                                <Label.FormattedText>
-                                                    <FormattedString>
-                                                        <Span Text="{Binding RepsPlanned}"
-                                                              TextColor="{StaticResource Primary}"
-                                                              FontAttributes="Bold"/>
-                                                        <Span Text=" "/>
-                                                        <Span Text="{local:Localize Reps}"/>
-                                                    </FormattedString>
-                                                </Label.FormattedText>
-                                            </Label>
-                                        </HorizontalStackLayout>
-                                    </VerticalStackLayout>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
-
-                <Button Text="{local:Localize StartWorkout}"
-                        Style="{StaticResource PrimaryButton}"
-                        Command="{Binding StartWorkoutCommand}"/>
 
             </VerticalStackLayout>
+        </ScrollView>
 
-        </VerticalStackLayout>
-    </ScrollView>
-
+    </Grid>
 </ContentPage>

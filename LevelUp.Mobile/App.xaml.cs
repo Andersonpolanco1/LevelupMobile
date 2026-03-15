@@ -28,14 +28,7 @@ namespace LevelUp.Mobile
             _database = database;
             _sessionService = sessionService;
 
-            var saved = Preferences.Get("AppTheme", "Dark");
-            UserAppTheme = saved switch
-            {
-                "Light" => AppTheme.Light,
-                "System" => AppTheme.Unspecified,
-                _ => AppTheme.Dark
-            };
-
+            UserAppTheme = AppPreferences.GetTheme();
             var language = AppPreferences.GetLanguage();
             LocalizationService.Instance.SetLanguage(language);
         }
