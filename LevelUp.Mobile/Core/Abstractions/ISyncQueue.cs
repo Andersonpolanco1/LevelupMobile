@@ -7,5 +7,8 @@ namespace LevelUp.Mobile.Core.Abstractions
     {
         Task EnqueueAsync<T>(T entity, SyncOperation operation)
             where T : ILocalEntity;
+
+        Task RemoveByEntityIdAsync(Guid entityId); 
+
     }
 }

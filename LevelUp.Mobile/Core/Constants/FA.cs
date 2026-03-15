@@ -9,6 +9,9 @@
         public const string ChartLine = "\uf201";      // Progreso / estadísticas
         public const string Bars = "\uf0c9";           // Menú hamburguesa
         public const string ArrowLeft = "\uf060";      // Volver atrás
+        public const string AngleLeft = "\uf104";          // Volver atrás (chevron)
+        public const string AngleUp = "\uf106";            // Chevron arriba
+        public const string AngleDown = "\uf107";          // Chevron abajo
         // — Workout & Ejercicios —
         public const string Play = "\uf04b";           // Iniciar Workout
         public const string CircleCheck = "\uf058";    // Ejercicio completado
@@ -30,5 +33,9 @@
         public const string AngleRight = "\uf105";     // Flecha / detalle
         public const string Xmark = "\uf00d";          // Cerrar / cancelar
         public const string Trash = "\uf1f8";          // Eliminar
+        public const string FloppyDisk = "\uf0c7";         // Guardar
+        public const string NoteSticky = "\uf249";         // Notas / sticky note
+        public const string TriangleExclamation = "\uf071"; // Advertencia
+        public const string CalendarXmark = "\ue07f";      // Calendario sin días
     }
 }

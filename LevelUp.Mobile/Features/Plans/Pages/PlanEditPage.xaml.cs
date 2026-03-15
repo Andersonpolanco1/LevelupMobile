@@ -1,11 +1,11 @@
-// Features/Plans/Pages/PlansPage.xaml.cs
+using LevelUp.Mobile.Features.Plans.Models;
 using LevelUp.Mobile.Features.Plans.ViewModels;
 
 namespace LevelUp.Mobile.Features.Plans.Pages;
 
-public partial class PlansPage : ContentPage
+public partial class PlanEditPage : ContentPage
 {
-    public PlansPage(PlansViewModel vm)
+    public PlanEditPage(PlanEditViewModel vm)
     {
         InitializeComponent();
         BindingContext = vm;
@@ -14,7 +14,7 @@ public partial class PlansPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        if (BindingContext is PlansViewModel vm)
-            vm.LoadPlansCommand.Execute(null);
+        if (BindingContext is PlanEditViewModel vm)
+            vm.LoadCommand.Execute(null);
     }
 }

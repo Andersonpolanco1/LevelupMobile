@@ -81,6 +81,9 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("Workout/Summary", typeof(WorkoutSummaryPage));
         Routing.RegisterRoute("Plans/Detail", typeof(PlanDetailPage));
         Routing.RegisterRoute("Plans/Create", typeof(CreatePlanPage));
+        Routing.RegisterRoute("PlanEdit", typeof(PlanEditPage));
+        Routing.RegisterRoute("PlanDayDetail", typeof(PlanDayDetailPage));
+
 
         UpdateTabTitles();
         LocalizationService.Instance.PropertyChanged += (_, _) => UpdateTabTitles();

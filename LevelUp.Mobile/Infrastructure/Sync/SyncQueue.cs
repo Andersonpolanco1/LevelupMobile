@@ -22,4 +22,11 @@ public class SyncQueue(LocalDatabase db) : ISyncQueue
         };
         await db.Connection.InsertAsync(item);
     }
+
+    public async Task RemoveByEntityIdAsync(Guid entityId)
+    {
+        await db.Connection.ExecuteAsync(
+            "DELETE FROM SyncQueueItem WHERE EntityId = ?",
+            entityId.ToString());
+    }
 }

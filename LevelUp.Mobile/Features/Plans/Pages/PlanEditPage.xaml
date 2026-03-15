@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Plans.ViewModels"
+    xmlns:models="clr-namespace:LevelUp.Mobile.Features.Plans.Models"
+    xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants"
+    x:Class="LevelUp.Mobile.Features.Plans.Pages.PlanEditPage"
+    x:DataType="vm:PlanEditViewModel"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- ── HEADER ── -->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="40,*"
+              Padding="20,56,20,20"
+              BackgroundColor="{AppThemeBinding
+                  Light={StaticResource SurfaceLight},
+                  Dark={StaticResource SurfaceDark}}">
+
+            <Label Grid.Column="0"
+                   Text="{x:Static constants:FA.AngleLeft}"
+                   FontFamily="FASolid" FontSize="22"
+                   TextColor="{StaticResource Primary}"
+                   VerticalOptions="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+
+            <Label Grid.Column="1"
+                   Text="Editar plan"
+                   Style="{StaticResource SubtitleLabel}"
+                   HorizontalOptions="Center" VerticalOptions="Center"/>
+
+            <BoxView Grid.ColumnSpan="2"
+                     Style="{StaticResource Divider}"
+                     VerticalOptions="End"/>
+        </Grid>
+
+        <!-- ── CONTENIDO ── -->
+        <ScrollView Grid.Row="1" Padding="20,20,20,40">
+            <VerticalStackLayout Spacing="24">
+
+                <!-- Loading -->
+                <ActivityIndicator
+                    IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                    Color="{StaticResource Primary}"
+                    HorizontalOptions="Center" Margin="0,32,0,0"/>
+
+                <VerticalStackLayout
+                    Spacing="24"
+                    IsVisible="{Binding IsBusy,
+                        Converter={StaticResource InvertedBoolConverter}}">
+
+                    <!-- ── Info del plan ── -->
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="INFORMACIÓN DEL PLAN"
+                               Style="{StaticResource CaptionLabel}"
+                               FontAttributes="Bold" CharacterSpacing="2"/>
+
+                        <Border Padding="12,0" StrokeThickness="1"
+                                BackgroundColor="{AppThemeBinding
+                                    Light={StaticResource SurfaceLight},
+                                    Dark={StaticResource SurfaceElevatedDark}}"
+                                Stroke="{AppThemeBinding
+                                    Light={StaticResource DividerLight},
+                                    Dark={StaticResource DividerDark}}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Entry Text="{Binding PlanName}"
+                                   Placeholder="Nombre del plan"/>
+                        </Border>
+
+                        <Border Padding="12,8" StrokeThickness="1"
+                                BackgroundColor="{AppThemeBinding
+                                    Light={StaticResource SurfaceLight},
+                                    Dark={StaticResource SurfaceElevatedDark}}"
+                                Stroke="{AppThemeBinding
+                                    Light={StaticResource DividerLight},
+                                    Dark={StaticResource DividerDark}}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Editor Text="{Binding PlanNotes}"
+                                    Placeholder="Notas del plan (opcional)"
+                                    AutoSize="TextChanges"
+                                    MinimumHeightRequest="80"/>
+                        </Border>
+
+                        <Button Text="Guardar cambios"
+                                Style="{StaticResource PrimaryButton}"
+                                Command="{Binding SavePlanInfoCommand}"
+                                HorizontalOptions="End"
+                                WidthRequest="180"/>
+                    </VerticalStackLayout>
+
+                    <!-- ── Días de entrenamiento ── -->
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="DÍAS DE ENTRENAMIENTO"
+                               Style="{StaticResource CaptionLabel}"
+                               FontAttributes="Bold" CharacterSpacing="2"/>
+
+                        <Label Text="Activa los días en que entrenas. Si un día tiene ejercicios, se te pedirá confirmación antes de eliminarlo."
+                               Style="{StaticResource BodyLabel}"
+                               Margin="0,0,0,4"/>
+
+                        <VerticalStackLayout
+                            Spacing="8"
+                            BindableLayout.ItemsSource="{Binding DayItems}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:DayEditItem">
+
+                                    <Border Style="{StaticResource CardBorder}" Padding="0">
+                                        <VerticalStackLayout Spacing="0">
+
+                                            <!-- Fila principal -->
+                                            <!-- Fila principal — tap en toda la fila activa el toggle -->
+                                            <Grid ColumnDefinitions="Auto,*,Auto,Auto"
+      ColumnSpacing="12"
+      Padding="16,12,16,12">
+
+                                                <Grid.GestureRecognizers>
+                                                    <TapGestureRecognizer
+            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                Path=BindingContext.TapDayCommand}"
+            CommandParameter="{Binding .}"/>
+                                                </Grid.GestureRecognizers>
+
+                                                <!-- Switch — solo visual, IsToggled refleja estado, sin Toggled event -->
+                                                <Switch Grid.Column="0"
+            IsToggled="{Binding IsEnabled}"
+            OnColor="{StaticResource Primary}"
+            ThumbColor="White"
+            VerticalOptions="Center"
+            InputTransparent="True"/>
+
+                                                <!-- Nombre + contador -->
+                                                <VerticalStackLayout Grid.Column="1"
+                         Spacing="2"
+                         VerticalOptions="Center">
+                                                    <Label Text="{Binding DisplayName}"
+               Style="{StaticResource SubtitleLabel}"
+               FontSize="16"/>
+                                                    <HorizontalStackLayout
+            Spacing="4"
+            IsVisible="{Binding IsEnabled}">
+                                                        <Label Text="{x:Static constants:FA.Dumbbell}"
+                   FontFamily="FASolid" FontSize="11"
+                   TextColor="{AppThemeBinding
+                       Light={StaticResource TextSecondaryLight},
+                       Dark={StaticResource TextSecondaryDark}}"
+                   VerticalOptions="Center"/>
+                                                        <Label FontSize="12"
+                   Text="{Binding ExerciseCount, StringFormat='{0} ejercicio(s)'}"
+                   TextColor="{AppThemeBinding
+                       Light={StaticResource TextSecondaryLight},
+                       Dark={StaticResource TextSecondaryDark}}"
+                   VerticalOptions="Center"/>
+                                                    </HorizontalStackLayout>
+                                                </VerticalStackLayout>
+
+                                                <!-- Badge advertencia ejercicios -->
+                                                <Border Grid.Column="2"
+            Padding="6,3"
+            StrokeThickness="0"
+            BackgroundColor="#3DF59E0B"
+            VerticalOptions="Center"
+            IsVisible="{Binding ExerciseCount,
+                Converter={StaticResource IntGreaterThanZeroBoolConverter}}">
+                                                    <Border.StrokeShape>
+                                                        <RoundRectangle CornerRadius="8"/>
+                                                    </Border.StrokeShape>
+                                                    <Label Text="{x:Static constants:FA.TriangleExclamation}"
+               FontFamily="FASolid" FontSize="13"
+               TextColor="{StaticResource Warning}"/>
+                                                </Border>
+
+                                                <!-- Chevron expandido (↑) -->
+                                                <Label Grid.Column="3"
+           Text="{x:Static constants:FA.AngleUp}"
+           FontFamily="FASolid" FontSize="14"
+           VerticalOptions="Center"
+           IsVisible="{Binding IsExpandedNotes}"
+           TextColor="{AppThemeBinding
+               Light={StaticResource TextDisabledLight},
+               Dark={StaticResource TextDisabledDark}}">
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                    Path=BindingContext.ToggleNotesCommand}"
+                CommandParameter="{Binding .}"/>
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+
+                                                <!-- Chevron colapsado (↓) solo si día activo -->
+                                                <Label Grid.Column="3"
+           Text="{x:Static constants:FA.AngleDown}"
+           FontFamily="FASolid" FontSize="14"
+           VerticalOptions="Center"
+           TextColor="{AppThemeBinding
+               Light={StaticResource TextDisabledLight},
+               Dark={StaticResource TextDisabledDark}}">
+                                                    <Label.IsVisible>
+                                                        <MultiBinding Converter="{StaticResource AllTrueBoolConverter}">
+                                                            <Binding Path="IsEnabled"/>
+                                                            <Binding Path="IsExpandedNotes"
+                         Converter="{StaticResource InvertedBoolConverter}"/>
+                                                        </MultiBinding>
+                                                    </Label.IsVisible>
+                                                    <Label.GestureRecognizers>
+                                                        <TapGestureRecognizer
+                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                    Path=BindingContext.ToggleNotesCommand}"
+                CommandParameter="{Binding .}"/>
+                                                    </Label.GestureRecognizers>
+                                                </Label>
+
+                                            </Grid>
+
+                                            <!-- Panel notas expandible -->
+                                            <VerticalStackLayout
+                                                IsVisible="{Binding IsExpandedNotes}"
+                                                Spacing="10"
+                                                Padding="16,0,16,14">
+                                                <BoxView Style="{StaticResource Divider}" Margin="0,0,0,4"/>
+                                                <Label Text="Notas del día (opcional)"
+                                                       Style="{StaticResource CaptionLabel}"
+                                                       FontAttributes="Bold"/>
+                                                <Border Padding="12,0" StrokeThickness="1"
+                                                        BackgroundColor="{AppThemeBinding
+                                                            Light={StaticResource SurfaceElevatedLight},
+                                                            Dark={StaticResource SurfaceElevatedDark}}"
+                                                        Stroke="{AppThemeBinding
+                                                            Light={StaticResource DividerLight},
+                                                            Dark={StaticResource DividerDark}}">
+                                                    <Border.StrokeShape>
+                                                        <RoundRectangle CornerRadius="12"/>
+                                                    </Border.StrokeShape>
+                                                    <Entry Text="{Binding Notes}"
+                                                           Placeholder="Ej: Fuerza, cardio ligero…"
+                                                           ReturnType="Done"/>
+                                                </Border>
+                                                <Button Text="Guardar notas"
+                                                        Style="{StaticResource PrimaryButton}"
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                                            Path=BindingContext.SaveDayNotesCommand}"
+                                                        CommandParameter="{Binding .}"
+                                                        HorizontalOptions="End"
+                                                        WidthRequest="160"/>
+                                            </VerticalStackLayout>
+
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

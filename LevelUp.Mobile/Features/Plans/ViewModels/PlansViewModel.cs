@@ -1,51 +1,59 @@
-﻿using LevelUp.Mobile.Core.Entities;
-using LevelUp.Mobile.Features.Plans.Models;
+﻿// Features/Plans/ViewModels/PlansViewModel.cs
+using LevelUp.Mobile.Core.Entities;
 using LevelUp.Mobile.Services;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace LevelUp.Mobile.Features.Plans.ViewModels
+namespace LevelUp.Mobile.Features.Plans.ViewModels;
+
+public class PlansViewModel
 {
-    public class PlansViewModel
+    private readonly WeeklyPlanService _service;
+
+    public ObservableCollection<WeeklyPlan> Plans { get; } = new();
+    public ICommand LoadPlansCommand { get; }
+    public ICommand CreatePlanCommand { get; }
+    public ICommand OpenPlanCommand { get; }
+
+    public PlansViewModel(WeeklyPlanService service)
     {
-        private readonly WeeklyPlanService _service;
+        _service = service;
 
-        public ObservableCollection<WeeklyPlan> Plans { get; } = new();
+        LoadPlansCommand = new Command(async () => await LoadPlansAsync());
 
-        public ICommand LoadPlansCommand { get; }
+        CreatePlanCommand = new Command(async () =>
+            await Shell.Current.GoToAsync("///Plans/Create"));
 
-        public ICommand CreatePlanCommand { get; }
+        OpenPlanCommand = new Command<WeeklyPlan>(async plan =>
+            await Shell.Current.GoToAsync($"///Plans/Detail?id={plan.Id}"));
+    }
 
-        public ICommand OpenPlanCommand { get; }
+    private async Task LoadPlansAsync()
+    {
+        Plans.Clear();
+        var plans = await _service.GetPlansAsync();
+        if (plans is null) return;
 
-        public PlansViewModel(WeeklyPlanService service)
+        foreach (var plan in plans)
         {
-            _service = service;
-
-            LoadPlansCommand = new Command(async () => await LoadPlans());
-
-            CreatePlanCommand = new Command(async () =>
-            {
-                await Shell.Current.GoToAsync("///Plans/Create");
-            });
-
-            OpenPlanCommand = new Command<WeeklyPlan>(async plan =>
-            {
-                await Shell.Current.GoToAsync($"///Plans/Detail?id={plan.Id}");
-            });
-        }
-
-        private async Task LoadPlans()
-        {
-            Plans.Clear();
-
-            var plans = await _service.GetPlansAsync();
-
-            if (plans == null)
-                return;
-
-            foreach (var plan in plans)
-                Plans.Add(plan);
+            var days = await _service.GetDaysAsync(plan.Id);
+            plan.DaysOfWeekShortName = days
+                .OrderBy(d => d.DayOfWeek)
+                .Select(d => GetShortName(d.DayOfWeek))
+                .ToArray();
+            Plans.Add(plan);
         }
     }
+
+    private static string GetShortName(DayOfWeek day) => day switch
+    {
+        DayOfWeek.Monday => "Lun",
+        DayOfWeek.Tuesday => "Mar",
+        DayOfWeek.Wednesday => "Mié",
+        DayOfWeek.Thursday => "Jue",
+        DayOfWeek.Friday => "Vie",
+        DayOfWeek.Saturday => "Sáb",
+        DayOfWeek.Sunday => "Dom",
+        _ => ""
+    };
 }

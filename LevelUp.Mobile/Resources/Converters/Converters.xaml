@@ -8,5 +8,6 @@
     <converters:IntEqualsZeroBoolConverter        x:Key="IntEqualsZeroBoolConverter" />
     <converters:StringNotNullOrEmptyBoolConverter x:Key="StringNotNullOrEmptyBoolConverter" />
     <converters:IsNotNullConverter                x:Key="IsNotNullConverter" />
+    <converters:AllTrueBoolConverter              x:Key="AllTrueBoolConverter"/>
 
 </ResourceDictionary>

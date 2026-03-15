@@ -47,4 +47,63 @@ public class WeeklyPlanRepository : BaseRepository<WeeklyPlan>
                      && !d.IsDeleted)
             .FirstOrDefaultAsync();
     }
+
+    // WeeklyPlanRepository.cs
+
+    public async Task InsertDayAsync(WeeklyPlanDay day)
+    {
+        var db = await GetDbAsync();
+        await db.InsertAsync(day);
+    }
+
+    public async Task DeleteDayAsync(Guid dayId)
+    {
+        var db = await GetDbAsync();
+        var day = await db.Table<WeeklyPlanDay>()
+            .Where(d => d.Id == dayId)
+            .FirstOrDefaultAsync();
+        if (day is null) return;
+        day.IsDeleted = true;
+        day.UpdatedAt = DateTime.UtcNow;
+        day.IsSynced = false;
+        await db.UpdateAsync(day);
+    }
+
+    public async Task UpdateDayAsync(WeeklyPlanDay day)
+    {
+        var db = await GetDbAsync();
+        await db.UpdateAsync(day);
+    }
+
+    public async Task UpdatePlanAsync(WeeklyPlan plan)
+    {
+        var db = await GetDbAsync();
+        await db.UpdateAsync(plan);
+    }
+
+    // Cuenta ejercicios activos de un día
+    public async Task<int> GetExerciseCountForDayAsync(Guid dayId)
+    {
+        var db = await GetDbAsync();
+        return await db.Table<WeeklyPlanExercise>()
+            .Where(e => e.WeeklyPlanDayId == dayId && !e.IsDeleted)
+            .CountAsync();
+    }
+
+    // WeeklyPlanRepository.cs
+    public async Task<WeeklyPlanDay?> GetDayByIdAsync(Guid dayId)
+    {
+        var db = await GetDbAsync();
+        return await db.Table<WeeklyPlanDay>()
+            .Where(d => d.Id == dayId && !d.IsDeleted)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<WeeklyPlanDay?> GetDayByIdRawAsync(Guid dayId)
+    {
+        var db = await GetDbAsync();
+        return await db.Table<WeeklyPlanDay>()
+            .Where(d => d.Id == dayId)
+            .FirstOrDefaultAsync();
+    }
 }
