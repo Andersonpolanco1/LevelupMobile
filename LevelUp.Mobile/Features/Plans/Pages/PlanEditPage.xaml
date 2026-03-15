@@ -5,6 +5,7 @@
     xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Plans.ViewModels"
     xmlns:models="clr-namespace:LevelUp.Mobile.Features.Plans.Models"
     xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants"
+    xmlns:local="clr-namespace:LevelUp.Mobile.Core.Extensions"
     x:Class="LevelUp.Mobile.Features.Plans.Pages.PlanEditPage"
     x:DataType="vm:PlanEditViewModel"
     Shell.NavBarIsVisible="False">
@@ -30,7 +31,7 @@
             </Label>
 
             <Label Grid.Column="1"
-                   Text="Configurar plan"
+                   Text="{local:Localize ConfigurePlan}"
                    Style="{StaticResource SubtitleLabel}"
                    HorizontalOptions="Center" VerticalOptions="Center"/>
 
@@ -55,7 +56,7 @@
 
                     <!-- ── Info del plan ── -->
                     <VerticalStackLayout Spacing="12">
-                        <Label Text="INFORMACIÓN DEL PLAN"
+                        <Label Text="{local:Localize PlanInfoSection}"
                                Style="{StaticResource CaptionLabel}"
                                FontAttributes="Bold" CharacterSpacing="2"/>
 
@@ -70,7 +71,7 @@
                                 <RoundRectangle CornerRadius="12"/>
                             </Border.StrokeShape>
                             <Entry Text="{Binding PlanName}"
-                                   Placeholder="Nombre del plan"/>
+                                   Placeholder="{local:Localize PlanNamePlaceholder}"/>
                         </Border>
 
                         <Border Padding="12,8" StrokeThickness="1"
@@ -84,23 +85,23 @@
                                 <RoundRectangle CornerRadius="12"/>
                             </Border.StrokeShape>
                             <Editor Text="{Binding PlanNotes}"
-                                    Placeholder="Notas del plan (opcional)"
+                                    Placeholder="{local:Localize PlanNotesPlaceholder}"
                                     AutoSize="TextChanges"
                                     MinimumHeightRequest="80"/>
                         </Border>
 
-                        <Button Text="Guardar cambios"
+                        <Button Text="{local:Localize SaveChanges}"
                                 Style="{StaticResource PrimaryButton}"
                                 Command="{Binding SavePlanInfoCommand}"/>
                     </VerticalStackLayout>
 
                     <!-- ── Días de entrenamiento ── -->
                     <VerticalStackLayout Spacing="12">
-                        <Label Text="DÍAS DE ENTRENAMIENTO"
+                        <Label Text="{local:Localize TrainingDays}"
                                Style="{StaticResource CaptionLabel}"
                                FontAttributes="Bold" CharacterSpacing="2"/>
 
-                        <Label Text="Activa los días en que entrenas. Si un día tiene ejercicios, se te pedirá confirmación antes de eliminarlo."
+                        <Label Text="{local:Localize TrainingDaysHint}"
                                Style="{StaticResource BodyLabel}"
                                Margin="0,0,0,4"/>
 
@@ -144,8 +145,8 @@
                                                                    Light={StaticResource TextSecondaryLight},
                                                                    Dark={StaticResource TextSecondaryDark}}"
                                                                VerticalOptions="Center"/>
-                                                        <Label FontSize="12"
-                                                               Text="{Binding ExerciseCount, StringFormat='{0} ejercicios'}"
+                                                        <Label Text="{Binding ExercisesText}"
+                                                               FontSize="12"
                                                                TextColor="{AppThemeBinding
                                                                    Light={StaticResource TextSecondaryLight},
                                                                    Dark={StaticResource TextSecondaryDark}}"
@@ -211,7 +212,7 @@
                                                 Spacing="10"
                                                 Padding="16,0,16,14">
                                                 <BoxView Style="{StaticResource Divider}" Margin="0,0,0,4"/>
-                                                <Label Text="Notas del día (opcional)"
+                                                <Label Text="{local:Localize DayNotesLabel}"
                                                        Style="{StaticResource CaptionLabel}"
                                                        FontAttributes="Bold"/>
                                                 <Border Padding="12,0" StrokeThickness="1"
@@ -225,10 +226,10 @@
                                                         <RoundRectangle CornerRadius="12"/>
                                                     </Border.StrokeShape>
                                                     <Entry Text="{Binding Notes}"
-                                                           Placeholder="Ej: Fuerza, cardio ligero…"
+                                                           Placeholder="{local:Localize DayNotesPlaceholder}"
                                                            ReturnType="Done"/>
                                                 </Border>
-                                                <Button Text="Guardar notas"
+                                                <Button Text="{local:Localize SaveNotes}"
                                                         Style="{StaticResource PrimaryButton}"
                                                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
                                                             Path=BindingContext.SaveDayNotesCommand}"
@@ -247,13 +248,13 @@
                     <!-- ── Zona de peligro ── -->
                     <VerticalStackLayout Spacing="12" Margin="0,16,0,0">
                         <BoxView Style="{StaticResource Divider}"/>
-                        <Label Text="ZONA DE PELIGRO"
+                        <Label Text="{local:Localize DangerZone}"
                                Style="{StaticResource CaptionLabel}"
                                FontAttributes="Bold" CharacterSpacing="2"
                                TextColor="{StaticResource Error}"/>
-                        <Label Text="Eliminar este plan es una acción permanente y no se puede deshacer."
+                        <Label Text="{local:Localize DeletePlanWarning}"
                                Style="{StaticResource BodyLabel}"/>
-                        <Label Text="Eliminar plan"
+                        <Label Text="{local:Localize DeletePlan}"
                                FontSize="14"
                                FontAttributes="Bold"
                                TextColor="{StaticResource Error}"

@@ -105,7 +105,7 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
 
         [RelayCommand]
         private async Task CreatePlanAsync()
-            => await Shell.Current.GoToAsync("///Plans/Create");
+            => await Shell.Current.GoToAsync("///Plans");
         private static string GetGreeting()
         {
             var key = DateTime.Now.Hour switch

@@ -225,4 +225,174 @@
   <data name="Welcome" xml:space="preserve">
     <value>Welcome</value>
   </data>
+  <data name="PlanDetailTitle" xml:space="preserve">
+    <value>Plan detail</value>
+  </data>
+  <data name="DaysOfPlan" xml:space="preserve">
+    <value>Days of plan</value>
+  </data>
+  <data name="NoDaysConfigured" xml:space="preserve">
+    <value>No days configured</value>
+  </data>
+  <data name="NoDaysConfiguredSub" xml:space="preserve">
+    <value>No days have been configured for this plan yet.</value>
+  </data>
+  <data name="ConfigurePlan" xml:space="preserve">
+    <value>Configure plan</value>
+  </data>
+  <data name="PlanInfoSection" xml:space="preserve">
+    <value>Plan information</value>
+  </data>
+  <data name="PlanNotesPlaceholder" xml:space="preserve">
+    <value>Plan notes (optional)</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Save changes</value>
+  </data>
+  <data name="TrainingDays" xml:space="preserve">
+    <value>Training days</value>
+  </data>
+  <data name="TrainingDaysHint" xml:space="preserve">
+    <value>Enable the days you train. If a day has exercises, confirmation will be required before removing it.</value>
+  </data>
+  <data name="DayNotesLabel" xml:space="preserve">
+    <value>Day notes (optional)</value>
+  </data>
+  <data name="DayNotesPlaceholder" xml:space="preserve">
+    <value>E.g. Strength, light cardio…</value>
+  </data>
+  <data name="SaveNotes" xml:space="preserve">
+    <value>Save notes</value>
+  </data>
+  <data name="DangerZone" xml:space="preserve">
+    <value>Danger zone</value>
+  </data>
+  <data name="DeletePlanWarning" xml:space="preserve">
+    <value>Deleting this plan is permanent and cannot be undone.</value>
+  </data>
+  <data name="DeletePlan" xml:space="preserve">
+    <value>Delete plan</value>
+  </data>
+  <data name="NoExercisesToday" xml:space="preserve">
+    <value>No exercises today</value>
+  </data>
+  <data name="NoExercisesTodaySub" xml:space="preserve">
+    <value>The active plan has no exercises assigned for today.</value>
+  </data>
+  <data name="PlanUpdated" xml:space="preserve">
+    <value>Plan updated</value>
+  </data>
+  <data name="NotesSaved" xml:space="preserve">
+    <value>Notes saved</value>
+  </data>
+  <data name="DeletePlanConfirmTitle" xml:space="preserve">
+    <value>Delete plan</value>
+  </data>
+  <data name="DeletePlanConfirmMessage" xml:space="preserve">
+    <value>Do you want to delete "{0}"? This action cannot be undone.</value>
+  </data>
+  <data name="DeleteDayConfirmTitle" xml:space="preserve">
+    <value>Remove day</value>
+  </data>
+  <data name="DeleteDayConfirmMessage" xml:space="preserve">
+    <value>The day "{0}" has {1} exercise(s). Remove it anyway? The exercises will be lost.</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="DayMon" xml:space="preserve">
+    <value>Mon</value>
+  </data>
+  <data name="DayTue" xml:space="preserve">
+    <value>Tue</value>
+  </data>
+  <data name="DayWed" xml:space="preserve">
+    <value>Wed</value>
+  </data>
+  <data name="DayThu" xml:space="preserve">
+    <value>Thu</value>
+  </data>
+  <data name="DayFri" xml:space="preserve">
+    <value>Fri</value>
+  </data>
+  <data name="DaySat" xml:space="preserve">
+    <value>Sat</value>
+  </data>
+  <data name="DaySun" xml:space="preserve">
+    <value>Sun</value>
+  </data>
+  <data name="ActivatePlan" xml:space="preserve"><value>Activate plan</value></data>
+<data name="PlanActive" xml:space="preserve"><value>Plan active</value></data>
+<data name="PlanActivated" xml:space="preserve"><value>Plan activated!</value></data>
+<data name="ExercisesCount" xml:space="preserve"><value>{0} exercises</value></data>
+<data name="DayMonFull" xml:space="preserve"><value>Monday</value></data>
+<data name="DayTueFull" xml:space="preserve"><value>Tuesday</value></data>
+<data name="DayWedFull" xml:space="preserve"><value>Wednesday</value></data>
+<data name="DayThuFull" xml:space="preserve"><value>Thursday</value></data>
+<data name="DayFriFull" xml:space="preserve"><value>Friday</value></data>
+<data name="DaySatFull" xml:space="preserve"><value>Saturday</value></data>
+<data name="DaySunFull" xml:space="preserve"><value>Sunday</value></data>
+<data name="ConfigurePlan" xml:space="preserve">
+  <value>Configure plan</value>
+</data>
+<data name="PlanInfoSection" xml:space="preserve">
+  <value>Plan information</value>
+</data>
+<data name="PlanNotesPlaceholder" xml:space="preserve">
+  <value>Plan notes (optional)</value>
+</data>
+<data name="SaveChanges" xml:space="preserve">
+  <value>Save changes</value>
+</data>
+<data name="TrainingDays" xml:space="preserve">
+  <value>Training days</value>
+</data>
+<data name="TrainingDaysHint" xml:space="preserve">
+  <value>Enable the days you train. If a day has exercises, confirmation will be required before removing it.</value>
+</data>
+<data name="DayNotesLabel" xml:space="preserve">
+  <value>Day notes (optional)</value>
+</data>
+<data name="DayNotesPlaceholder" xml:space="preserve">
+  <value>E.g. Strength, light cardio…</value>
+</data>
+<data name="SaveNotes" xml:space="preserve">
+  <value>Save notes</value>
+</data>
+<data name="DangerZone" xml:space="preserve">
+  <value>Danger zone</value>
+</data>
+<data name="DeletePlanWarning" xml:space="preserve">
+  <value>Deleting this plan is permanent and cannot be undone.</value>
+</data>
+<data name="DeletePlan" xml:space="preserve">
+  <value>Delete plan</value>
+</data>
+<data name="PlanUpdated" xml:space="preserve">
+  <value>Plan updated</value>
+</data>
+<data name="NotesSaved" xml:space="preserve">
+  <value>Notes saved</value>
+</data>
+<data name="DeletePlanConfirmTitle" xml:space="preserve">
+  <value>Delete plan</value>
+</data>
+<data name="DeletePlanConfirmMessage" xml:space="preserve">
+  <value>Do you want to delete "{0}"? This action cannot be undone.</value>
+</data>
+<data name="DeleteDayConfirmTitle" xml:space="preserve">
+  <value>Remove day</value>
+</data>
+<data name="DeleteDayConfirmMessage" xml:space="preserve">
+  <value>The day "{0}" has {1} exercise(s). Remove it anyway? The exercises will be lost.</value>
+</data>
+<data name="Delete" xml:space="preserve">
+  <value>Delete</value>
+</data>
+<data name="Cancel" xml:space="preserve">
+  <value>Cancel</value>
+</data>
 </root>

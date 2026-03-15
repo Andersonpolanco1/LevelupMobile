@@ -47,13 +47,13 @@ public class PlansViewModel
 
     private static string GetShortName(DayOfWeek day) => day switch
     {
-        DayOfWeek.Monday => "Lun",
-        DayOfWeek.Tuesday => "Mar",
-        DayOfWeek.Wednesday => "Mié",
-        DayOfWeek.Thursday => "Jue",
-        DayOfWeek.Friday => "Vie",
-        DayOfWeek.Saturday => "Sáb",
-        DayOfWeek.Sunday => "Dom",
+        DayOfWeek.Monday => LocalizationService.Instance["DayMon"],
+        DayOfWeek.Tuesday => LocalizationService.Instance["DayTue"],
+        DayOfWeek.Wednesday => LocalizationService.Instance["DayWed"],
+        DayOfWeek.Thursday => LocalizationService.Instance["DayThu"],
+        DayOfWeek.Friday => LocalizationService.Instance["DayFri"],
+        DayOfWeek.Saturday => LocalizationService.Instance["DaySat"],
+        DayOfWeek.Sunday => LocalizationService.Instance["DaySun"],
         _ => ""
     };
 }

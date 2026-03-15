@@ -19,15 +19,15 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
         private WeeklyPlan? _plan;
         private bool _loaded;
 
-        private static readonly (DayOfWeek Day, string Name)[] AllDays =
+        private static (DayOfWeek Day, string Name)[] GetAllDays() =>
         [
-            (DayOfWeek.Monday,    "Lunes"),
-            (DayOfWeek.Tuesday,   "Martes"),
-            (DayOfWeek.Wednesday, "Miércoles"),
-            (DayOfWeek.Thursday,  "Jueves"),
-            (DayOfWeek.Friday,    "Viernes"),
-            (DayOfWeek.Saturday,  "Sábado"),
-            (DayOfWeek.Sunday,    "Domingo"),
+            (DayOfWeek.Monday,    LocalizationService.Instance["DayMonFull"]),
+            (DayOfWeek.Tuesday,   LocalizationService.Instance["DayTueFull"]),
+            (DayOfWeek.Wednesday, LocalizationService.Instance["DayWedFull"]),
+            (DayOfWeek.Thursday,  LocalizationService.Instance["DayThuFull"]),
+            (DayOfWeek.Friday,    LocalizationService.Instance["DayFriFull"]),
+            (DayOfWeek.Saturday,  LocalizationService.Instance["DaySatFull"]),
+            (DayOfWeek.Sunday,    LocalizationService.Instance["DaySunFull"]),
         ];
 
         // ── Control de carga ──────────────────────────────────────────
@@ -57,9 +57,10 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
                 PlanNotes = _plan.Notes;
 
                 var existingDays = await planService.GetDaysAsync(id);
+                var allDays = GetAllDays();
 
                 var items = new List<DayEditItem>();
-                foreach (var (dow, name) in AllDays)
+                foreach (var (dow, name) in allDays)
                 {
                     var match = existingDays.FirstOrDefault(d => d.DayOfWeek == dow);
                     var count = match is not null
@@ -97,7 +98,7 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
             await RunAsync(async () =>
             {
                 await planService.UpdatePlanInfoAsync(_plan.Id, PlanName, PlanNotes);
-                await ShowSuccessAsync("Plan actualizado");
+                await ShowSuccessAsync(LocalizationService.Instance["PlanUpdated"]);
             });
         }
 
@@ -107,9 +108,10 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
             if (_plan is null) return;
 
             bool confirmed = await Shell.Current.DisplayAlertAsync(
-                "Eliminar plan",
-                $"¿Deseas eliminar \"{_plan.Name}\"? Esta acción no se puede deshacer.",
-                "Eliminar", "Cancelar");
+                LocalizationService.Instance["DeletePlanConfirmTitle"],
+                string.Format(LocalizationService.Instance["DeletePlanConfirmMessage"], _plan.Name),
+                LocalizationService.Instance["Delete"],
+                LocalizationService.Instance["Cancel"]);
 
             if (!confirmed) return;
 
@@ -129,7 +131,6 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
 
             item.IsEnabled = !item.IsEnabled;
 
-            // ─ Activar ─
             if (item.IsEnabled)
             {
                 try
@@ -146,16 +147,16 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
                 return;
             }
 
-            // ─ Desactivar ─
             if (item.ExistingDayId is null) { item.IsEnabled = false; return; }
 
             if (item.ExerciseCount > 0)
             {
                 bool confirmed = await Shell.Current.DisplayAlertAsync(
-                    "Eliminar día",
-                    $"El día \"{item.DisplayName}\" tiene {item.ExerciseCount} ejercicio(s). " +
-                    "¿Deseas eliminarlo de todas formas? Se perderán los ejercicios.",
-                    "Eliminar", "Cancelar");
+                    LocalizationService.Instance["DeleteDayConfirmTitle"],
+                    string.Format(LocalizationService.Instance["DeleteDayConfirmMessage"],
+                        item.DisplayName, item.ExerciseCount),
+                    LocalizationService.Instance["Delete"],
+                    LocalizationService.Instance["Cancel"]);
 
                 if (!confirmed) { item.IsEnabled = true; return; }
 
@@ -198,7 +199,7 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
             {
                 await planService.UpdateDayNotesAsync(item.ExistingDayId.Value, item.Notes);
                 item.IsExpandedNotes = false;
-                await ShowSuccessAsync("Notas guardadas");
+                await ShowSuccessAsync(LocalizationService.Instance["NotesSaved"]);
             }
             catch (Exception ex)
             {
@@ -212,8 +213,6 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
             if (!item.IsEnabled) return;
             item.IsExpandedNotes = !item.IsExpandedNotes;
         }
-
-        // ── Navegación ────────────────────────────────────────────────
 
         [RelayCommand]
         private async Task GoBackAsync()

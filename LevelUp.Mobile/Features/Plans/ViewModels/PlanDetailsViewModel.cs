@@ -25,18 +25,33 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
         private ObservableCollection<DayWithCount> _days = new();
 
         public bool IsNotActive => Plan is not null && !Plan.IsActive;
-        public string ActivateButtonText =>
-            Plan?.IsActive == true ? "Plan activo" : "Activar plan";
 
-        private static readonly Dictionary<DayOfWeek, string> DayNames = new()
+        public string ActivateButtonText => Plan?.IsActive == true
+            ? LocalizationService.Instance["PlanActive"]
+            : LocalizationService.Instance["ActivatePlan"];
+
+        private static string GetDayShortName(DayOfWeek day) => day switch
         {
-            { DayOfWeek.Monday,    "Lunes" },
-            { DayOfWeek.Tuesday,   "Martes" },
-            { DayOfWeek.Wednesday, "Miércoles" },
-            { DayOfWeek.Thursday,  "Jueves" },
-            { DayOfWeek.Friday,    "Viernes" },
-            { DayOfWeek.Saturday,  "Sábado" },
-            { DayOfWeek.Sunday,    "Domingo" },
+            DayOfWeek.Monday => LocalizationService.Instance["DayMon"],
+            DayOfWeek.Tuesday => LocalizationService.Instance["DayTue"],
+            DayOfWeek.Wednesday => LocalizationService.Instance["DayWed"],
+            DayOfWeek.Thursday => LocalizationService.Instance["DayThu"],
+            DayOfWeek.Friday => LocalizationService.Instance["DayFri"],
+            DayOfWeek.Saturday => LocalizationService.Instance["DaySat"],
+            DayOfWeek.Sunday => LocalizationService.Instance["DaySun"],
+            _ => ""
+        };
+
+        private static string GetDayFullName(DayOfWeek day) => day switch
+        {
+            DayOfWeek.Monday => LocalizationService.Instance["DayMonFull"],
+            DayOfWeek.Tuesday => LocalizationService.Instance["DayTueFull"],
+            DayOfWeek.Wednesday => LocalizationService.Instance["DayWedFull"],
+            DayOfWeek.Thursday => LocalizationService.Instance["DayThuFull"],
+            DayOfWeek.Friday => LocalizationService.Instance["DayFriFull"],
+            DayOfWeek.Saturday => LocalizationService.Instance["DaySatFull"],
+            DayOfWeek.Sunday => LocalizationService.Instance["DaySunFull"],
+            _ => day.ToString()
         };
 
         [RelayCommand]
@@ -58,7 +73,7 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
 
                 Plan.DaysOfWeekShortName = rawDays
                     .OrderBy(d => d.DayOfWeek)
-                    .Select(d => DayNames.TryGetValue(d.DayOfWeek, out var n) ? n[..3] : "")
+                    .Select(d => GetDayShortName(d.DayOfWeek))
                     .ToArray();
 
                 var items = new List<DayWithCount>();
@@ -69,8 +84,7 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
                     {
                         Day = d,
                         ExerciseCount = count,
-                        DayName = DayNames.TryGetValue(d.DayOfWeek, out var n)
-                                            ? n : d.DayOfWeek.ToString()
+                        DayName = GetDayFullName(d.DayOfWeek)
                     });
                 }
 

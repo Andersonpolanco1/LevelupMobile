@@ -63,7 +63,7 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Día configurado pero sin ejercicios — sin card, ícono naranja -->
+            <!-- Día configurado pero sin ejercicios -->
             <VerticalStackLayout
                 Spacing="8"
                 HorizontalOptions="Center"
@@ -73,10 +73,10 @@
                        FontFamily="FASolid" FontSize="40"
                        TextColor="{StaticResource Primary}"
                        HorizontalOptions="Center"/>
-                <Label Text="Sin ejercicios para hoy"
+                <Label Text="{local:Localize NoExercisesToday}"
                        Style="{StaticResource SubtitleLabel}"
                        HorizontalOptions="Center"/>
-                <Label Text="El plan activo, hoy no tiene ejercicios asignados."
+                <Label Text="{local:Localize NoExercisesTodaySub}"
                        Style="{StaticResource BodyLabel}"
                        HorizontalOptions="Center"
                        HorizontalTextAlignment="Center"/>
@@ -156,7 +156,6 @@
                     </BindableLayout.ItemTemplate>
                 </VerticalStackLayout>
 
-                <!-- Botón iniciar workout -->
                 <Button Text="{local:Localize StartWorkout}"
                         Style="{StaticResource PrimaryButton}"
                         Command="{Binding StartWorkoutCommand}"/>
