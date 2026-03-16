@@ -14,6 +14,7 @@ namespace LevelUp.Mobile.Extensions
             services.AddSingleton<ExerciseRepository>();
             services.AddSingleton<WeeklyPlanRepository>();
             services.AddSingleton<WorkoutRepository>();
+            services.AddSingleton<MuscleRepository>();
 
             services.AddSingleton<ISyncQueue, SyncQueue>();
             services.AddSingleton<ISyncService, SyncService>();

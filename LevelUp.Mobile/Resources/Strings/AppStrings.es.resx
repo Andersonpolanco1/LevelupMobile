@@ -304,81 +304,31 @@
     <value>Cancelar</value>
   </data>
   <data name="DayMon" xml:space="preserve"><value>Lun</value></data>
-<data name="DayTue" xml:space="preserve"><value>Mar</value></data>
-<data name="DayWed" xml:space="preserve"><value>Mié</value></data>
-<data name="DayThu" xml:space="preserve"><value>Jue</value></data>
-<data name="DayFri" xml:space="preserve"><value>Vie</value></data>
-<data name="DaySat" xml:space="preserve"><value>Sáb</value></data>
-<data name="DaySun" xml:space="preserve"><value>Dom</value></data>
-<data name="ActivatePlan" xml:space="preserve"><value>Activar plan</value></data>
-<data name="PlanActive" xml:space="preserve"><value>Plan activo</value></data>
-<data name="PlanActivated" xml:space="preserve"><value>¡Plan activado!</value></data>
-<data name="ExercisesCount" xml:space="preserve"><value>{0} ejercicios</value></data>
-<data name="DayMonFull" xml:space="preserve"><value>Lunes</value></data>
-<data name="DayTueFull" xml:space="preserve"><value>Martes</value></data>
-<data name="DayWedFull" xml:space="preserve"><value>Miércoles</value></data>
-<data name="DayThuFull" xml:space="preserve"><value>Jueves</value></data>
-<data name="DayFriFull" xml:space="preserve"><value>Viernes</value></data>
-<data name="DaySatFull" xml:space="preserve"><value>Sábado</value></data>
-<data name="DaySunFull" xml:space="preserve"><value>Domingo</value></data>
-<data name="ConfigurePlan" xml:space="preserve">
-  <value>Configurar plan</value>
-</data>
-<data name="PlanInfoSection" xml:space="preserve">
-  <value>Información del plan</value>
-</data>
-<data name="PlanNotesPlaceholder" xml:space="preserve">
-  <value>Notas del plan (opcional)</value>
-</data>
-<data name="SaveChanges" xml:space="preserve">
-  <value>Guardar cambios</value>
-</data>
-<data name="TrainingDays" xml:space="preserve">
-  <value>Días de entrenamiento</value>
-</data>
-<data name="TrainingDaysHint" xml:space="preserve">
-  <value>Activa los días en que entrenas. Si un día tiene ejercicios, se te pedirá confirmación antes de eliminarlo.</value>
-</data>
-<data name="DayNotesLabel" xml:space="preserve">
-  <value>Notas del día (opcional)</value>
-</data>
-<data name="DayNotesPlaceholder" xml:space="preserve">
-  <value>Ej: Fuerza, cardio ligero…</value>
-</data>
-<data name="SaveNotes" xml:space="preserve">
-  <value>Guardar notas</value>
-</data>
-<data name="DangerZone" xml:space="preserve">
-  <value>Zona de peligro</value>
-</data>
-<data name="DeletePlanWarning" xml:space="preserve">
-  <value>Eliminar este plan es una acción permanente y no se puede deshacer.</value>
-</data>
-<data name="DeletePlan" xml:space="preserve">
-  <value>Eliminar plan</value>
-</data>
-<data name="PlanUpdated" xml:space="preserve">
-  <value>Plan actualizado</value>
-</data>
-<data name="NotesSaved" xml:space="preserve">
-  <value>Notas guardadas</value>
-</data>
-<data name="DeletePlanConfirmTitle" xml:space="preserve">
-  <value>Eliminar plan</value>
-</data>
-<data name="DeletePlanConfirmMessage" xml:space="preserve">
-  <value>¿Deseas eliminar "{0}"? Esta acción no se puede deshacer.</value>
-</data>
-<data name="DeleteDayConfirmTitle" xml:space="preserve">
-  <value>Eliminar día</value>
-</data>
-<data name="DeleteDayConfirmMessage" xml:space="preserve">
-  <value>El día "{0}" tiene {1} ejercicio(s). ¿Deseas eliminarlo? Se perderán los ejercicios.</value>
-</data>
-<data name="Delete" xml:space="preserve">
-  <value>Eliminar</value>
-</data>
-<data name="Cancel" xml:space="preserve">
-  <value>Cancelar</value>
-</data>
+  <data name="DayTue" xml:space="preserve"><value>Mar</value></data>
+  <data name="DayWed" xml:space="preserve"><value>Mié</value></data>
+  <data name="DayThu" xml:space="preserve"><value>Jue</value></data>
+  <data name="DayFri" xml:space="preserve"><value>Vie</value></data>
+  <data name="DaySat" xml:space="preserve"><value>Sáb</value></data>
+  <data name="DaySun" xml:space="preserve"><value>Dom</value></data>
+  <data name="ActivatePlan" xml:space="preserve"><value>Activar plan</value></data>
+  <data name="PlanActive" xml:space="preserve"><value>Plan activo</value></data>
+  <data name="PlanActivated" xml:space="preserve"><value>¡Plan activado!</value></data>
+  <data name="ExercisesCount" xml:space="preserve"><value>{0} ejercicios</value></data>
+  <data name="DayMonFull" xml:space="preserve"><value>Lunes</value></data>
+  <data name="DayTueFull" xml:space="preserve"><value>Martes</value></data>
+  <data name="DayWedFull" xml:space="preserve"><value>Miércoles</value></data>
+  <data name="DayThuFull" xml:space="preserve"><value>Jueves</value></data>
+  <data name="DayFriFull" xml:space="preserve"><value>Viernes</value></data>
+  <data name="DaySatFull" xml:space="preserve"><value>Sábado</value></data>
+  <data name="DaySunFull" xml:space="preserve"><value>Domingo</value></data>
+  <data name="NoNotes" xml:space="preserve"><value>Sin notas</value></data>
+  <data name="ExercisesShort" xml:space="preserve"><value>ejercicios</value></data>
+  <data name="ExercisesSectionTitle" xml:space="preserve"><value>EJERCICIOS</value></data>
+  <data name="NoExercisesYet" xml:space="preserve"><value>Sin ejercicios aún</value></data>
+  <data name="AddFirstExercise" xml:space="preserve"><value>Toca el botón de abajo para agregar ejercicios a este día</value></data>
+  <data name="AddExercise" xml:space="preserve"><value>Agregar ejercicio</value></data>
+  <data name="AddExercises" xml:space="preserve"><value>Agregar ejercicios</value></data>
+  <data name="Selected" xml:space="preserve"><value>seleccionados</value></data>
+  <data name="SearchExercises" xml:space="preserve"><value>Buscar ejercicios...</value></data>
+  <data name="NoExercisesFound" xml:space="preserve"><value>No se encontraron ejercicios</value></data>
 </root>

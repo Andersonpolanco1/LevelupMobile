@@ -154,4 +154,69 @@ public class WeeklyPlanService(
 
     public Task<int> GetExerciseCountForDayAsync(Guid dayId)
         => repo.GetExerciseCountForDayAsync(dayId);
+
+
+    // ── Nuevos métodos a agregar en WeeklyPlanService ────────────────────────────
+    // Complementan los métodos que ya tienes.
+
+    /// <summary>
+    /// Agrega un ejercicio al día con sets/reps nulos (se editan luego).
+    /// Si ya existe ese exerciseId en el día, no crea duplicado.
+    /// </summary>
+    public async Task<WeeklyPlanExercise?> AddExerciseToDayAsync(Guid dayId, Guid exerciseId)
+    {
+        var existing = await repo.GetExercisesForDayAsync(dayId);
+
+        // Evitar duplicado
+        if (existing.Any(e => e.ExerciseId == exerciseId))
+            return existing.First(e => e.ExerciseId == exerciseId);
+
+        int nextOrder = existing.Count > 0 ? existing.Max(e => e.Order) + 1 : 0;
+
+        var planExercise = new WeeklyPlanExercise
+        {
+            Id = Guid.NewGuid(),
+            WeeklyPlanDayId = dayId,
+            ExerciseId = exerciseId,
+            Order = nextOrder,
+            CreatedAt = DateTime.UtcNow,
+            IsSynced = false
+        };
+
+        await repo.InsertPlanExerciseAsync(planExercise);
+        await queue.EnqueueAsync(planExercise, SyncOperation.Create);
+        _ = Task.Run(() => sync.ProcessSyncQueueAsync());
+        return planExercise;
+    }
+
+    /// <summary>
+    /// Quita un ejercicio del día buscando por ExerciseId (no por WeeklyPlanExercise.Id).
+    /// Usado por el picker al hacer uncheck.
+    /// </summary>
+    public async Task RemoveExerciseFromDayAsync(Guid dayId, Guid exerciseId)
+    {
+        var existing = await repo.GetExercisesForDayAsync(dayId);
+        var target = existing.FirstOrDefault(e => e.ExerciseId == exerciseId);
+        if (target is null) return;
+
+        await repo.DeletePlanExerciseAsync(target.Id);
+        var deleted = await repo.GetPlanExerciseByIdRawAsync(target.Id);
+        if (deleted is not null)
+            await queue.EnqueueAsync(deleted, SyncOperation.Delete);
+        _ = Task.Run(() => sync.ProcessSyncQueueAsync());
+    }
+
+    // Eliminar un ejercicio del plan
+    public async Task RemovePlanExerciseAsync(Guid planExerciseId)
+    {
+        await repo.DeletePlanExerciseAsync(planExerciseId);
+        var deleted = await repo.GetPlanExerciseByIdRawAsync(planExerciseId);
+        if (deleted is not null)
+            await queue.EnqueueAsync(deleted, SyncOperation.Delete);
+        _ = Task.Run(() => sync.ProcessSyncQueueAsync());
+    }
+
+    // Obtener ejercicios de un día del plan
+    public Task<List<WeeklyPlanExercise>> GetExercisesForDayAsync(Guid dayId)
+        => repo.GetExercisesForDayAsync(dayId);
 }

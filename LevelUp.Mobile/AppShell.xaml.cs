@@ -20,73 +20,83 @@ public partial class AppShell : Shell
 
     public AppShell(IServiceProvider services)
     {
-        InitializeComponent();
-
-        // ── Pantallas pre-autenticación (sin TabBar) ──────────────────
-        Items.Add(new ShellContent
+        try
         {
-            Route = "Splash",
-            Content = services.GetRequiredService<SplashPage>()
-        });
-        Items.Add(new ShellContent
+            InitializeComponent();
+
+            // ── Pantallas pre-autenticación (sin TabBar) ──────────────────
+            Items.Add(new ShellContent
+            {
+                Route = "Splash",
+                Content = services.GetRequiredService<SplashPage>()
+            });
+            Items.Add(new ShellContent
+            {
+                Route = "Login",
+                Content = services.GetRequiredService<LoginPage>()
+            });
+
+            // ── Área autenticada con TabBar ───────────────────────────────
+            var tabBar = new TabBar();
+
+            _homeTab = new Tab
+            {
+                Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.House, Size = 20 },
+                Items = { new ShellContent { Route = "Home", ContentTemplate = new DataTemplate(services.GetRequiredService<HomePage>) } }
+            };
+
+            _exercisesTab = new Tab
+            {
+                Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.Dumbbell, Size = 20 },
+                Items = { new ShellContent { Route = "Exercises", ContentTemplate = new DataTemplate(services.GetRequiredService<ExercisesPage>) } }
+            };
+
+            _workoutTab = new Tab
+            {
+                Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.Play, Size = 20 },
+                Items = { new ShellContent { Route = "Workout", ContentTemplate = new DataTemplate(services.GetRequiredService<WorkoutPage>) } }
+            };
+
+            _plansTab = new Tab
+            {
+                Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.CalendarDays, Size = 20 },
+                Items = { new ShellContent { Route = "Plans", ContentTemplate = new DataTemplate(services.GetRequiredService<PlansPage>) } }
+            };
+
+            _profileTab = new Tab
+            {
+                Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.User, Size = 20 },
+                Items = { new ShellContent { Route = "Profile", ContentTemplate = new DataTemplate(services.GetRequiredService<ProfilePage>) } }
+            };
+
+            tabBar.Items.Add(_homeTab);
+            tabBar.Items.Add(_exercisesTab);
+            tabBar.Items.Add(_workoutTab);
+            tabBar.Items.Add(_plansTab);
+            tabBar.Items.Add(_profileTab);
+
+            Items.Add(tabBar);
+
+            // ── Sub-rutas ─────────────────────────────────────────────────
+            Routing.RegisterRoute("Exercises/Detail", typeof(ExerciseDetailPage));
+            Routing.RegisterRoute("Workout/Active", typeof(ActiveWorkoutPage));
+            Routing.RegisterRoute("Workout/Summary", typeof(WorkoutSummaryPage));
+            Routing.RegisterRoute("Plans/Detail", typeof(PlanDetailPage));
+            Routing.RegisterRoute("Plans/Create", typeof(CreatePlanPage));
+            Routing.RegisterRoute("PlanEdit", typeof(PlanEditPage));
+            Routing.RegisterRoute("PlanDayDetail", typeof(PlanDayDetailPage));
+            Routing.RegisterRoute("exercisePicker", typeof(ExercisePickerPage));
+
+            UpdateTabTitles();
+            LocalizationService.Instance.PropertyChanged += (_, _) => UpdateTabTitles();
+        }
+        catch (Exception ex)
         {
-            Route = "Login",
-            Content = services.GetRequiredService<LoginPage>()
-        });
-
-        // ── Área autenticada con TabBar ───────────────────────────────
-        var tabBar = new TabBar();
-
-        _homeTab = new Tab
-        {
-            Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.House, Size = 20 },
-            Items = { new ShellContent { Route = "Home", ContentTemplate = new DataTemplate(services.GetRequiredService<HomePage>) } }
-        };
-
-        _exercisesTab = new Tab
-        {
-            Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.Dumbbell, Size = 20 },
-            Items = { new ShellContent { Route = "Exercises", ContentTemplate = new DataTemplate(services.GetRequiredService<ExercisesPage>) } }
-        };
-
-        _workoutTab = new Tab
-        {
-            Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.Play, Size = 20 },
-            Items = { new ShellContent { Route = "Workout", ContentTemplate = new DataTemplate(services.GetRequiredService<WorkoutPage>) } }
-        };
-
-        _plansTab = new Tab
-        {
-            Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.CalendarDays, Size = 20 },
-            Items = { new ShellContent { Route = "Plans", ContentTemplate = new DataTemplate(services.GetRequiredService<PlansPage>) } }
-        };
-
-        _profileTab = new Tab
-        {
-            Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.User, Size = 20 },
-            Items = { new ShellContent { Route = "Profile", ContentTemplate = new DataTemplate(services.GetRequiredService<ProfilePage>) } }
-        };
-
-        tabBar.Items.Add(_homeTab);
-        tabBar.Items.Add(_exercisesTab);
-        tabBar.Items.Add(_workoutTab);
-        tabBar.Items.Add(_plansTab);
-        tabBar.Items.Add(_profileTab);
-
-        Items.Add(tabBar);
-
-        // ── Sub-rutas ─────────────────────────────────────────────────
-        Routing.RegisterRoute("Exercises/Detail", typeof(ExerciseDetailPage));
-        Routing.RegisterRoute("Workout/Active", typeof(ActiveWorkoutPage));
-        Routing.RegisterRoute("Workout/Summary", typeof(WorkoutSummaryPage));
-        Routing.RegisterRoute("Plans/Detail", typeof(PlanDetailPage));
-        Routing.RegisterRoute("Plans/Create", typeof(CreatePlanPage));
-        Routing.RegisterRoute("PlanEdit", typeof(PlanEditPage));
-        Routing.RegisterRoute("PlanDayDetail", typeof(PlanDayDetailPage));
-
-
-        UpdateTabTitles();
-        LocalizationService.Instance.PropertyChanged += (_, _) => UpdateTabTitles();
+            System.Diagnostics.Debug.WriteLine($">>> APPSHELL CRASH: {ex}");
+            System.Diagnostics.Debug.WriteLine($">>> INNER: {ex.InnerException?.Message}");
+            throw;
+        }
+       
     }
 
     private void UpdateTabTitles()

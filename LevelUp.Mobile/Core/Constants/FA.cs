@@ -41,5 +41,15 @@
         public const string Plus = "\uf067"; // Cruz simple sin círculo
         //theme
         public const string Sun = "\uf185"; // fa-sun
+
+        // — Acciones —
+        public const string CircleXmark = "\uf057";    // X dentro de círculo (limpiar search)
+        public const string Pen = "\uf304";            // Editar notas (lápiz simple)
+        public const string GripLines = "\uf7a5";      // Drag handle (líneas grip)
+        public const string LayerGroup = "\uf5fd";     // Sets (capas)
+        public const string ArrowsRotate = "\uf021";   // Reps (flechas rotar)
+        public const string Clock = "\uf017";          // Duración
+        public const string HourglassHalf = "\uf252";  // Descanso / rest
+
     }
 }

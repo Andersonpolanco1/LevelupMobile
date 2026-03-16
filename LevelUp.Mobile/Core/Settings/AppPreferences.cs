@@ -12,7 +12,7 @@ namespace LevelUp.Mobile.Core.Settings
             Preferences.Set(LanguageKey, (int)language);
 
         public static Language GetLanguage() =>
-            (Language)Preferences.Get(LanguageKey, (int)Language.English);
+            (Language)Preferences.Get(LanguageKey, (int)Language.Spanish);
 
         // ── Tema ──────────────────────────────────────────────────────
         public static void SetTheme(AppTheme theme)

@@ -1,12 +1,266 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="LevelUp.Mobile.Features.Plans.Pages.PlanDayDetailPage"
-             Title="PlanDayDetailPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Plans.ViewModels"
+    xmlns:models="clr-namespace:LevelUp.Mobile.Features.Plans.Models"
+    xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants"
+    xmlns:local="clr-namespace:LevelUp.Mobile.Core.Extensions"
+    x:Class="LevelUp.Mobile.Features.Plans.Pages.PlanDayDetailPage"
+    x:DataType="vm:PlanDayDetailViewModel"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- ── HEADER ── -->
+        <Grid Grid.Row="0"
+              RowDefinitions="Auto,Auto"
+              Padding="20,56,20,16"
+              BackgroundColor="{AppThemeBinding
+                  Light={StaticResource SurfaceLight},
+                  Dark={StaticResource SurfaceDark}}">
+
+            <!-- Top nav -->
+            <Grid Grid.Row="0"
+                  ColumnDefinitions="40,*,40"
+                  Margin="0,0,0,16">
+
+                <Label Grid.Column="0"
+                       Text="{x:Static constants:FA.AngleLeft}"
+                       FontFamily="FASolid" FontSize="22"
+                       TextColor="{StaticResource Primary}"
+                       VerticalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <Label Grid.Column="1"
+                       Text="{Binding DayName}"
+                       Style="{StaticResource SubtitleLabel}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+
+                <Label Grid.Column="2"
+                       Text="{x:Static constants:FA.PenToSquare}"
+                       FontFamily="FASolid" FontSize="18"
+                       HorizontalOptions="End"
+                       VerticalOptions="Center"
+                       TextColor="{AppThemeBinding
+                           Light={StaticResource TextSecondaryLight},
+                           Dark={StaticResource TextSecondaryDark}}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding EditNotesCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+
+            <!-- Day info row -->
+            <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+
+                <Border Grid.Column="0"
+                        Padding="12,8"
+                        StrokeThickness="0"
+                        BackgroundColor="#FFF3E8">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10"/>
+                    </Border.StrokeShape>
+                    <Label Text="{x:Static constants:FA.Dumbbell}"
+                           FontFamily="FASolid" FontSize="18"
+                           TextColor="{StaticResource Primary}"/>
+                </Border>
+
+                <!-- Notas: solo visibles si existen -->
+                <Label Grid.Column="1"
+                       Text="{Binding Day.Notes}"
+                       Style="{StaticResource BodyLabel}"
+                       VerticalOptions="Center"
+                       LineBreakMode="TailTruncation"
+                       IsVisible="{Binding Day.Notes,
+                           Converter={StaticResource IsNotNullConverter}}"/>
+
+                <!-- Exercise count badge -->
+                <Border Grid.Column="2"
+                        Padding="10,5"
+                        StrokeThickness="0"
+                        VerticalOptions="Center"
+                        BackgroundColor="{AppThemeBinding
+                            Light={StaticResource SurfaceElevatedLight},
+                            Dark={StaticResource SurfaceElevatedDark}}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Spacing="5">
+                        <Label Text="{Binding ExerciseCount}"
+                               FontSize="13" FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}"
+                               VerticalOptions="Center"/>
+                        <Label Text="{local:Localize ExercisesShort}"
+                               FontSize="12"
+                               TextColor="{AppThemeBinding
+                                   Light={StaticResource TextSecondaryLight},
+                                   Dark={StaticResource TextSecondaryDark}}"
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Border>
+            </Grid>
+
+            <BoxView Grid.RowSpan="2" Style="{StaticResource Divider}" VerticalOptions="End"/>
+        </Grid>
+
+        <!-- ── EXERCISES LIST ── -->
+        <ScrollView Grid.Row="1" Padding="20,16,20,8">
+            <VerticalStackLayout Spacing="0">
+
+                <ActivityIndicator
+                    IsRunning="{Binding IsBusy}"
+                    IsVisible="{Binding IsBusy}"
+                    Color="{StaticResource Primary}"
+                    HorizontalOptions="Center"
+                    Margin="0,48,0,0"/>
+
+                <VerticalStackLayout
+                    Spacing="0"
+                    IsVisible="{Binding IsBusy,
+                        Converter={StaticResource InvertedBoolConverter}}">
+
+                    <!-- Section header -->
+                    <Label Text="{local:Localize ExercisesSectionTitle}"
+                           Style="{StaticResource CaptionLabel}"
+                           FontAttributes="Bold"
+                           CharacterSpacing="2"
+                           Margin="0,0,0,12"
+                           IsVisible="{Binding HasExercises}"/>
+
+                    <!-- Empty state -->
+                    <VerticalStackLayout
+                        IsVisible="{Binding HasExercises,
+                            Converter={StaticResource InvertedBoolConverter}}"
+                        HorizontalOptions="Center"
+                        Spacing="10"
+                        Margin="0,60,0,0">
+                        <Label Text="{x:Static constants:FA.Dumbbell}"
+                               FontFamily="FASolid" FontSize="48"
+                               TextColor="{StaticResource Primary}"
+                               HorizontalOptions="Center"/>
+                        <Label Text="{local:Localize NoExercisesYet}"
+                               Style="{StaticResource SubtitleLabel}"
+                               HorizontalOptions="Center"/>
+                        <Label Text="{local:Localize AddFirstExercise}"
+                               Style="{StaticResource BodyLabel}"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               Margin="24,0"/>
+                    </VerticalStackLayout>
+
+                    <!-- Exercise cards -->
+                    <VerticalStackLayout
+                        Spacing="10"
+                        BindableLayout.ItemsSource="{Binding Exercises}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="models:PlanExerciseRow">
+                                <Border Style="{StaticResource CardBorder}" Padding="0">
+                                    <Grid ColumnDefinitions="4,14,*,Auto" Padding="0,14,14,14">
+
+                                        <BoxView Grid.Column="0"
+                                                 WidthRequest="4"
+                                                 BackgroundColor="{StaticResource Primary}"
+                                                 VerticalOptions="Fill"/>
+
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Order}"
+                                               FontSize="11" FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding
+                                                   Light={StaticResource TextDisabledLight},
+                                                   Dark={StaticResource TextDisabledDark}}"
+                                               VerticalOptions="Start"
+                                               Margin="0,2,0,0"/>
+
+                                        <VerticalStackLayout Grid.Column="2" Spacing="4" Margin="10,0,0,0">
+                                            <Label Text="{Binding ExerciseName}"
+                                                   Style="{StaticResource SubtitleLabel}"
+                                                   FontSize="15"
+                                                   LineBreakMode="TailTruncation"/>
+
+                                            <HorizontalStackLayout Spacing="10">
+
+                                                <HorizontalStackLayout Spacing="3"
+                                                    IsVisible="{Binding Exercise.SetsPlanned,
+                                                        Converter={StaticResource IsNotNullConverter}}">
+                                                    <Label Text="{x:Static constants:FA.LayerGroup}"
+                                                           FontFamily="FASolid" FontSize="10"
+                                                           TextColor="{StaticResource Primary}"
+                                                           VerticalOptions="Center"/>
+                                                    <Label Text="{Binding SetsText}"
+                                                           FontSize="12"
+                                                           TextColor="{AppThemeBinding
+                                                               Light={StaticResource TextSecondaryLight},
+                                                               Dark={StaticResource TextSecondaryDark}}"
+                                                           VerticalOptions="Center"/>
+                                                </HorizontalStackLayout>
+
+                                                <HorizontalStackLayout Spacing="3"
+                                                    IsVisible="{Binding Exercise.RepsPlanned,
+                                                        Converter={StaticResource IsNotNullConverter}}">
+                                                    <Label Text="{x:Static constants:FA.RotateRight}"
+                                                           FontFamily="FASolid" FontSize="10"
+                                                           TextColor="{StaticResource Primary}"
+                                                           VerticalOptions="Center"/>
+                                                    <Label Text="{Binding RepsText}"
+                                                           FontSize="12"
+                                                           TextColor="{AppThemeBinding
+                                                               Light={StaticResource TextSecondaryLight},
+                                                               Dark={StaticResource TextSecondaryDark}}"
+                                                           VerticalOptions="Center"/>
+                                                </HorizontalStackLayout>
+
+                                            </HorizontalStackLayout>
+
+                                            <Label Text="{Binding Exercise.Notes}"
+                                                   Style="{StaticResource BodyLabel}"
+                                                   FontSize="12"
+                                                   IsVisible="{Binding Exercise.Notes,
+                                                       Converter={StaticResource IsNotNullConverter}}"/>
+                                        </VerticalStackLayout>
+
+                                        <!-- Trash -->
+                                        <Label Grid.Column="3"
+                                               Text="{x:Static constants:FA.Trash}"
+                                               FontFamily="FASolid" FontSize="15"
+                                               TextColor="{StaticResource Error}"
+                                               VerticalOptions="Center"
+                                               HorizontalOptions="Center">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                                        Path=BindingContext.RemoveExerciseCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <BoxView HeightRequest="16" Color="Transparent"/>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- ── ACTION BAR ── -->
+        <Grid Grid.Row="2"
+              Padding="20,12,20,36"
+              BackgroundColor="{AppThemeBinding
+                  Light={StaticResource SurfaceLight},
+                  Dark={StaticResource SurfaceDark}}">
+            <BoxView Style="{StaticResource Divider}"
+                     VerticalOptions="Start" Margin="0,-12,0,0"/>
+            <Button Text="{local:Localize AddExercise}"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding AddExerciseCommand}"
+                    Margin="0,12,0,0"/>
+        </Grid>
+
+    </Grid>
 </ContentPage>

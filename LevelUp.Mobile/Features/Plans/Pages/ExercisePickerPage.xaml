@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Plans.ViewModels"
+    xmlns:models="clr-namespace:LevelUp.Mobile.Features.Plans.Models"
+    xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants"
+    xmlns:local="clr-namespace:LevelUp.Mobile.Core.Extensions"
+    x:Class="LevelUp.Mobile.Features.Plans.Pages.ExercisePickerPage"
+    x:DataType="vm:ExercisePickerViewModel"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+
+        <!-- ── HEADER ── -->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="40,*,Auto"
+              Padding="20,56,20,12"
+              BackgroundColor="{AppThemeBinding
+                  Light={StaticResource SurfaceLight},
+                  Dark={StaticResource SurfaceDark}}">
+
+            <Label Grid.Column="0"
+                   Text="{x:Static constants:FA.AngleLeft}"
+                   FontFamily="FASolid" FontSize="22"
+                   TextColor="{StaticResource Primary}"
+                   VerticalOptions="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+
+            <Label Grid.Column="1"
+                   Text="{local:Localize AddExercises}"
+                   Style="{StaticResource SubtitleLabel}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+
+            <!-- Selected count badge -->
+            <Border Grid.Column="2"
+                    Padding="10,5"
+                    StrokeThickness="0"
+                    VerticalOptions="Center"
+                    BackgroundColor="#FFF3E8"
+                    IsVisible="{Binding SelectedCount,
+                        Converter={StaticResource IntGreaterThanZeroBoolConverter}}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20"/>
+                </Border.StrokeShape>
+                <HorizontalStackLayout Spacing="4">
+                    <Label Text="{Binding SelectedCount}"
+                           FontSize="13" FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}"
+                           VerticalOptions="Center"/>
+                    <Label Text="{local:Localize Selected}"
+                           FontSize="12"
+                           TextColor="{StaticResource Primary}"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </Border>
+
+        </Grid>
+
+        <!-- ── SEARCH BAR ── -->
+        <Border Grid.Row="1"
+                Margin="20,8,20,0"
+                Padding="12,0"
+                StrokeThickness="0"
+                BackgroundColor="{AppThemeBinding
+                    Light={StaticResource SurfaceElevatedLight},
+                    Dark={StaticResource SurfaceElevatedDark}}">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="12"/>
+            </Border.StrokeShape>
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                <Label Grid.Column="0"
+                       Text="{x:Static constants:FA.MagnifyingGlass}"
+                       FontFamily="FASolid" FontSize="15"
+                       TextColor="{AppThemeBinding
+                           Light={StaticResource TextDisabledLight},
+                           Dark={StaticResource TextDisabledDark}}"
+                       VerticalOptions="Center"/>
+                <Entry Grid.Column="1"
+                       Text="{Binding SearchText}"
+                       Placeholder="{local:Localize SearchExercises}"
+                       BackgroundColor="Transparent"
+                       HeightRequest="44"/>
+                <Label Grid.Column="2"
+                       Text="{x:Static constants:FA.Xmark}"
+                       FontFamily="FASolid" FontSize="15"
+                       TextColor="{AppThemeBinding
+                           Light={StaticResource TextDisabledLight},
+                           Dark={StaticResource TextDisabledDark}}"
+                       VerticalOptions="Center"
+                       IsVisible="{Binding SearchText,
+                           Converter={StaticResource StringNotNullOrEmptyBoolConverter}}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ClearGroupFilterCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+        </Border>
+
+        <!-- ── MUSCLE GROUP CHIPS ── -->
+        <ScrollView Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalScrollBarVisibility="Never"
+                    Margin="0,10,0,4"
+                    Padding="20,0">
+            <HorizontalStackLayout Spacing="8"
+                                   BindableLayout.ItemsSource="{Binding MuscleGroups}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="models:MuscleGroupRow">
+                        <Border Padding="14,7"
+                                StrokeThickness="1"
+                                BackgroundColor="{AppThemeBinding
+                                    Light={StaticResource SurfaceLight},
+                                    Dark={StaticResource SurfaceElevatedDark}}"
+                                Stroke="{AppThemeBinding
+                                    Light={StaticResource DividerLight},
+                                    Dark={StaticResource DividerDark}}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20"/>
+                            </Border.StrokeShape>
+                            <Label Text="{Binding Name}"
+                                   FontSize="13" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding
+                                       Light={StaticResource TextSecondaryLight},
+                                       Dark={StaticResource TextSecondaryDark}}"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                        Path=BindingContext.SelectGroupCommand}"
+                                    CommandParameter="{Binding .}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- ── EXERCISE GRID ── -->
+        <Grid Grid.Row="3">
+
+            <ActivityIndicator
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}"
+                Color="{StaticResource Primary}"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"/>
+
+            <!-- Empty state -->
+            <VerticalStackLayout
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                Spacing="10"
+                IsVisible="{Binding IsEmpty}">
+                <Label Text="{x:Static constants:FA.MagnifyingGlass}"
+                       FontFamily="FASolid" FontSize="40"
+                       TextColor="{StaticResource Primary}"
+                       HorizontalOptions="Center"/>
+                <Label Text="{local:Localize NoExercisesFound}"
+                       Style="{StaticResource SubtitleLabel}"
+                       HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+
+            <!-- Cards 2 por fila -->
+            <CollectionView
+                ItemsSource="{Binding FilteredExercises}"
+                SelectionMode="None"
+                IsVisible="{Binding IsBusy,
+                    Converter={StaticResource InvertedBoolConverter}}"
+                Margin="12,4,12,0">
+
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="2"
+                                     HorizontalItemSpacing="8"
+                                     VerticalItemSpacing="8"/>
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:ExercisePickerRow">
+                        <Grid Padding="4">
+                            <Border StrokeThickness="0"
+                                    HeightRequest="180"
+                                    BackgroundColor="{AppThemeBinding
+                                        Light={StaticResource SurfaceLight},
+                                        Dark={StaticResource CardDark}}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14"/>
+                                </Border.StrokeShape>
+
+                                <Grid RowDefinitions="*,Auto">
+
+                                    <!-- Imagen / placeholder -->
+                                    <Grid Grid.Row="0"
+                                          BackgroundColor="{AppThemeBinding
+                                              Light={StaticResource SurfaceElevatedLight},
+                                              Dark={StaticResource SurfaceElevatedDark}}">
+
+                                        <Label Text="{x:Static constants:FA.Dumbbell}"
+                                               FontFamily="FASolid" FontSize="32"
+                                               TextColor="{AppThemeBinding
+                                                   Light={StaticResource TextDisabledLight},
+                                                   Dark={StaticResource TextDisabledDark}}"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"
+                                               IsVisible="{Binding ImageUrl,
+                                                   Converter={StaticResource IsNullConverter}}"/>
+
+                                        <Image Source="{Binding ImageUrl}"
+                                               Aspect="AspectFill"
+                                               IsVisible="{Binding ImageUrl,
+                                                   Converter={StaticResource IsNotNullConverter}}"/>
+
+                                        <!-- Check overlay -->
+                                        <Border IsVisible="{Binding IsSelected}"
+                                                BackgroundColor="#CC000000"
+                                                StrokeThickness="0">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="0"/>
+                                            </Border.StrokeShape>
+                                            <Label Text="{x:Static constants:FA.CircleCheck}"
+                                                   FontFamily="FASolid" FontSize="32"
+                                                   TextColor="{StaticResource Primary}"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"/>
+                                        </Border>
+                                    </Grid>
+
+                                    <!-- Footer nombre -->
+                                    <Grid Grid.Row="1" Padding="10,8">
+                                        <Label Text="{Binding Name}"
+                                               FontSize="12"
+                                               FontAttributes="Bold"
+                                               LineBreakMode="TailTruncation"
+                                               MaxLines="2"
+                                               TextColor="{AppThemeBinding
+                                                   Light={StaticResource TextPrimaryLight},
+                                                   Dark={StaticResource TextPrimaryDark}}"/>
+                                    </Grid>
+                                </Grid>
+
+                                <!-- Borde naranja al seleccionar -->
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border"
+                                                 Binding="{Binding IsSelected}"
+                                                 Value="True">
+                                        <Setter Property="Stroke" Value="{StaticResource Primary}"/>
+                                        <Setter Property="StrokeThickness" Value="2"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Border"
+                                                 Binding="{Binding IsSelected}"
+                                                 Value="False">
+                                        <Setter Property="Stroke" Value="Transparent"/>
+                                        <Setter Property="StrokeThickness" Value="0"/>
+                                    </DataTrigger>
+                                </Border.Triggers>
+
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                            Path=BindingContext.ToggleExerciseCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+    </Grid>
+</ContentPage>

@@ -46,6 +46,11 @@ namespace LevelUp.Mobile.Extensions
 
             services.AddTransient<ProfilePage>();
 
+            services.AddTransient<PlanDayDetailPage>();
+            services.AddTransient<PlanDayDetailViewModel>();
+            services.AddTransient<ExercisePickerPage>();
+            services.AddTransient<ExercisePickerViewModel>();
+
             return services;
         }
     }

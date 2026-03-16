@@ -106,4 +106,49 @@ public class WeeklyPlanRepository : BaseRepository<WeeklyPlan>
             .Where(d => d.Id == dayId)
             .FirstOrDefaultAsync();
     }
+
+    // ── Métodos a agregar en WeeklyPlanRepository ────────────────────────────────
+    // Pega estos métodos dentro de la clase WeeklyPlanRepository existente.
+    // Ya tienes GetExercisesForDayAsync — solo añade los que faltan.
+
+    public async Task InsertPlanExerciseAsync(WeeklyPlanExercise exercise)
+    {
+        var db = await GetDbAsync();
+        await db.InsertAsync(exercise);
+    }
+
+    public async Task UpdatePlanExerciseAsync(WeeklyPlanExercise exercise)
+    {
+        var db = await GetDbAsync();
+        await db.UpdateAsync(exercise);
+    }
+
+    public async Task DeletePlanExerciseAsync(Guid planExerciseId)
+    {
+        var db = await GetDbAsync();
+        var exercise = await db.Table<WeeklyPlanExercise>()
+            .Where(e => e.Id == planExerciseId)
+            .FirstOrDefaultAsync();
+        if (exercise is null) return;
+        exercise.IsDeleted = true;
+        exercise.UpdatedAt = DateTime.UtcNow;
+        exercise.IsSynced = false;
+        await db.UpdateAsync(exercise);
+    }
+
+    public async Task<WeeklyPlanExercise?> GetPlanExerciseByIdAsync(Guid id)
+    {
+        var db = await GetDbAsync();
+        return await db.Table<WeeklyPlanExercise>()
+            .Where(e => e.Id == id && !e.IsDeleted)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<WeeklyPlanExercise?> GetPlanExerciseByIdRawAsync(Guid id)
+    {
+        var db = await GetDbAsync();
+        return await db.Table<WeeklyPlanExercise>()
+            .Where(e => e.Id == id)
+            .FirstOrDefaultAsync();
+    }
 }
