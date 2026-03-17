@@ -6,6 +6,7 @@ using LevelUp.Mobile.Features.Home.ViewModels;
 using LevelUp.Mobile.Features.Plans.Pages;
 using LevelUp.Mobile.Features.Plans.ViewModels;
 using LevelUp.Mobile.Features.Profile.Pages;
+using LevelUp.Mobile.Features.Profile.ViewModels;
 using LevelUp.Mobile.Features.Splash.Pages;
 using LevelUp.Mobile.Features.Splash.ViewModels;
 using LevelUp.Mobile.Features.Workouts.Pages;
@@ -44,6 +45,7 @@ namespace LevelUp.Mobile.Extensions
             services.AddTransient<PlanEditPage>();
             services.AddTransient<PlanEditViewModel>();
 
+            services.AddTransient<ProfileViewModel>();  // ← esta faltaba
             services.AddTransient<ProfilePage>();
 
             services.AddTransient<PlanDayDetailPage>();

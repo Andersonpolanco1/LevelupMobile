@@ -85,8 +85,10 @@ namespace LevelUp.Mobile.Infrastructure.Session
             await conn.ExecuteAsync("DELETE FROM Workout");
             await conn.ExecuteAsync("DELETE FROM WorkoutExercise");
             await conn.ExecuteAsync("DELETE FROM ExerciseSet");
-            await conn.ExecuteAsync("DELETE FROM SyncQueueItem");  // ← crítico
-            await conn.ExecuteAsync("DELETE FROM SyncState");      // ← crítico, fuerza full sync al login
+            await conn.ExecuteAsync("DELETE FROM SyncQueueItem"); 
+            await conn.ExecuteAsync("DELETE FROM SyncState");    
+            await conn.ExecuteAsync("DELETE FROM UserProfile");
+
         }
     }
 

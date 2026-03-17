@@ -17,6 +17,7 @@ public class SyncService : ISyncService
     private readonly ExerciseRepository _exercises;
     private readonly WeeklyPlanRepository _plans;
     private readonly WorkoutRepository _workouts;
+    private readonly UserProfileRepository _profileRepo;
 
     private static readonly JsonSerializerOptions _json =
         new() { PropertyNameCaseInsensitive = true };
@@ -26,13 +27,15 @@ public class SyncService : ISyncService
         LocalDatabase db,
         ExerciseRepository exercises,
         WeeklyPlanRepository plans,
-        WorkoutRepository workouts)
+        WorkoutRepository workouts,
+        UserProfileRepository profileRepo)
     {
         _api = api;
         _db = db;
         _exercises = exercises;
         _plans = plans;
         _workouts = workouts;
+        _profileRepo = profileRepo;
     }
 
     // ── Full Sync ─────────────────────────────────────────────────────────────
@@ -43,6 +46,7 @@ public class SyncService : ISyncService
         await ProcessSyncQueueAsync(ct);
         await SyncCatalogAsync(ct);
         await SyncUserDataAsync(ct);
+        await SyncProfileAsync(ct);
         Log("FullSync END");
     }
 
@@ -313,6 +317,69 @@ public class SyncService : ISyncService
     }
 
     // ── PUSH: Cola de sincronización ──────────────────────────────────────────
+
+    // ── PULL + PUSH: Perfil del usuario ──────────────────────────────────────────
+
+    public async Task SyncProfileAsync(CancellationToken ct = default)
+    {
+        await _db.EnsureInitializedAsync();
+        Log("SyncProfile START");
+
+        // 1. PUSH: si hay cambios locales pendientes, enviarlos primero
+        var localProfile = await _profileRepo.GetAsync();
+        if (localProfile is not null && !localProfile.IsSynced)
+        {
+            await PushProfileAsync(localProfile);
+        }
+
+        // 2. PULL: traer el perfil del servidor
+        ProfileSyncDto dto;
+        try
+        {
+            dto = await _api.GetAsync<ProfileSyncDto>("sync/profile");
+        }
+        catch (Exception ex)
+        {
+            Log($"SyncProfile PULL ERROR (sin red): {ex.Message}");
+            return;
+        }
+
+        // 3. Guardar localmente (el servidor es autoridad si hay conflicto)
+        var profile = new UserProfile
+        {
+            Id = dto.UserId,
+            Name = dto.Name,
+            Email = dto.Email,
+            ProfilePictureUrl = dto.ProfilePictureUrl,
+            CurrentBodyWeightInLb = dto.CurrentBodyWeightInLb,
+            PreferredLanguage = dto.PreferredLanguage,
+            PreferredTheme = dto.PreferredTheme,
+            PreferredWeightUnit = dto.PreferredWeightUnit,
+            TimeZoneId = dto.TimeZoneId,
+            UpdatedAt = dto.UpdatedAt,
+            CreatedAt = dto.CreatedAt ?? DateTime.UtcNow,
+            IsSynced = true
+        };
+
+        await _profileRepo.UpsertAsync(profile);
+        Log("SyncProfile END ✓");
+    }
+
+    public async Task PushProfileAsync(UserProfile profile)
+    {
+        var dto = new ProfileUpsertDto
+        {
+            CurrentBodyWeightInLb = profile.CurrentBodyWeightInLb,
+            PreferredLanguage = profile.PreferredLanguage,
+            PreferredTheme = profile.PreferredTheme,
+            PreferredWeightUnit = profile.PreferredWeightUnit,
+            TimeZoneId = profile.TimeZoneId,
+            UpdatedAt = profile.UpdatedAt ?? DateTime.UtcNow
+        };
+
+        await _api.PostAsync<ProfileUpsertDto, object>("sync/profile", dto);
+        Log("PushProfile ✓");
+    }
 
     public async Task ProcessSyncQueueAsync(CancellationToken ct = default)
     {

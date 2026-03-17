@@ -57,6 +57,10 @@ namespace LevelUp.Mobile.Infrastructure.LocalDb
 
             await _database.CreateTableAsync<SyncQueueItem>();
             await _database.CreateTableAsync<Core.Entities.SyncState>();
+
+            await Connection.CreateTableAsync<UserProfile>();
+
+
         }
 
         private async Task CreateIndexes()

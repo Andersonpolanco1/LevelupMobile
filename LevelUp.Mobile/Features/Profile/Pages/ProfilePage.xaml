@@ -1,16 +1,283 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="LevelUp.Mobile.Features.Profile.Pages.ProfilePage"
-             Title="ProfilePage">
-    <VerticalStackLayout Padding="20" Spacing="16">
-        <Button Text="🔄 Ejecutar FullSync"
-            Clicked="OnSyncClicked"
-            BackgroundColor="#FF7A00"
-            TextColor="White" />
-        <Label x:Name="StatusLabel"
-           Text="Presiona el botón para sincronizar"
-           FontSize="14"
-           LineBreakMode="WordWrap" />
-    </VerticalStackLayout>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Profile.ViewModels"
+    x:Class="LevelUp.Mobile.Features.Profile.Pages.ProfilePage"
+    x:DataType="vm:ProfileViewModel"
+    Title="Profile"
+    Shell.NavBarIsVisible="False">
+
+    <!-- ══════════════════════════════════════════════════════════════
+         ROOT: ScrollView con fondo del tema
+    ══════════════════════════════════════════════════════════════ -->
+    <ScrollView>
+        <VerticalStackLayout Spacing="0">
+
+            <!-- ── HEADER HERO ──────────────────────────────────── -->
+            <Grid HeightRequest="220">
+
+                <!-- Fondo degradado brand -->
+                <BoxView>
+                    <BoxView.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#CC2200" Offset="0"/>
+                            <GradientStop Color="#FF7A00" Offset="0.6"/>
+                            <GradientStop Color="#FFD000" Offset="1"/>
+                        </LinearGradientBrush>
+                    </BoxView.Background>
+                </BoxView>
+
+                <!-- Overlay oscuro sutil -->
+                <BoxView Color="#33000000"/>
+
+                <!-- Contenido del header -->
+                <VerticalStackLayout
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Spacing="10"
+                    Padding="0,30,0,0">
+
+                    <!-- Avatar -->
+                    <Border
+                        HeightRequest="84"
+                        WidthRequest="84"
+                        HorizontalOptions="Center"
+                        StrokeThickness="3"
+                        Stroke="White">
+                        <Border.StrokeShape>
+                            <Ellipse/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#80000000" Offset="0,4" Radius="12"/>
+                        </Border.Shadow>
+
+                        <Grid>
+                            <!-- Placeholder con iniciales -->
+                            <Label
+                                Text="{Binding Name, StringFormat='{0:0}'}"
+                                FontSize="32"
+                                FontAttributes="Bold"
+                                TextColor="White"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"/>
+
+                            <!-- Foto de perfil (si existe) -->
+                            <Image
+                                Source="{Binding ProfilePictureUrl}"
+                                Aspect="AspectFill"
+                                IsVisible="{Binding ProfilePictureUrl, Converter={StaticResource IsNotNullConverter}}"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Nombre -->
+                    <Label
+                        Text="{Binding Name}"
+                        Style="{StaticResource SubtitleLabel}"
+                        TextColor="White"
+                        HorizontalOptions="Center"/>
+
+                    <!-- Email -->
+                    <Label
+                        Text="{Binding Email}"
+                        Style="{StaticResource BodyLabel}"
+                        TextColor="#CCffffff"
+                        HorizontalOptions="Center"/>
+
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- ── CONTENIDO ─────────────────────────────────────── -->
+            <VerticalStackLayout
+                Padding="16,20,16,40"
+                Spacing="16"
+                BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
+
+                <!-- Loading indicator -->
+                <ActivityIndicator
+                    IsRunning="{Binding IsLoading}"
+                    IsVisible="{Binding IsLoading}"
+                    Color="{StaticResource Primary}"
+                    HorizontalOptions="Center"/>
+
+                <!-- Error banner -->
+                <Border
+                    IsVisible="{Binding HasError}"
+                    BackgroundColor="#1FEF4444"
+                    StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Padding="16,12" Spacing="10">
+                        <Label Text="⚠" FontSize="16" VerticalOptions="Center"/>
+                        <Label
+                            Text="{Binding ErrorMessage}"
+                            FontSize="13"
+                            TextColor="{StaticResource Error}"
+                            VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!-- Saved banner -->
+                <Border
+                    IsVisible="{Binding IsSaved}"
+                    BackgroundColor="#1F22C55E"
+                    StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Padding="16,12" Spacing="10">
+                        <Label Text="✓" FontSize="16" TextColor="{StaticResource Success}" VerticalOptions="Center"/>
+                        <Label
+                            Text="Settings saved"
+                            FontSize="13"
+                            TextColor="{StaticResource Success}"
+                            VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!-- ════════════════════════════════════════════════ -->
+                <!--  SECCIÓN: Body & Fitness                         -->
+                <!-- ════════════════════════════════════════════════ -->
+                <Label
+                    Text="BODY &amp; FITNESS"
+                    Style="{StaticResource CaptionLabel}"
+                    Margin="4,0,0,0"
+                    CharacterSpacing="1.5"/>
+
+                <Border Style="{StaticResource CardBorder}">
+                    <VerticalStackLayout Spacing="0">
+
+                        <!-- Body weight -->
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,8">
+                            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="Body Weight" FontSize="14" FontAttributes="Bold"/>
+                                <Label
+                                    Text="Used as snapshot when you start a workout"
+                                    Style="{StaticResource CaptionLabel}"/>
+                            </VerticalStackLayout>
+
+                            <HorizontalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                <Entry
+                                    Text="{Binding BodyWeightDisplay}"
+                                    Keyboard="Numeric"
+                                    WidthRequest="72"
+                                    HorizontalTextAlignment="End"
+                                    FontSize="16"
+                                    FontAttributes="Bold"/>
+                                <Label
+                                    Text="{Binding WeightUnitLabel}"
+                                    FontSize="13"
+                                    TextColor="{StaticResource Primary}"
+                                    VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </Grid>
+
+                        <BoxView Style="{StaticResource Divider}"/>
+
+                        <!-- Weight unit picker -->
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,12">
+                            <Label
+                                Grid.Column="0"
+                                Text="Weight Unit"
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                VerticalOptions="Center"/>
+                            <Picker
+                                Grid.Column="1"
+                                ItemsSource="{Binding WeightUnits}"
+                                SelectedIndex="{Binding SelectedWeightUnitIndex}"
+                                WidthRequest="90"
+                                HorizontalOptions="End"
+                                TextColor="{StaticResource Primary}"
+                                FontSize="14"/>
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ════════════════════════════════════════════════ -->
+                <!--  SECCIÓN: Preferences                            -->
+                <!-- ════════════════════════════════════════════════ -->
+                <Label
+                    Text="PREFERENCES"
+                    Style="{StaticResource CaptionLabel}"
+                    Margin="4,8,0,0"
+                    CharacterSpacing="1.5"/>
+
+                <Border Style="{StaticResource CardBorder}">
+                    <VerticalStackLayout Spacing="0">
+
+                        <!-- Language -->
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,12">
+                            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="Language" FontSize="14" FontAttributes="Bold"/>
+                                <Label Text="App display language" Style="{StaticResource CaptionLabel}"/>
+                            </VerticalStackLayout>
+                            <Picker
+                                Grid.Column="1"
+                                ItemsSource="{Binding Languages}"
+                                SelectedIndex="{Binding SelectedLanguageIndex}"
+                                WidthRequest="110"
+                                HorizontalOptions="End"
+                                TextColor="{StaticResource Primary}"
+                                FontSize="14"/>
+                        </Grid>
+
+                        <BoxView Style="{StaticResource Divider}"/>
+
+                        <!-- Timezone -->
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,12">
+                            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="Time Zone" FontSize="14" FontAttributes="Bold"/>
+                                <Label Text="For scheduling workouts" Style="{StaticResource CaptionLabel}"/>
+                            </VerticalStackLayout>
+                            <Picker
+                                Grid.Column="1"
+                                ItemsSource="{Binding Timezones}"
+                                SelectedIndex="{Binding SelectedTimezoneIndex}"
+                                WidthRequest="160"
+                                HorizontalOptions="End"
+                                TextColor="{StaticResource Primary}"
+                                FontSize="12"/>
+                        </Grid>
+
+                        <BoxView Style="{StaticResource Divider}"/>
+
+                        <!-- Dark theme toggle -->
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,12">
+                            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="Dark Mode" FontSize="14" FontAttributes="Bold"/>
+                                <Label Text="Override system theme" Style="{StaticResource CaptionLabel}"/>
+                            </VerticalStackLayout>
+                            <Switch
+                                Grid.Column="1"
+                                IsToggled="{Binding IsDarkTheme}"
+                                OnColor="{StaticResource Primary}"
+                                VerticalOptions="Center"/>
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ════════════════════════════════════════════════ -->
+                <!--  SAVE BUTTON                                     -->
+                <!-- ════════════════════════════════════════════════ -->
+                <Button
+                    Text="Save Changes"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding IsSaving, Converter={StaticResource InvertedBoolConverter}}"
+                    Margin="0,8,0,0">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsSaving}" Value="True">
+                            <Setter Property="Text" Value="Saving…"/>
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>

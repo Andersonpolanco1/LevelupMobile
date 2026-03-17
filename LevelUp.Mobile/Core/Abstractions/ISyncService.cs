@@ -1,4 +1,6 @@
-﻿namespace LevelUp.Mobile.Core.Abstractions
+﻿using LevelUp.Mobile.Core.Entities;
+
+namespace LevelUp.Mobile.Core.Abstractions
 {
     public interface ISyncService
     {
@@ -13,5 +15,11 @@
 
         /// <summary>Sync completo: primero push, luego pull.</summary>
         Task FullSyncAsync(CancellationToken ct = default);
+
+        /// <summary>Pull + push del perfil del usuario.</summary>
+        Task SyncProfileAsync(CancellationToken ct = default);
+
+        /// <summary>Push inmediato del perfil (sin esperar al FullSync).</summary>
+        Task PushProfileAsync(UserProfile profile);
     }
 }
