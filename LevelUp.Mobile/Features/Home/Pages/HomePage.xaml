@@ -64,60 +64,17 @@
                 </VerticalStackLayout>
             </HorizontalStackLayout>
 
-            <!-- ── TOGGLE TEMA (pill moderno) ── -->
-            <Border Grid.Column="2"
-                    x:Name="ThemeTogglePill"
-                    WidthRequest="56" HeightRequest="28"
-                    StrokeThickness="1.5"
-                    Stroke="{AppThemeBinding
-                        Light={StaticResource TextSecondaryLight},
-                        Dark={StaticResource TextSecondaryDark}}"
-                    BackgroundColor="{AppThemeBinding
-                        Light={StaticResource SurfaceLight},
-                        Dark={StaticResource SurfaceDark}}"
-                    VerticalOptions="Center"
-                    HorizontalOptions="End">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="14"/>
-                </Border.StrokeShape>
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ToggleThemeCommand}"/>
-                </Border.GestureRecognizers>
-
-                <Grid ColumnDefinitions="28,28">
-                    <!-- Ícono Sol -->
-                    <Label Grid.Column="0"
-                           Text="☀️"
-                           FontSize="12"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"/>
-
-                    <!-- Ícono Luna -->
-                    <Label Grid.Column="1"
-                           Text="🌙"
-                           FontSize="12"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"/>
-
-                    <!-- Thumb deslizante -->
-                    <Border x:Name="ThumbIndicator"
-                            Grid.Column="0"
-                            WidthRequest="22" HeightRequest="22"
-                            StrokeThickness="0"
-                            BackgroundColor="{StaticResource Primary}"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center"
-                            TranslationX="0">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="11"/>
-                        </Border.StrokeShape>
-                        <Label x:Name="ThumbIcon"
-                               FontSize="11"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-                    </Border>
-                </Grid>
-            </Border>
+            <!-- ── LOGO DE MARCA ── -->
+            <Image Grid.Column="2"
+                   Source="logo_login.svg"
+                   HeightRequest="34"
+                   WidthRequest="34"
+                   VerticalOptions="Center"
+                   HorizontalOptions="End">
+                <Image.Behaviors>
+                    <!-- Tint naranja en modo oscuro, visible en ambos temas -->
+                </Image.Behaviors>
+            </Image>
 
             <BoxView Grid.ColumnSpan="3"
                      Style="{StaticResource Divider}"

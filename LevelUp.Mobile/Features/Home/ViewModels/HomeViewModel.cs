@@ -20,15 +20,11 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
             _tokenService = tokenService;
             LocalizationService.Instance.PropertyChanged += (_, _) =>
                 OnPropertyChanged(nameof(Greeting));
-
-            // Cargar estado inicial del tema
-            _isDarkTheme = (Application.Current?.UserAppTheme ?? AppTheme.Dark) != AppTheme.Light;
         }
 
         [ObservableProperty] private string? _userName;
         [ObservableProperty] private string? _profilePictureUrl;
         [ObservableProperty] private Guid? _userId;
-        [ObservableProperty] private bool _isDarkTheme;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsWorkoutVisible))]
@@ -55,24 +51,6 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
             !HasDayWithNoExercises &&
             TodayPlan.Exercises.Count > 0;
 
-        // ── Toggle tema ───────────────────────────────────────────────
-
-        [RelayCommand]
-        private void ToggleTheme()
-        {
-            var newTheme = !IsDarkTheme ? AppTheme.Dark : AppTheme.Light;
-
-            // 1. Aplicar tema al sistema primero
-            if (Application.Current is not null)
-                Application.Current.UserAppTheme = newTheme;
-
-            // 2. Persistir preferencia
-            AppPreferences.SetTheme(newTheme);
-
-            // 3. Notificar al ViewModel al final → dispara PropertyChanged → animación
-            IsDarkTheme = !IsDarkTheme;
-        }
-
         // ── Inicializar ───────────────────────────────────────────────
 
         [RelayCommand]
@@ -96,7 +74,8 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
 
                 if (UserId is null) return;
 
-                var today = await _homeService.GetTodayAsync(UserId.Value, Language.Spanish);
+                var language = AppPreferences.GetLanguage();
+                var today = await _homeService.GetTodayAsync(UserId.Value, language);
 
                 TodayPlan = today is null ? null : new TodayPlanDto
                 {

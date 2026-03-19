@@ -303,83 +303,136 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancelar</value>
   </data>
-  <data name="DayMon" xml:space="preserve"><value>Lun</value></data>
-  <data name="DayTue" xml:space="preserve"><value>Mar</value></data>
-  <data name="DayWed" xml:space="preserve"><value>Mié</value></data>
-  <data name="DayThu" xml:space="preserve"><value>Jue</value></data>
-  <data name="DayFri" xml:space="preserve"><value>Vie</value></data>
-  <data name="DaySat" xml:space="preserve"><value>Sáb</value></data>
-  <data name="DaySun" xml:space="preserve"><value>Dom</value></data>
-  <data name="ActivatePlan" xml:space="preserve"><value>Activar plan</value></data>
-  <data name="PlanActive" xml:space="preserve"><value>Plan activo</value></data>
-  <data name="PlanActivated" xml:space="preserve"><value>¡Plan activado!</value></data>
-  <data name="ExercisesCount" xml:space="preserve"><value>{0} ejercicios</value></data>
-  <data name="DayMonFull" xml:space="preserve"><value>Lunes</value></data>
-  <data name="DayTueFull" xml:space="preserve"><value>Martes</value></data>
-  <data name="DayWedFull" xml:space="preserve"><value>Miércoles</value></data>
-  <data name="DayThuFull" xml:space="preserve"><value>Jueves</value></data>
-  <data name="DayFriFull" xml:space="preserve"><value>Viernes</value></data>
-  <data name="DaySatFull" xml:space="preserve"><value>Sábado</value></data>
-  <data name="DaySunFull" xml:space="preserve"><value>Domingo</value></data>
-  <data name="NoNotes" xml:space="preserve"><value>Sin notas</value></data>
-  <data name="ExercisesShort" xml:space="preserve"><value>ejercicios</value></data>
-  <data name="ExercisesSectionTitle" xml:space="preserve"><value>EJERCICIOS</value></data>
-  <data name="NoExercisesYet" xml:space="preserve"><value>Sin ejercicios aún</value></data>
-  <data name="AddFirstExercise" xml:space="preserve"><value>Toca el botón de abajo para agregar ejercicios a este día</value></data>
-  <data name="AddExercise" xml:space="preserve"><value>Agregar ejercicio</value></data>
-  <data name="AddExercises" xml:space="preserve"><value>Agregar ejercicios</value></data>
-  <data name="Selected" xml:space="preserve"><value>seleccionados</value></data>
-  <data name="SearchExercises" xml:space="preserve"><value>Buscar ejercicios...</value></data>
-  <data name="NoExercisesFound" xml:space="preserve"><value>No se encontraron ejercicios</value></data>
-  <!-- ══════════════════════════════════════════════════════════════
-     PROFILE PAGE — agregar en AppStrings.es.resx (Español)
-     Nota: SaveChanges y Settings ya existen, se reutilizan.
-══════════════════════════════════════════════════════════════ -->
-
-<data name="ProfileSectionBodyFitness" xml:space="preserve">
-  <value>CUERPO Y ESTADO FÍSICO</value>
-</data>
-<data name="ProfileSectionPreferences" xml:space="preserve">
-  <value>PREFERENCIAS</value>
-</data>
-<data name="ProfileBodyWeightLabel" xml:space="preserve">
-  <value>Peso Corporal</value>
-</data>
-<data name="ProfileBodyWeightSub" xml:space="preserve">
-  <value>Se usa como referencia al iniciar un entrenamiento</value>
-</data>
-<data name="ProfileWeightUnitLabel" xml:space="preserve">
-  <value>Unidad de Peso</value>
-</data>
-<data name="ProfileLanguageLabel" xml:space="preserve">
-  <value>Idioma</value>
-</data>
-<data name="ProfileLanguageSub" xml:space="preserve">
-  <value>Idioma de la aplicación</value>
-</data>
-<data name="ProfileTimezoneLabel" xml:space="preserve">
-  <value>Zona Horaria</value>
-</data>
-<data name="ProfileTimezoneSub" xml:space="preserve">
-  <value>Para programar entrenamientos</value>
-</data>
-<data name="ProfileDarkModeLabel" xml:space="preserve">
-  <value>Modo Oscuro</value>
-</data>
-<data name="ProfileDarkModeSub" xml:space="preserve">
-  <value>Reemplaza el tema del sistema</value>
-</data>
-<data name="ProfileSavingButton" xml:space="preserve">
-  <value>Guardando…</value>
-</data>
-<data name="ProfileSettingsSaved" xml:space="preserve">
-  <value>Configuración guardada</value>
-</data>
-<data name="ProfileErrorLoad" xml:space="preserve">
-  <value>No se pudo cargar el perfil.</value>
-</data>
-<data name="ProfileErrorSave" xml:space="preserve">
-  <value>No se pudo guardar la configuración.</value>
-</data>
-
+  <data name="DayMon" xml:space="preserve">
+    <value>Lun</value>
+  </data>
+  <data name="DayTue" xml:space="preserve">
+    <value>Mar</value>
+  </data>
+  <data name="DayWed" xml:space="preserve">
+    <value>Mié</value>
+  </data>
+  <data name="DayThu" xml:space="preserve">
+    <value>Jue</value>
+  </data>
+  <data name="DayFri" xml:space="preserve">
+    <value>Vie</value>
+  </data>
+  <data name="DaySat" xml:space="preserve">
+    <value>Sáb</value>
+  </data>
+  <data name="DaySun" xml:space="preserve">
+    <value>Dom</value>
+  </data>
+  <data name="ActivatePlan" xml:space="preserve">
+    <value>Activar plan</value>
+  </data>
+  <data name="PlanActive" xml:space="preserve">
+    <value>Plan activo</value>
+  </data>
+  <data name="PlanActivated" xml:space="preserve">
+    <value>¡Plan activado!</value>
+  </data>
+  <data name="ExercisesCount" xml:space="preserve">
+    <value>{0} ejercicios</value>
+  </data>
+  <data name="DayMonFull" xml:space="preserve">
+    <value>Lunes</value>
+  </data>
+  <data name="DayTueFull" xml:space="preserve">
+    <value>Martes</value>
+  </data>
+  <data name="DayWedFull" xml:space="preserve">
+    <value>Miércoles</value>
+  </data>
+  <data name="DayThuFull" xml:space="preserve">
+    <value>Jueves</value>
+  </data>
+  <data name="DayFriFull" xml:space="preserve">
+    <value>Viernes</value>
+  </data>
+  <data name="DaySatFull" xml:space="preserve">
+    <value>Sábado</value>
+  </data>
+  <data name="DaySunFull" xml:space="preserve">
+    <value>Domingo</value>
+  </data>
+  <data name="NoNotes" xml:space="preserve">
+    <value>Sin notas</value>
+  </data>
+  <data name="ExercisesShort" xml:space="preserve">
+    <value>ejercicios</value>
+  </data>
+  <data name="ExercisesSectionTitle" xml:space="preserve">
+    <value>EJERCICIOS</value>
+  </data>
+  <data name="NoExercisesYet" xml:space="preserve">
+    <value>Sin ejercicios aún</value>
+  </data>
+  <data name="AddFirstExercise" xml:space="preserve">
+    <value>Toca el botón de abajo para agregar ejercicios a este día</value>
+  </data>
+  <data name="AddExercise" xml:space="preserve">
+    <value>Agregar ejercicio</value>
+  </data>
+  <data name="AddExercises" xml:space="preserve">
+    <value>Agregar ejercicios</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>seleccionados</value>
+  </data>
+  <data name="SearchExercises" xml:space="preserve">
+    <value>Buscar ejercicios...</value>
+  </data>
+  <data name="NoExercisesFound" xml:space="preserve">
+    <value>No se encontraron ejercicios</value>
+  </data>
+  <data name="ProfileSectionBodyFitness" xml:space="preserve">
+    <value>CUERPO Y ESTADO FÍSICO</value>
+  </data>
+  <data name="ProfileSectionPreferences" xml:space="preserve">
+    <value>PREFERENCIAS</value>
+  </data>
+  <data name="ProfileBodyWeightLabel" xml:space="preserve">
+    <value>Peso Corporal</value>
+  </data>
+  <data name="ProfileBodyWeightSub" xml:space="preserve">
+    <value>Se usa como referencia al iniciar un entrenamiento</value>
+  </data>
+  <data name="ProfileWeightUnitLabel" xml:space="preserve">
+    <value>Unidad de Peso</value>
+  </data>
+  <data name="ProfileLanguageLabel" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="ProfileLanguageSub" xml:space="preserve">
+    <value>Idioma de la aplicación</value>
+  </data>
+  <data name="ProfileTimezoneLabel" xml:space="preserve">
+    <value>Zona Horaria</value>
+  </data>
+  <data name="ProfileTimezoneSub" xml:space="preserve">
+    <value>Para programar entrenamientos</value>
+  </data>
+  <data name="ProfileDarkModeLabel" xml:space="preserve">
+    <value>Modo Oscuro</value>
+  </data>
+  <data name="ProfileDarkModeSub" xml:space="preserve">
+    <value>Reemplaza el tema del sistema</value>
+  </data>
+  <data name="ProfileSavingButton" xml:space="preserve">
+    <value>Guardando…</value>
+  </data>
+  <data name="ProfileSettingsSaved" xml:space="preserve">
+    <value>Configuración guardada</value>
+  </data>
+  <data name="ProfileErrorLoad" xml:space="preserve">
+    <value>No se pudo cargar el perfil.</value>
+  </data>
+  <data name="ProfileErrorSave" xml:space="preserve">
+    <value>No se pudo guardar la configuración.</value>
+  </data>
+  <data name="ProfileLogout" xml:space="preserve">
+    <value>Cerras sesión</value>
+  </data>
 </root>

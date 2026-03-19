@@ -9,16 +9,12 @@
     Title="{local:Localize Settings}"
     Shell.NavBarIsVisible="False">
 
-    <!-- ══════════════════════════════════════════════════════════════
-         ROOT: ScrollView con fondo del tema
-    ══════════════════════════════════════════════════════════════ -->
     <ScrollView>
         <VerticalStackLayout Spacing="0">
 
             <!-- ── HEADER HERO ──────────────────────────────────── -->
             <Grid HeightRequest="220">
 
-                <!-- Fondo degradado brand -->
                 <BoxView>
                     <BoxView.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -29,17 +25,14 @@
                     </BoxView.Background>
                 </BoxView>
 
-                <!-- Overlay oscuro sutil -->
                 <BoxView Color="#33000000"/>
 
-                <!-- Contenido del header -->
                 <VerticalStackLayout
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
                     Spacing="10"
                     Padding="0,30,0,0">
 
-                    <!-- Avatar -->
                     <Border
                         HeightRequest="84"
                         WidthRequest="84"
@@ -54,7 +47,6 @@
                         </Border.Shadow>
 
                         <Grid>
-                            <!-- Placeholder con iniciales -->
                             <Label
                                 Text="{Binding Name, StringFormat='{0:0}'}"
                                 FontSize="32"
@@ -66,18 +58,16 @@
                             <Image
                                 Source="{Binding ProfilePictureUrl}"
                                 Aspect="AspectFill"
-                                IsVisible="{Binding ProfilePictureUrl, Converter={StaticResource IsNotNullConverter}}"/>
+                                IsVisible="{Binding HasProfilePicture}"/>
                         </Grid>
                     </Border>
 
-                    <!-- Nombre -->
                     <Label
                         Text="{Binding Name}"
                         Style="{StaticResource SubtitleLabel}"
                         TextColor="White"
                         HorizontalOptions="Center"/>
 
-                    <!-- Email -->
                     <Label
                         Text="{Binding Email}"
                         Style="{StaticResource BodyLabel}"
@@ -93,7 +83,6 @@
                 Spacing="16"
                 BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
 
-                <!-- Loading indicator -->
                 <ActivityIndicator
                     IsRunning="{Binding IsLoading}"
                     IsVisible="{Binding IsLoading}"
@@ -148,15 +137,11 @@
                 <Border Style="{StaticResource CardBorder}">
                     <VerticalStackLayout Spacing="0">
 
-                        <!-- Body weight -->
                         <Grid ColumnDefinitions="*,Auto" Padding="0,8">
                             <VerticalStackLayout Grid.Column="0" Spacing="2">
                                 <Label Text="{local:Localize ProfileBodyWeightLabel}" FontSize="14" FontAttributes="Bold"/>
-                                <Label
-                                    Text="{local:Localize ProfileBodyWeightSub}"
-                                    Style="{StaticResource CaptionLabel}"/>
+                                <Label Text="{local:Localize ProfileBodyWeightSub}" Style="{StaticResource CaptionLabel}"/>
                             </VerticalStackLayout>
-
                             <HorizontalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
                                 <Entry
                                     Text="{Binding BodyWeightDisplay}"
@@ -175,7 +160,6 @@
 
                         <BoxView Style="{StaticResource Divider}"/>
 
-                        <!-- Weight unit picker -->
                         <Grid ColumnDefinitions="*,Auto" Padding="0,12">
                             <Label
                                 Grid.Column="0"
@@ -208,7 +192,6 @@
                 <Border Style="{StaticResource CardBorder}">
                     <VerticalStackLayout Spacing="0">
 
-                        <!-- Language -->
                         <Grid ColumnDefinitions="*,Auto" Padding="0,12">
                             <VerticalStackLayout Grid.Column="0" Spacing="2">
                                 <Label Text="{local:Localize ProfileLanguageLabel}" FontSize="14" FontAttributes="Bold"/>
@@ -226,25 +209,6 @@
 
                         <BoxView Style="{StaticResource Divider}"/>
 
-                        <!-- Timezone -->
-                        <Grid ColumnDefinitions="*,Auto" Padding="0,12">
-                            <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                <Label Text="{local:Localize ProfileTimezoneLabel}" FontSize="14" FontAttributes="Bold"/>
-                                <Label Text="{local:Localize ProfileTimezoneSub}" Style="{StaticResource CaptionLabel}"/>
-                            </VerticalStackLayout>
-                            <Picker
-                                Grid.Column="1"
-                                ItemsSource="{Binding Timezones}"
-                                SelectedIndex="{Binding SelectedTimezoneIndex}"
-                                WidthRequest="160"
-                                HorizontalOptions="End"
-                                TextColor="{StaticResource Primary}"
-                                FontSize="12"/>
-                        </Grid>
-
-                        <BoxView Style="{StaticResource Divider}"/>
-
-                        <!-- Dark theme toggle -->
                         <Grid ColumnDefinitions="*,Auto" Padding="0,12">
                             <VerticalStackLayout Grid.Column="0" Spacing="2">
                                 <Label Text="{local:Localize ProfileDarkModeLabel}" FontSize="14" FontAttributes="Bold"/>
@@ -267,7 +231,7 @@
                     Text="{local:Localize SaveChanges}"
                     Style="{StaticResource PrimaryButton}"
                     Command="{Binding SaveCommand}"
-                    IsEnabled="{Binding IsSaving, Converter={StaticResource InvertedBoolConverter}}"
+                    IsEnabled="{Binding CanSave}"
                     Margin="0,8,0,0">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button" Binding="{Binding IsSaving}" Value="True">
@@ -275,6 +239,17 @@
                         </DataTrigger>
                     </Button.Triggers>
                 </Button>
+
+                <!-- ════════════════════════════════════════════════ -->
+                <!--  LOGOUT BUTTON                                   -->
+                <!-- ════════════════════════════════════════════════ -->
+                <Button
+                    Text="{local:Localize ProfileLogout}"
+                    Style="{StaticResource SecondaryButton}"
+                    Command="{Binding LogoutCommand}"
+                    TextColor="{StaticResource Error}"
+                    BorderColor="{StaticResource Error}"
+                    Margin="0,4,0,0"/>
 
             </VerticalStackLayout>
         </VerticalStackLayout>

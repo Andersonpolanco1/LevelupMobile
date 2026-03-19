@@ -8,21 +8,19 @@
     <Color x:Key="BrandMid">#FF8000</Color>
     <Color x:Key="BrandEnd">#FFD000</Color>
 
-    <!-- PRIMARY -->
-    <Color x:Key="Primary">#FF7A00</Color>
-    <Color x:Key="PrimaryHover">#FF8F1F</Color>
-    <Color x:Key="PrimaryPressed">#E56700</Color>
+    <!-- PRIMARY — punto medio visual del gradiente del logo -->
+    <Color x:Key="Primary">#FF6600</Color>
+    <Color x:Key="PrimaryHover">#FF7A1A</Color>
+    <Color x:Key="PrimaryPressed">#E55C00</Color>
 
     <!-- DARK THEME -->
     <Color x:Key="BackgroundDark">#0B0B0C</Color>
     <Color x:Key="SurfaceDark">#141416</Color>
     <Color x:Key="SurfaceElevatedDark">#1E1E21</Color>
     <Color x:Key="CardDark">#232327</Color>
-
     <Color x:Key="TextPrimaryDark">#FFFFFF</Color>
     <Color x:Key="TextSecondaryDark">#A1A1AA</Color>
     <Color x:Key="TextDisabledDark">#52525B</Color>
-
     <Color x:Key="DividerDark">#2A2A2E</Color>
 
     <!-- LIGHT THEME -->
@@ -30,11 +28,9 @@
     <Color x:Key="SurfaceLight">#FFFFFF</Color>
     <Color x:Key="SurfaceElevatedLight">#F1F1F4</Color>
     <Color x:Key="CardLight">#FFFFFF</Color>
-
     <Color x:Key="TextPrimaryLight">#18181B</Color>
     <Color x:Key="TextSecondaryLight">#71717A</Color>
     <Color x:Key="TextDisabledLight">#A1A1AA</Color>
-
     <Color x:Key="DividerLight">#E4E4E7</Color>
 
     <!-- STATES -->
