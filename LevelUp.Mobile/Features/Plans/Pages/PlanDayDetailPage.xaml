@@ -6,6 +6,7 @@
     xmlns:models="clr-namespace:LevelUp.Mobile.Features.Plans.Models"
     xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants"
     xmlns:local="clr-namespace:LevelUp.Mobile.Core.Extensions"
+    xmlns:controls="clr-namespace:LevelUp.Mobile.Shared.Controls"
     x:Class="LevelUp.Mobile.Features.Plans.Pages.PlanDayDetailPage"
     x:DataType="vm:PlanDayDetailViewModel"
     Shell.NavBarIsVisible="False">
@@ -14,16 +15,16 @@
 
         <!-- ── HEADER ── -->
         <Grid Grid.Row="0"
-              RowDefinitions="Auto,Auto"
-              Padding="20,56,20,16"
-              BackgroundColor="{AppThemeBinding
-                  Light={StaticResource SurfaceLight},
-                  Dark={StaticResource SurfaceDark}}">
+      RowDefinitions="Auto,Auto"
+      Padding="20,44,20,12"
+      BackgroundColor="{AppThemeBinding
+          Light={StaticResource SurfaceLight},
+          Dark={StaticResource SurfaceDark}}">
 
             <!-- Top nav -->
             <Grid Grid.Row="0"
-                  ColumnDefinitions="40,*,40"
-                  Margin="0,0,0,16">
+          ColumnDefinitions="40,*,40"
+          Margin="0,0,0,10">
 
                 <Label Grid.Column="0"
                        Text="{x:Static constants:FA.AngleLeft}"
@@ -56,22 +57,9 @@
             </Grid>
 
             <!-- Day info row -->
-            <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+            <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="10">
 
-                <Border Grid.Column="0"
-                        Padding="12,8"
-                        StrokeThickness="0"
-                        BackgroundColor="#FFF3E8">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="10"/>
-                    </Border.StrokeShape>
-                    <Label Text="{x:Static constants:FA.Dumbbell}"
-                           FontFamily="FASolid" FontSize="18"
-                           TextColor="{StaticResource Primary}"/>
-                </Border>
-
-                <!-- Notas: solo visibles si existen -->
-                <Label Grid.Column="1"
+                <Label Grid.Column="0"
                        Text="{Binding Day.Notes}"
                        Style="{StaticResource BodyLabel}"
                        VerticalOptions="Center"
@@ -79,8 +67,7 @@
                        IsVisible="{Binding Day.Notes,
                            Converter={StaticResource IsNotNullConverter}}"/>
 
-                <!-- Exercise count badge -->
-                <Border Grid.Column="2"
+                <Border Grid.Column="1"
                         Padding="10,5"
                         StrokeThickness="0"
                         VerticalOptions="Center"
@@ -124,14 +111,6 @@
                     IsVisible="{Binding IsBusy,
                         Converter={StaticResource InvertedBoolConverter}}">
 
-                    <!-- Section header -->
-                    <Label Text="{local:Localize ExercisesSectionTitle}"
-                           Style="{StaticResource CaptionLabel}"
-                           FontAttributes="Bold"
-                           CharacterSpacing="2"
-                           Margin="0,0,0,12"
-                           IsVisible="{Binding HasExercises}"/>
-
                     <!-- Empty state -->
                     <VerticalStackLayout
                         IsVisible="{Binding HasExercises,
@@ -153,95 +132,52 @@
                                Margin="24,0"/>
                     </VerticalStackLayout>
 
-                    <!-- Exercise cards -->
-                    <VerticalStackLayout
-                        Spacing="10"
-                        BindableLayout.ItemsSource="{Binding Exercises}">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="models:PlanExerciseRow">
-                                <Border Style="{StaticResource CardBorder}" Padding="0">
-                                    <Grid ColumnDefinitions="4,14,*,Auto" Padding="0,14,14,14">
+                    <!-- Grid agrupado por músculo -->
+                    <CollectionView
+                        ItemsSource="{Binding ExerciseGroups}"
+                        IsGrouped="True"
+                        SelectionMode="None"
+                        IsVisible="{Binding HasExercises}">
 
-                                        <BoxView Grid.Column="0"
-                                                 WidthRequest="4"
-                                                 BackgroundColor="{StaticResource Primary}"
-                                                 VerticalOptions="Fill"/>
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout
+                                Orientation="Vertical"
+                                Span="2"
+                                HorizontalItemSpacing="10"
+                                VerticalItemSpacing="0"/>
+                        </CollectionView.ItemsLayout>
 
-                                        <Label Grid.Column="1"
-                                               Text="{Binding Order}"
-                                               FontSize="11" FontAttributes="Bold"
-                                               TextColor="{AppThemeBinding
-                                                   Light={StaticResource TextDisabledLight},
-                                                   Dark={StaticResource TextDisabledDark}}"
-                                               VerticalOptions="Start"
-                                               Margin="0,2,0,0"/>
-
-                                        <VerticalStackLayout Grid.Column="2" Spacing="4" Margin="10,0,0,0">
-                                            <Label Text="{Binding ExerciseName}"
-                                                   Style="{StaticResource SubtitleLabel}"
-                                                   FontSize="15"
-                                                   LineBreakMode="TailTruncation"/>
-
-                                            <HorizontalStackLayout Spacing="10">
-
-                                                <HorizontalStackLayout Spacing="3"
-                                                    IsVisible="{Binding Exercise.SetsPlanned,
-                                                        Converter={StaticResource IsNotNullConverter}}">
-                                                    <Label Text="{x:Static constants:FA.LayerGroup}"
-                                                           FontFamily="FASolid" FontSize="10"
-                                                           TextColor="{StaticResource Primary}"
-                                                           VerticalOptions="Center"/>
-                                                    <Label Text="{Binding SetsText}"
-                                                           FontSize="12"
-                                                           TextColor="{AppThemeBinding
-                                                               Light={StaticResource TextSecondaryLight},
-                                                               Dark={StaticResource TextSecondaryDark}}"
-                                                           VerticalOptions="Center"/>
-                                                </HorizontalStackLayout>
-
-                                                <HorizontalStackLayout Spacing="3"
-                                                    IsVisible="{Binding Exercise.RepsPlanned,
-                                                        Converter={StaticResource IsNotNullConverter}}">
-                                                    <Label Text="{x:Static constants:FA.RotateRight}"
-                                                           FontFamily="FASolid" FontSize="10"
-                                                           TextColor="{StaticResource Primary}"
-                                                           VerticalOptions="Center"/>
-                                                    <Label Text="{Binding RepsText}"
-                                                           FontSize="12"
-                                                           TextColor="{AppThemeBinding
-                                                               Light={StaticResource TextSecondaryLight},
-                                                               Dark={StaticResource TextSecondaryDark}}"
-                                                           VerticalOptions="Center"/>
-                                                </HorizontalStackLayout>
-
-                                            </HorizontalStackLayout>
-
-                                            <Label Text="{Binding Exercise.Notes}"
-                                                   Style="{StaticResource BodyLabel}"
-                                                   FontSize="12"
-                                                   IsVisible="{Binding Exercise.Notes,
-                                                       Converter={StaticResource IsNotNullConverter}}"/>
-                                        </VerticalStackLayout>
-
-                                        <!-- Trash -->
-                                        <Label Grid.Column="3"
-                                               Text="{x:Static constants:FA.Trash}"
-                                               FontFamily="FASolid" FontSize="15"
-                                               TextColor="{StaticResource Error}"
-                                               VerticalOptions="Center"
-                                               HorizontalOptions="Center">
-                                            <Label.GestureRecognizers>
-                                                <TapGestureRecognizer
-                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
-                                                        Path=BindingContext.RemoveExerciseCommand}"
-                                                    CommandParameter="{Binding .}"/>
-                                            </Label.GestureRecognizers>
-                                        </Label>
-                                    </Grid>
-                                </Border>
+                        <!-- Header: grupo muscular -->
+                        <CollectionView.GroupHeaderTemplate>
+                            <DataTemplate x:DataType="models:PlanExerciseGroup">
+                                <Label Text="{Binding MuscleGroupName}"
+                                       FontSize="12" FontAttributes="Bold"
+                                       CharacterSpacing="1.2"
+                                       Margin="2,12,0,6"
+                                       TextColor="{AppThemeBinding
+                                           Light={StaticResource TextDisabledLight},
+                                           Dark={StaticResource TextDisabledDark}}"/>
                             </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </VerticalStackLayout>
+                        </CollectionView.GroupHeaderTemplate>
+
+                        <!-- Card de ejercicio -->
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:PlanExerciseRow">
+                                <Grid Padding="0,0,0,10">
+                                    <controls:ExerciseCardView
+                                        ExerciseName="{Binding ExerciseName}"
+                                        ImageUrl="{Binding ImageUrl}"
+                                        Order="{Binding Order}"
+                                        ShowOrder="True"
+                                        SetsPlanned="{Binding Exercise.SetsPlanned}"
+                                        RepsPlanned="{Binding Exercise.RepsPlanned}"
+                                        ShowSetsReps="True"
+                                        IsSelected="False"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+
+                    </CollectionView>
 
                     <BoxView HeightRequest="16" Color="Transparent"/>
                 </VerticalStackLayout>
@@ -256,7 +192,7 @@
                   Dark={StaticResource SurfaceDark}}">
             <BoxView Style="{StaticResource Divider}"
                      VerticalOptions="Start" Margin="0,-12,0,0"/>
-            <Button Text="{local:Localize AddExercise}"
+            <Button Text="{local:Localize ManageExercises}"
                     Style="{StaticResource PrimaryButton}"
                     Command="{Binding AddExerciseCommand}"
                     Margin="0,12,0,0"/>

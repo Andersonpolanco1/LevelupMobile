@@ -435,4 +435,7 @@
   <data name="ProfileLogout" xml:space="preserve">
     <value>Log Out</value>
   </data>
+  <data name="ManageExercises" xml:space="preserve">
+    <value>Add / Remove Exercises</value>
+  </data>
 </root>

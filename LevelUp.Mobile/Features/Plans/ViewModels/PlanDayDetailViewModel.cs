@@ -39,13 +39,13 @@ public partial class PlanDayDetailViewModel(
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasExercises))]
     [NotifyPropertyChangedFor(nameof(ExerciseCount))]
-    private ObservableCollection<PlanExerciseRow> _exercises = [];
+    private ObservableCollection<PlanExerciseGroup> _exerciseGroups = [];
 
     [ObservableProperty]
     private bool _isBusy;
 
-    public bool HasExercises => Exercises.Count > 0;
-    public int ExerciseCount => Exercises.Count;
+    public bool HasExercises => ExerciseGroups.Sum(g => g.Count) > 0;
+    public int ExerciseCount => ExerciseGroups.Sum(g => g.Count);
 
     public string DayName => Day?.DayOfWeek switch
     {
@@ -80,30 +80,52 @@ public partial class PlanDayDetailViewModel(
     {
         var language = AppPreferences.GetLanguage();
 
+        // 1. Nombre e imagen del ejercicio
         var withTranslation = await exerciseRepo.GetWithTranslationAsync(language);
-        var nameMap = withTranslation
-            .ToDictionary(x => x.Exercise.Id, x => x.Translation?.Name ?? x.Exercise.Id.ToString());
+        var exerciseMap = withTranslation.ToDictionary(
+            x => x.Exercise.Id,
+            x => (
+                Name: x.Translation?.Name ?? x.Exercise.Id.ToString(),
+                ImageUrl: x.Exercise.ImageUrl
+            ));
 
+        // 2. Nombre del grupo muscular primario
+        var muscleGroupMap = await exerciseRepo.GetPrimaryMuscleGroupNameMapAsync(language);
+
+        // 3. Ejercicios del día
         var planExercises = await planService.GetExercisesForDayAsync(_dayId);
 
         var rows = planExercises
             .OrderBy(pe => pe.Order)
-            .Select(pe => new PlanExerciseRow
+            .Select(pe =>
             {
-                Exercise = pe,
-                ExerciseName = nameMap.TryGetValue(pe.ExerciseId, out var name) ? name : ""
+                exerciseMap.TryGetValue(pe.ExerciseId, out var info);
+                muscleGroupMap.TryGetValue(pe.ExerciseId, out var muscleGroup);
+
+                return new PlanExerciseRow
+                {
+                    Exercise = pe,
+                    ExerciseName = info.Name ?? "",
+                    ImageUrl = info.ImageUrl,
+                    MuscleGroupName = muscleGroup ?? "—",
+                    Order = pe.Order
+                };
             })
             .ToList();
 
-        Exercises = new ObservableCollection<PlanExerciseRow>(rows);
+        ExerciseGroups = new ObservableCollection<PlanExerciseGroup>(
+            rows
+                .GroupBy(r => r.MuscleGroupName)
+                .OrderBy(g => g.Key)
+                .Select(g => new PlanExerciseGroup(g.Key, g.OrderBy(r => r.Order)))
+        );
+
         OnPropertyChanged(nameof(HasExercises));
         OnPropertyChanged(nameof(ExerciseCount));
     }
 
     // ── Refresh al volver del picker ──────────────────────────────────
 
-    // Llama este método desde el code-behind de PlanDayDetailPage
-    // en OnAppearing para refrescar cuando el usuario vuelve del picker.
     public async Task OnAppearingAsync()
     {
         if (_dayId == Guid.Empty) return;
@@ -139,9 +161,7 @@ public partial class PlanDayDetailViewModel(
     {
         try
         {
-            System.Diagnostics.Debug.WriteLine($">>> AddExercise: navigating, dayId={_dayId}");
             await Shell.Current.GoToAsync($"exercisePicker?dayId={_dayId}");
-            System.Diagnostics.Debug.WriteLine(">>> AddExercise: navigation done");
         }
         catch (Exception ex)
         {
@@ -149,19 +169,5 @@ public partial class PlanDayDetailViewModel(
             System.Diagnostics.Debug.WriteLine($">>> INNER: {ex.InnerException?.Message}");
             System.Diagnostics.Debug.WriteLine($">>> STACK: {ex.StackTrace}");
         }
-    }
-
-    [RelayCommand]
-    private async Task RemoveExercise(PlanExerciseRow row)
-    {
-        bool confirm = await Shell.Current.DisplayAlert(
-            "Remove exercise",
-            $"Remove \"{row.ExerciseName}\" from this day?",
-            "Remove", "Cancel");
-
-        if (!confirm) return;
-
-        await planService.RemovePlanExerciseAsync(row.Exercise.Id);
-        await RefreshExercisesAsync();
     }
 }
