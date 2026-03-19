@@ -153,8 +153,16 @@ public partial class ExercisePickerViewModel(
     [RelayCommand]
     private void SelectGroup(MuscleGroupRow group)
     {
-        // Toggle: segundo tap en el mismo chip lo deselecciona
-        _selectedGroupId = _selectedGroupId == group.Id ? null : group.Id;
+        var newId = _selectedGroupId == group.Id ? null : (Guid?)group.Id;
+
+        foreach (var g in MuscleGroups)
+            g.IsSelected = g.Id == newId;
+
+        var temp = MuscleGroups;
+        MuscleGroups = [];
+        MuscleGroups = temp;
+
+        _selectedGroupId = newId;
         OnPropertyChanged(nameof(SelectedGroup));
         ApplyFilters();
     }

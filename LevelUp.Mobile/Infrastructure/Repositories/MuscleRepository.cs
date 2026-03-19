@@ -59,11 +59,10 @@ public class MuscleRepository(LocalDatabase db)
         var muscleIds = await GetMuscleIdsByGroupAsync(muscleGroupId);
         if (muscleIds.Count == 0) return [];
 
-        // ExerciseMuscle no filtra por IsDeleted porque es tabla de relación
         var links = await conn.Table<ExerciseMuscle>().ToListAsync();
 
         return links
-            .Where(l => muscleIds.Contains(l.MuscleId))
+            .Where(l => muscleIds.Contains(l.MuscleId) && l.Role == MuscleRole.Primary) 
             .Select(l => l.ExerciseId)
             .ToHashSet();
     }
