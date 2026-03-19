@@ -1,4 +1,6 @@
-﻿namespace LevelUp.Mobile.Features.Home.Models
+﻿// ── Models/TodayPlanDto.cs ────────────────────────────────────────────────────
+
+namespace LevelUp.Mobile.Features.Home.Models
 {
     public class TodayPlanDto
     {
@@ -10,7 +12,7 @@
         public List<TodayExerciseDto> Exercises { get; set; } = [];
     }
 
-    public class TodayExerciseDto
+    public class TodayExerciseDto 
     {
         public Guid ExerciseId { get; set; }
         public string ExerciseName { get; set; } = string.Empty;

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants"
+    x:Class="LevelUp.Mobile.Shared.Controls.ExerciseCardView">
+
+    <Border StrokeThickness="0"
+            HeightRequest="180"
+            BackgroundColor="{AppThemeBinding
+                Light={StaticResource SurfaceLight},
+                Dark={StaticResource CardDark}}">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="14"/>
+        </Border.StrokeShape>
+
+        <Grid RowDefinitions="*,Auto">
+
+            <!-- Imagen o placeholder -->
+            <Grid Grid.Row="0"
+                  BackgroundColor="{AppThemeBinding
+                      Light={StaticResource SurfaceElevatedLight},
+                      Dark={StaticResource SurfaceElevatedDark}}">
+
+                <Label Text="{x:Static constants:FA.Dumbbell}"
+                       FontFamily="FASolid" FontSize="32"
+                       TextColor="{AppThemeBinding
+                           Light={StaticResource TextDisabledLight},
+                           Dark={StaticResource TextDisabledDark}}"
+                       HorizontalOptions="Center" VerticalOptions="Center"
+                       IsVisible="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                           Path=ImageUrl, Converter={StaticResource IsNullConverter}}"/>
+
+                <Image Source="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                           Path=ImageUrl}"
+                       Aspect="AspectFill"
+                       IsVisible="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                           Path=ImageUrl, Converter={StaticResource IsNotNullConverter}}"/>
+
+                <!-- Overlay de selección (ExercisePicker) -->
+                <Border IsVisible="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                            Path=IsSelected}"
+                        BackgroundColor="#CC000000"
+                        StrokeThickness="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="0"/>
+                    </Border.StrokeShape>
+                    <Label Text="{x:Static constants:FA.CircleCheck}"
+                           FontFamily="FASolid" FontSize="32"
+                           TextColor="{StaticResource Primary}"
+                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Border>
+
+                <!-- Badge de orden -->
+                <Border Margin="6" Padding="5,2"
+                        StrokeThickness="0"
+                        BackgroundColor="#CC000000"
+                        HorizontalOptions="Start" VerticalOptions="Start"
+                        IsVisible="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                            Path=ShowOrder}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="6"/>
+                    </Border.StrokeShape>
+                    <Label Text="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                               Path=Order}"
+                           FontSize="10" FontAttributes="Bold" TextColor="White"/>
+                </Border>
+            </Grid>
+
+            <!-- Footer -->
+            <VerticalStackLayout Grid.Row="1" Padding="10,8" Spacing="2">
+                <Label Text="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                           Path=ExerciseName}"
+                       FontSize="12" FontAttributes="Bold"
+                       LineBreakMode="TailTruncation" MaxLines="2"
+                       TextColor="{AppThemeBinding
+                           Light={StaticResource TextPrimaryLight},
+                           Dark={StaticResource TextPrimaryDark}}"/>
+
+                <!-- Sets × Reps (opcionales) -->
+                <HorizontalStackLayout Spacing="4"
+                    IsVisible="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                        Path=ShowSetsReps}">
+                    <Label FontSize="11" FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}"
+                           IsVisible="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                               Path=SetsPlanned, Converter={StaticResource IsNotNullConverter}}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                                          Path=SetsPlanned}"/>
+                                <Span Text=" sets"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Text="×" FontSize="11"
+                           TextColor="{AppThemeBinding
+                               Light={StaticResource TextDisabledLight},
+                               Dark={StaticResource TextDisabledDark}}"
+                           IsVisible="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                               Path=RepsPlanned, Converter={StaticResource IsNotNullConverter}}"/>
+                    <Label FontSize="11" FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}"
+                           IsVisible="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                               Path=RepsPlanned, Converter={StaticResource IsNotNullConverter}}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                                          Path=RepsPlanned}"/>
+                                <Span Text=" reps"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- Borde naranja al seleccionar -->
+        <Border.Triggers>
+            <DataTrigger TargetType="Border"
+                         Binding="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                             Path=IsSelected}"
+                         Value="True">
+                <Setter Property="Stroke" Value="{StaticResource Primary}"/>
+                <Setter Property="StrokeThickness" Value="2"/>
+            </DataTrigger>
+            <DataTrigger TargetType="Border"
+                         Binding="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                             Path=IsSelected}"
+                         Value="False">
+                <Setter Property="Stroke" Value="Transparent"/>
+                <Setter Property="StrokeThickness" Value="0"/>
+            </DataTrigger>
+        </Border.Triggers>
+    </Border>
+</ContentView>

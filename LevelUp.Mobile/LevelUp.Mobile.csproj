@@ -84,13 +84,12 @@
 
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Core\Helpers\" />
 	  <Folder Include="Core\Controls\" />
+	  <Folder Include="Core\Helpers\" />
 	  <Folder Include="Features\Workouts\Models\" />
 	  <Folder Include="Features\Workouts\Services\" />
 	  <Folder Include="Features\Workouts\ViewModels\" />
 	  <Folder Include="Infrastructure\Storage\" />
-	  <Folder Include="Shared\Controls\" />
 	  <Folder Include="Shared\Components\" />
 	</ItemGroup>
 
@@ -155,6 +154,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Resources\Themes\LightTheme.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Shared\Controls\ExerciseCardView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

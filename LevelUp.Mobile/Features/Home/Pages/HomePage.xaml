@@ -5,6 +5,7 @@
              xmlns:models="clr-namespace:LevelUp.Mobile.Features.Home.Models"
              xmlns:local="clr-namespace:LevelUp.Mobile.Core.Extensions"
              xmlns:constants="clr-namespace:LevelUp.Mobile.Core.Constants"
+             xmlns:controls="clr-namespace:LevelUp.Mobile.Shared.Controls"
              x:Class="LevelUp.Mobile.Features.Home.Pages.HomePage"
              x:DataType="vm:HomeViewModel">
 
@@ -48,21 +49,11 @@
                 </VerticalStackLayout>
             </HorizontalStackLayout>
 
-            <!-- ── LOGO DE MARCA ── -->
-            <Image Grid.Column="2"
-                   Source="logo_login.svg"
-                   HeightRequest="34"
-                   WidthRequest="34"
-                   VerticalOptions="Center"
-                   HorizontalOptions="End">
-                <Image.Behaviors>
-                    <!-- Tint naranja en modo oscuro, visible en ambos temas -->
-                </Image.Behaviors>
-            </Image>
+            <Image Grid.Column="2" Source="appiconfg.svg"
+                   HeightRequest="34" WidthRequest="34"
+                   VerticalOptions="Center" HorizontalOptions="End"/>
 
-            <BoxView Grid.ColumnSpan="3"
-                     Style="{StaticResource Divider}"
-                     VerticalOptions="End"/>
+            <BoxView Grid.ColumnSpan="3" Style="{StaticResource Divider}" VerticalOptions="End"/>
         </Grid>
 
         <!-- ── CONTENIDO ── -->
@@ -153,89 +144,15 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="models:TodayExerciseDto">
                                 <Grid Padding="0,0,0,10">
-                                    <Border StrokeThickness="0" HeightRequest="180"
-                                            BackgroundColor="{AppThemeBinding
-                                                Light={StaticResource SurfaceLight},
-                                                Dark={StaticResource CardDark}}">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="14"/>
-                                        </Border.StrokeShape>
-
-                                        <Grid RowDefinitions="*,Auto">
-
-                                            <!-- Imagen o placeholder -->
-                                            <Grid Grid.Row="0"
-                                                  BackgroundColor="{AppThemeBinding
-                                                      Light={StaticResource SurfaceElevatedLight},
-                                                      Dark={StaticResource SurfaceElevatedDark}}">
-                                                <Label Text="{x:Static constants:FA.Dumbbell}"
-                                                       FontFamily="FASolid" FontSize="32"
-                                                       TextColor="{AppThemeBinding
-                                                           Light={StaticResource TextDisabledLight},
-                                                           Dark={StaticResource TextDisabledDark}}"
-                                                       HorizontalOptions="Center" VerticalOptions="Center"
-                                                       IsVisible="{Binding ImageUrl,
-                                                           Converter={StaticResource IsNullConverter}}"/>
-                                                <Image Source="{Binding ImageUrl}" Aspect="AspectFill"
-                                                       IsVisible="{Binding ImageUrl,
-                                                           Converter={StaticResource IsNotNullConverter}}"/>
-
-                                                <!-- Badge de orden -->
-                                                <Border Margin="6" Padding="5,2"
-                                                        StrokeThickness="0"
-                                                        BackgroundColor="#CC000000"
-                                                        HorizontalOptions="Start" VerticalOptions="Start">
-                                                    <Border.StrokeShape>
-                                                        <RoundRectangle CornerRadius="6"/>
-                                                    </Border.StrokeShape>
-                                                    <Label Text="{Binding Order}"
-                                                           FontSize="10" FontAttributes="Bold"
-                                                           TextColor="White"/>
-                                                </Border>
-                                            </Grid>
-
-                                            <!-- Footer -->
-                                            <VerticalStackLayout Grid.Row="1" Padding="10,8" Spacing="2">
-                                                <Label Text="{Binding ExerciseName}"
-                                                       FontSize="12" FontAttributes="Bold"
-                                                       LineBreakMode="TailTruncation" MaxLines="2"
-                                                       TextColor="{AppThemeBinding
-                                                           Light={StaticResource TextPrimaryLight},
-                                                           Dark={StaticResource TextPrimaryDark}}"/>
-                                                <HorizontalStackLayout Spacing="4">
-                                                    <Label FontSize="11" FontAttributes="Bold"
-                                                           TextColor="{StaticResource Primary}"
-                                                           IsVisible="{Binding SetsPlanned,
-                                                               Converter={StaticResource IsNotNullConverter}}">
-                                                        <Label.FormattedText>
-                                                            <FormattedString>
-                                                                <Span Text="{Binding SetsPlanned}"/>
-                                                                <Span Text=" sets"/>
-                                                            </FormattedString>
-                                                        </Label.FormattedText>
-                                                    </Label>
-                                                    <Label Text="×" FontSize="11"
-                                                           TextColor="{AppThemeBinding
-                                                               Light={StaticResource TextDisabledLight},
-                                                               Dark={StaticResource TextDisabledDark}}"
-                                                           IsVisible="{Binding RepsPlanned,
-                                                               Converter={StaticResource IsNotNullConverter}}"/>
-                                                    <Label FontSize="11" FontAttributes="Bold"
-                                                           TextColor="{StaticResource Primary}"
-                                                           IsVisible="{Binding RepsPlanned,
-                                                               Converter={StaticResource IsNotNullConverter}}">
-                                                        <Label.FormattedText>
-                                                            <FormattedString>
-                                                                <Span Text="{Binding RepsPlanned}"/>
-                                                                <Span Text=" reps"/>
-                                                            </FormattedString>
-                                                        </Label.FormattedText>
-                                                    </Label>
-                                                </HorizontalStackLayout>
-                                            </VerticalStackLayout>
-
-                                        </Grid>
-                                    </Border>
+                                    <controls:ExerciseCardView
+                                        ExerciseName="{Binding ExerciseName}"
+                                        ImageUrl="{Binding ImageUrl}"
+                                        Order="{Binding Order}"
+                                        ShowOrder="True"
+                                        SetsPlanned="{Binding SetsPlanned}"
+                                        RepsPlanned="{Binding RepsPlanned}"
+                                        ShowSetsReps="True"
+                                        IsSelected="False"/>
                                 </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
