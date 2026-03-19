@@ -15,11 +15,24 @@
         public Guid ExerciseId { get; set; }
         public string ExerciseName { get; set; } = string.Empty;
         public string? ImageUrl { get; set; }
+        public string? MuscleGroupName { get; set; }
         public int Order { get; set; }
         public int? SetsPlanned { get; set; }
         public int? RepsPlanned { get; set; }
         public TimeSpan? DurationPlanned { get; set; }
         public TimeSpan? RestTimePlanned { get; set; }
         public string? Notes { get; set; }
+    }
+
+    /// <summary>Grupo de ejercicios por músculo para el CollectionView agrupado.</summary>
+    public class TodayExerciseGroup : List<TodayExerciseDto>
+    {
+        public string MuscleGroupName { get; }
+
+        public TodayExerciseGroup(string muscleGroupName, IEnumerable<TodayExerciseDto> items)
+            : base(items)
+        {
+            MuscleGroupName = muscleGroupName;
+        }
     }
 }

@@ -1,11 +1,12 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LevelUp.Mobile.Core.Abstractions;
-using LevelUp.Mobile.Core.Enums;
 using LevelUp.Mobile.Core.Settings;
 using LevelUp.Mobile.Features.Home.Models;
 using LevelUp.Mobile.Infrastructure.Token;
 using LevelUp.Mobile.Services;
+using System.Collections.ObjectModel;
 
 namespace LevelUp.Mobile.Features.Home.ViewModels
 {
@@ -42,6 +43,10 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
         [NotifyPropertyChangedFor(nameof(IsWorkoutVisible))]
         private bool _hasDayWithNoExercises;
 
+        /// <summary>Ejercicios agrupados por grupo muscular para el CollectionView.</summary>
+        [ObservableProperty]
+        private ObservableCollection<TodayExerciseGroup> _exerciseGroups = [];
+
         public string Greeting => GetGreeting();
 
         public bool IsWorkoutVisible =>
@@ -68,8 +73,7 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
                 if (claims.TryGetValue("sub", out var id))
                     UserId = Guid.Parse(id);
 
-                if (claims.TryGetValue("picture", out var pic) &&
-                    !string.IsNullOrEmpty(pic))
+                if (claims.TryGetValue("picture", out var pic) && !string.IsNullOrEmpty(pic))
                     ProfilePictureUrl = pic;
 
                 if (UserId is null) return;
@@ -77,30 +81,30 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
                 var language = AppPreferences.GetLanguage();
                 var today = await _homeService.GetTodayAsync(UserId.Value, language);
 
-                TodayPlan = today is null ? null : new TodayPlanDto
-                {
-                    PlanName = today.PlanName,
-                    DayName = today.DayName,
-                    DayOfWeek = today.DayOfWeek,
-                    Notes = today.Notes,
-                    Exercises = today.Exercises.Select(e => new TodayExerciseDto
-                    {
-                        ExerciseId = e.ExerciseId,
-                        ExerciseName = e.ExerciseName,
-                        SetsPlanned = e.SetsPlanned,
-                        RepsPlanned = e.RepsPlanned,
-                        Order = e.Order
-                    }).ToList()
-                };
-
+                TodayPlan = today;
                 HasNoPlan = false;
                 HasRestDay = false;
                 HasDayWithNoExercises = false;
 
                 if (TodayPlan is null)
+                {
                     HasNoPlan = true;
+                    ExerciseGroups = [];
+                }
                 else if (TodayPlan.Exercises.Count == 0)
+                {
                     HasDayWithNoExercises = true;
+                    ExerciseGroups = [];
+                }
+                else
+                {
+                    ExerciseGroups = new ObservableCollection<TodayExerciseGroup>(
+                        TodayPlan.Exercises
+                            .GroupBy(e => e.MuscleGroupName ?? "—")
+                            .OrderBy(g => g.Key)
+                            .Select(g => new TodayExerciseGroup(g.Key, g.OrderBy(e => e.Order)))
+                    );
+                }
             }
             catch (Exception ex)
             {

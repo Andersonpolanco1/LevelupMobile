@@ -4,24 +4,23 @@ using LevelUp.Mobile.Infrastructure.Repositories;
 
 namespace LevelUp.Mobile.Services;
 
-public class HomeService(WeeklyPlanRepository plans, ExerciseRepository exercises)
+public class HomeService(
+    WeeklyPlanRepository plans,
+    ExerciseRepository exercises,
+    MuscleRepository muscles)
 {
     public async Task<TodayPlanDto?> GetTodayAsync(Guid userId, Language language)
     {
         System.Diagnostics.Debug.WriteLine($"[HomeService] GetTodayAsync userId={userId}");
 
-        // ✅ Primero verificar si existe un plan activo
         var activePlan = await plans.GetActivePlanAsync(userId);
         System.Diagnostics.Debug.WriteLine($"[HomeService] activePlan={activePlan?.Name ?? "NULL"}");
 
-        // Sin plan activo → null → HasNoPlan = true
         if (activePlan is null) return null;
 
-        // Buscar el día de hoy en el plan
         var day = await plans.GetTodayDayAsync(userId);
-        System.Diagnostics.Debug.WriteLine($"[HomeService] todayDay={day?.DayOfWeek.ToString() ?? "NULL"} (hoy={DateTime.Now.DayOfWeek})");
+        System.Diagnostics.Debug.WriteLine($"[HomeService] todayDay={day?.DayOfWeek.ToString() ?? "NULL"}");
 
-        // Plan existe pero hoy no tiene día → día de descanso
         if (day is null)
         {
             return new TodayPlanDto
@@ -29,17 +28,18 @@ public class HomeService(WeeklyPlanRepository plans, ExerciseRepository exercise
                 PlanName = activePlan.Name,
                 DayName = DateTime.Now.DayOfWeek.ToString(),
                 DayOfWeek = DateTime.Now.DayOfWeek,
-                Exercises = []   // lista vacía → HasRestDay = true
+                Exercises = []
             };
         }
 
-        // Hay día configurado → cargar ejercicios
         var planExercises = await plans.GetExercisesForDayAsync(day.Id);
         var exerciseIds = planExercises.Select(e => e.ExerciseId).ToList();
         var withTranslations = await exercises.GetWithTranslationAsync(language);
+        var muscleGroupMap = await muscles.GetPrimaryMuscleGroupByExerciseIdsAsync(exerciseIds, language);
+
         var relevant = withTranslations
             .Where(t => exerciseIds.Contains(t.Exercise.Id))
-            .ToList();
+            .ToDictionary(t => t.Exercise.Id);
 
         return new TodayPlanDto
         {
@@ -49,16 +49,23 @@ public class HomeService(WeeklyPlanRepository plans, ExerciseRepository exercise
             Notes = day.Notes,
             Exercises = planExercises.Select(pe =>
             {
-                var match = relevant.FirstOrDefault(r => r.Exercise.Id == pe.ExerciseId);
+                relevant.TryGetValue(pe.ExerciseId, out var match);
+                muscleGroupMap.TryGetValue(pe.ExerciseId, out var muscleGroupName);
+
                 return new TodayExerciseDto
                 {
                     ExerciseId = pe.ExerciseId,
                     ExerciseName = match.Translation?.Name ?? "—",
+                    ImageUrl = match.Exercise.ImageUrl,
+                    MuscleGroupName = muscleGroupName,
                     SetsPlanned = pe.SetsPlanned,
                     RepsPlanned = pe.RepsPlanned,
                     Order = pe.Order
                 };
-            }).OrderBy(e => e.Order).ToList()
+            })
+            .OrderBy(e => e.MuscleGroupName ?? "zzz")
+            .ThenBy(e => e.Order)
+            .ToList()
         };
     }
 }

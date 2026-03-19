@@ -6,7 +6,7 @@ using LevelUp.Mobile.Infrastructure.Repositories;
 namespace LevelUp.Mobile.Services;
 
 public class WeeklyPlanService(
-    WeeklyPlanRepository repo, ISyncQueue queue, ISyncService sync)
+    WeeklyPlanRepository repo, ISyncQueue queue, ISyncService sync, MuscleRepository muscleRepo)
 {
     // ── Planes ────────────────────────────────────────────────────────
 
@@ -160,18 +160,40 @@ public class WeeklyPlanService(
     // Complementan los métodos que ya tienes.
 
     /// <summary>
-    /// Agrega un ejercicio al día con sets/reps nulos (se editan luego).
-    /// Si ya existe ese exerciseId en el día, no crea duplicado.
+    /// Agrega un ejercicio al día calculando el Order dentro de su grupo muscular.
+    /// Si ya existe ese exerciseId en el día, devuelve el existente sin duplicar.
     /// </summary>
     public async Task<WeeklyPlanExercise?> AddExerciseToDayAsync(Guid dayId, Guid exerciseId)
     {
         var existing = await repo.GetExercisesForDayAsync(dayId);
 
         // Evitar duplicado
-        if (existing.Any(e => e.ExerciseId == exerciseId))
-            return existing.First(e => e.ExerciseId == exerciseId);
+        var duplicate = existing.FirstOrDefault(e => e.ExerciseId == exerciseId);
+        if (duplicate is not null) return duplicate;
 
-        int nextOrder = existing.Count > 0 ? existing.Max(e => e.Order) + 1 : 0;
+        // Obtener el MuscleGroupId primario del ejercicio nuevo
+        var muscleGroupId = await muscleRepo.GetPrimaryMuscleGroupIdAsync(exerciseId);
+
+        int nextOrder;
+
+        if (muscleGroupId.HasValue)
+        {
+            // Obtener los ExerciseIds del mismo grupo muscular que ya están en el día
+            var sameGroupIds = await muscleRepo.GetExerciseIdsByMuscleGroupAsync(muscleGroupId.Value);
+
+            var sameGroupExercises = existing
+                .Where(e => sameGroupIds.Contains(e.ExerciseId))
+                .ToList();
+
+            nextOrder = sameGroupExercises.Count > 0
+                ? sameGroupExercises.Max(e => e.Order) + 1
+                : 1;
+        }
+        else
+        {
+            // Sin grupo muscular conocido → al final del día
+            nextOrder = existing.Count > 0 ? existing.Max(e => e.Order) + 1 : 1;
+        }
 
         var planExercise = new WeeklyPlanExercise
         {
