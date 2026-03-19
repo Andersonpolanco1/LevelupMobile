@@ -345,4 +345,51 @@
   <data name="Selected" xml:space="preserve"><value>selected</value></data>
   <data name="SearchExercises" xml:space="preserve"><value>Search exercises...</value></data>
   <data name="NoExercisesFound" xml:space="preserve"><value>No exercises found</value></data>
+  
+<data name="ProfileSectionBodyFitness" xml:space="preserve">
+  <value>BODY &amp; FITNESS</value>
+</data>
+<data name="ProfileSectionPreferences" xml:space="preserve">
+  <value>PREFERENCES</value>
+</data>
+<data name="ProfileBodyWeightLabel" xml:space="preserve">
+  <value>Body Weight</value>
+</data>
+<data name="ProfileBodyWeightSub" xml:space="preserve">
+  <value>Used as snapshot when you start a workout</value>
+</data>
+<data name="ProfileWeightUnitLabel" xml:space="preserve">
+  <value>Weight Unit</value>
+</data>
+<data name="ProfileLanguageLabel" xml:space="preserve">
+  <value>Language</value>
+</data>
+<data name="ProfileLanguageSub" xml:space="preserve">
+  <value>App display language</value>
+</data>
+<data name="ProfileTimezoneLabel" xml:space="preserve">
+  <value>Time Zone</value>
+</data>
+<data name="ProfileTimezoneSub" xml:space="preserve">
+  <value>For scheduling workouts</value>
+</data>
+<data name="ProfileDarkModeLabel" xml:space="preserve">
+  <value>Dark Mode</value>
+</data>
+<data name="ProfileDarkModeSub" xml:space="preserve">
+  <value>Override system theme</value>
+</data>
+<data name="ProfileSavingButton" xml:space="preserve">
+  <value>Saving…</value>
+</data>
+<data name="ProfileSettingsSaved" xml:space="preserve">
+  <value>Settings saved</value>
+</data>
+<data name="ProfileErrorLoad" xml:space="preserve">
+  <value>Could not load profile.</value>
+</data>
+<data name="ProfileErrorSave" xml:space="preserve">
+  <value>Could not save settings.</value>
+</data>
+
 </root>

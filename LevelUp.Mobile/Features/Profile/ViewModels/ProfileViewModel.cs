@@ -1,10 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LevelUp.Mobile.Core.Abstractions;
 using LevelUp.Mobile.Core.Entities;
 using LevelUp.Mobile.Core.Enums;
+using LevelUp.Mobile.Core.Settings;
 using LevelUp.Mobile.Infrastructure.Repositories;
-using LevelUp.Mobile.Core.Abstractions;
-using LevelUp.Mobile.Core.Abstractions;
+using LevelUp.Mobile.Services;
 
 namespace LevelUp.Mobile.Features.Profile.ViewModels
 {
@@ -17,7 +18,10 @@ namespace LevelUp.Mobile.Features.Profile.ViewModels
         // ── Estado ────────────────────────────────────────────────────
 
         [ObservableProperty] private bool _isLoading;
-        [ObservableProperty] private bool _isSaving;
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(CanSave))]
+        [NotifyPropertyChangedFor(nameof(SaveButtonText))]
+        private bool _isSaving;
         [ObservableProperty] private string? _errorMessage;
         [ObservableProperty] private bool _hasError;
         [ObservableProperty] private bool _isSaved;
@@ -26,7 +30,9 @@ namespace LevelUp.Mobile.Features.Profile.ViewModels
 
         [ObservableProperty] private string? _name;
         [ObservableProperty] private string? _email;
-        [ObservableProperty] private string? _profilePictureUrl;
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(HasProfilePicture))]
+        private string? _profilePictureUrl;
 
         // ── Configuraciones editables ─────────────────────────────────
 
@@ -40,6 +46,15 @@ namespace LevelUp.Mobile.Features.Profile.ViewModels
 
         /// <summary>Label calculado para mostrar junto al Entry de peso. Evita indexers en XAML.</summary>
         public string WeightUnitLabel => SelectedWeightUnitIndex == 1 ? "kg" : "lbs";
+
+        /// <summary>True si hay foto de perfil — reemplaza NotNullConverter en XAML.</summary>
+        public bool HasProfilePicture => !string.IsNullOrEmpty(ProfilePictureUrl);
+
+        /// <summary>True cuando no se está guardando — reemplaza InvertedBoolConverter en XAML.</summary>
+        public bool CanSave => !IsSaving;
+
+        /// <summary>Texto del botón guardar según estado.</summary>
+        public string SaveButtonText => IsSaving ? "Saving…" : "Save Changes";
 
         // ── Picker sources ────────────────────────────────────────────
 
@@ -136,7 +151,7 @@ namespace LevelUp.Mobile.Features.Profile.ViewModels
             catch (Exception ex)
             {
                 HasError = true;
-                ErrorMessage = "Could not load profile.";
+                ErrorMessage = LocalizationService.Instance["ProfileErrorLoad"];
                 System.Diagnostics.Debug.WriteLine($"[ProfileViewModel] LoadAsync error: {ex.Message}");
             }
             finally
@@ -166,7 +181,8 @@ namespace LevelUp.Mobile.Features.Profile.ViewModels
 
                 await _profileRepo.UpsertAsync(_profile);
 
-                // Intentar push inmediato si hay red
+                ApplyPreferences(_profile);
+
                 try
                 {
                     await _syncService.PushProfileAsync(_profile);
@@ -175,20 +191,18 @@ namespace LevelUp.Mobile.Features.Profile.ViewModels
                 }
                 catch
                 {
-                    // Sin red — se sincronizará en el próximo FullSync
                     System.Diagnostics.Debug.WriteLine("[ProfileViewModel] SaveAsync: sin red, guardado local.");
                 }
 
                 IsSaved = true;
 
-                // Limpiar el indicador de éxito después de 2 segundos
                 await Task.Delay(2000);
                 IsSaved = false;
             }
             catch (Exception ex)
             {
                 HasError = true;
-                ErrorMessage = "Could not save settings.";
+                ErrorMessage = LocalizationService.Instance["ProfileErrorSave"];
                 System.Diagnostics.Debug.WriteLine($"[ProfileViewModel] SaveAsync error: {ex.Message}");
             }
             finally
@@ -197,18 +211,36 @@ namespace LevelUp.Mobile.Features.Profile.ViewModels
             }
         }
 
-        // ── Helpers de mapeo ──────────────────────────────────────────
+
+        private static void ApplyPreferences(UserProfile p)
+        {
+            AppPreferences.SetLanguage(p.PreferredLanguage);
+            LocalizationService.Instance.SetLanguage(p.PreferredLanguage);
+
+            var appTheme = p.PreferredTheme switch
+            {
+                ThemeMode.Light => AppTheme.Light,
+                ThemeMode.Dark => AppTheme.Dark,
+                _ => AppTheme.Unspecified   
+            };
+
+            AppPreferences.SetTheme(appTheme);
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                if (Application.Current is not null)
+                    Application.Current.UserAppTheme = appTheme;
+            });
+        }
 
         private void MapToViewModel(UserProfile p)
         {
-            // Solo lectura
             Name = !string.IsNullOrWhiteSpace(p.Name) ? p.Name : _session.UserName;
             Email = !string.IsNullOrWhiteSpace(p.Email) ? p.Email : _session.Email;
             ProfilePictureUrl = !string.IsNullOrWhiteSpace(p.ProfilePictureUrl)
                 ? p.ProfilePictureUrl
                 : _session.PhotoUrl;
 
-            // Peso — mostramos en la unidad preferida
             if (p.CurrentBodyWeightInLb.HasValue)
             {
                 var display = p.PreferredWeightUnit == WeightUnit.Kg

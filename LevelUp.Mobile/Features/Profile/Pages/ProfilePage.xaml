@@ -3,9 +3,10 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:vm="clr-namespace:LevelUp.Mobile.Features.Profile.ViewModels"
+    xmlns:local="clr-namespace:LevelUp.Mobile.Core.Extensions"
     x:Class="LevelUp.Mobile.Features.Profile.Pages.ProfilePage"
     x:DataType="vm:ProfileViewModel"
-    Title="Profile"
+    Title="{local:Localize Settings}"
     Shell.NavBarIsVisible="False">
 
     <!-- ══════════════════════════════════════════════════════════════
@@ -62,7 +63,6 @@
                                 HorizontalOptions="Center"
                                 VerticalOptions="Center"/>
 
-                            <!-- Foto de perfil (si existe) -->
                             <Image
                                 Source="{Binding ProfilePictureUrl}"
                                 Aspect="AspectFill"
@@ -129,7 +129,7 @@
                     <HorizontalStackLayout Padding="16,12" Spacing="10">
                         <Label Text="✓" FontSize="16" TextColor="{StaticResource Success}" VerticalOptions="Center"/>
                         <Label
-                            Text="Settings saved"
+                            Text="{local:Localize ProfileSettingsSaved}"
                             FontSize="13"
                             TextColor="{StaticResource Success}"
                             VerticalOptions="Center"/>
@@ -140,7 +140,7 @@
                 <!--  SECCIÓN: Body & Fitness                         -->
                 <!-- ════════════════════════════════════════════════ -->
                 <Label
-                    Text="BODY &amp; FITNESS"
+                    Text="{local:Localize ProfileSectionBodyFitness}"
                     Style="{StaticResource CaptionLabel}"
                     Margin="4,0,0,0"
                     CharacterSpacing="1.5"/>
@@ -151,9 +151,9 @@
                         <!-- Body weight -->
                         <Grid ColumnDefinitions="*,Auto" Padding="0,8">
                             <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                <Label Text="Body Weight" FontSize="14" FontAttributes="Bold"/>
+                                <Label Text="{local:Localize ProfileBodyWeightLabel}" FontSize="14" FontAttributes="Bold"/>
                                 <Label
-                                    Text="Used as snapshot when you start a workout"
+                                    Text="{local:Localize ProfileBodyWeightSub}"
                                     Style="{StaticResource CaptionLabel}"/>
                             </VerticalStackLayout>
 
@@ -179,7 +179,7 @@
                         <Grid ColumnDefinitions="*,Auto" Padding="0,12">
                             <Label
                                 Grid.Column="0"
-                                Text="Weight Unit"
+                                Text="{local:Localize ProfileWeightUnitLabel}"
                                 FontSize="14"
                                 FontAttributes="Bold"
                                 VerticalOptions="Center"/>
@@ -200,7 +200,7 @@
                 <!--  SECCIÓN: Preferences                            -->
                 <!-- ════════════════════════════════════════════════ -->
                 <Label
-                    Text="PREFERENCES"
+                    Text="{local:Localize ProfileSectionPreferences}"
                     Style="{StaticResource CaptionLabel}"
                     Margin="4,8,0,0"
                     CharacterSpacing="1.5"/>
@@ -211,8 +211,8 @@
                         <!-- Language -->
                         <Grid ColumnDefinitions="*,Auto" Padding="0,12">
                             <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                <Label Text="Language" FontSize="14" FontAttributes="Bold"/>
-                                <Label Text="App display language" Style="{StaticResource CaptionLabel}"/>
+                                <Label Text="{local:Localize ProfileLanguageLabel}" FontSize="14" FontAttributes="Bold"/>
+                                <Label Text="{local:Localize ProfileLanguageSub}" Style="{StaticResource CaptionLabel}"/>
                             </VerticalStackLayout>
                             <Picker
                                 Grid.Column="1"
@@ -229,8 +229,8 @@
                         <!-- Timezone -->
                         <Grid ColumnDefinitions="*,Auto" Padding="0,12">
                             <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                <Label Text="Time Zone" FontSize="14" FontAttributes="Bold"/>
-                                <Label Text="For scheduling workouts" Style="{StaticResource CaptionLabel}"/>
+                                <Label Text="{local:Localize ProfileTimezoneLabel}" FontSize="14" FontAttributes="Bold"/>
+                                <Label Text="{local:Localize ProfileTimezoneSub}" Style="{StaticResource CaptionLabel}"/>
                             </VerticalStackLayout>
                             <Picker
                                 Grid.Column="1"
@@ -247,8 +247,8 @@
                         <!-- Dark theme toggle -->
                         <Grid ColumnDefinitions="*,Auto" Padding="0,12">
                             <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                <Label Text="Dark Mode" FontSize="14" FontAttributes="Bold"/>
-                                <Label Text="Override system theme" Style="{StaticResource CaptionLabel}"/>
+                                <Label Text="{local:Localize ProfileDarkModeLabel}" FontSize="14" FontAttributes="Bold"/>
+                                <Label Text="{local:Localize ProfileDarkModeSub}" Style="{StaticResource CaptionLabel}"/>
                             </VerticalStackLayout>
                             <Switch
                                 Grid.Column="1"
@@ -264,14 +264,14 @@
                 <!--  SAVE BUTTON                                     -->
                 <!-- ════════════════════════════════════════════════ -->
                 <Button
-                    Text="Save Changes"
+                    Text="{local:Localize SaveChanges}"
                     Style="{StaticResource PrimaryButton}"
                     Command="{Binding SaveCommand}"
                     IsEnabled="{Binding IsSaving, Converter={StaticResource InvertedBoolConverter}}"
                     Margin="0,8,0,0">
                     <Button.Triggers>
                         <DataTrigger TargetType="Button" Binding="{Binding IsSaving}" Value="True">
-                            <Setter Property="Text" Value="Saving…"/>
+                            <Setter Property="Text" Value="{local:Localize ProfileSavingButton}"/>
                         </DataTrigger>
                     </Button.Triggers>
                 </Button>
