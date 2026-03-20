@@ -9,7 +9,7 @@
              x:Class="LevelUp.Mobile.Features.Home.Pages.HomePage"
              x:DataType="vm:HomeViewModel">
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,*,Auto">
 
         <!-- ── HEADER ── -->
         <Grid Grid.Row="0"
@@ -38,11 +38,11 @@
                     </Grid>
                 </Border>
                 <VerticalStackLayout Spacing="1" VerticalOptions="Center">
-                    <Label Text="{Binding Greeting}" FontSize="13" FontAttributes="Bold"
+                    <Label Text="{Binding Greeting}" FontSize="11"
                            TextColor="{AppThemeBinding
                                Light={StaticResource TextPrimaryLight},
                                Dark={StaticResource TextPrimaryDark}}"/>
-                    <Label Text="{Binding UserName}" FontSize="11"
+                    <Label Text="{Binding UserName}" FontSize="13" FontAttributes="Bold"
                            TextColor="{AppThemeBinding
                                Light={StaticResource TextSecondaryLight},
                                Dark={StaticResource TextSecondaryDark}}"/>
@@ -127,7 +127,6 @@
                                              VerticalItemSpacing="0"/>
                         </CollectionView.ItemsLayout>
 
-                        <!-- Header: nombre del grupo muscular -->
                         <CollectionView.GroupHeaderTemplate>
                             <DataTemplate x:DataType="models:TodayExerciseGroup">
                                 <Label Text="{Binding MuscleGroupName}"
@@ -140,7 +139,6 @@
                             </DataTemplate>
                         </CollectionView.GroupHeaderTemplate>
 
-                        <!-- Card de ejercicio -->
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="models:TodayExerciseDto">
                                 <Grid Padding="0,0,0,10">
@@ -159,14 +157,25 @@
 
                     </CollectionView>
 
-                    <Button Text="{local:Localize StartWorkout}"
-                            Style="{StaticResource PrimaryButton}"
-                            Command="{Binding StartWorkoutCommand}"/>
-
                 </VerticalStackLayout>
 
             </VerticalStackLayout>
         </ScrollView>
+
+        <!-- ── ACTION BAR fijo abajo ── -->
+        <Grid Grid.Row="2"
+              Padding="20,12,20,36"
+              IsVisible="{Binding IsWorkoutVisible}"
+              BackgroundColor="{AppThemeBinding
+                  Light={StaticResource SurfaceLight},
+                  Dark={StaticResource SurfaceDark}}">
+            <BoxView Style="{StaticResource Divider}"
+                     VerticalOptions="Start" Margin="0,-12,0,0"/>
+            <Button Text="{local:Localize StartWorkout}"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding StartWorkoutCommand}"
+                    Margin="0,12,0,0"/>
+        </Grid>
 
     </Grid>
 </ContentPage>

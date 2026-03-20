@@ -225,6 +225,25 @@ public class WeeklyPlanService(
         var deleted = await repo.GetPlanExerciseByIdRawAsync(target.Id);
         if (deleted is not null)
             await queue.EnqueueAsync(deleted, SyncOperation.Delete);
+
+        // ── Reordenar los restantes ───────────────────────────────────
+        var remaining = existing
+            .Where(e => e.ExerciseId != exerciseId)
+            .OrderBy(e => e.Order)
+            .ToList();
+
+        for (int i = 0; i < remaining.Count; i++)
+        {
+            var exercise = remaining[i];
+            if (exercise.Order == i + 1) continue; // ya está correcto
+
+            exercise.Order = i + 1;
+            exercise.UpdatedAt = DateTime.UtcNow;
+            exercise.IsSynced = false;
+            await repo.UpdatePlanExerciseAsync(exercise);
+            await queue.EnqueueAsync(exercise, SyncOperation.Update);
+        }
+
         _ = Task.Run(() => sync.ProcessSyncQueueAsync());
     }
 
