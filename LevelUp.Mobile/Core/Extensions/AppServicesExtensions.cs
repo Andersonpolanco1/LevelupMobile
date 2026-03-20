@@ -1,5 +1,4 @@
 ﻿using LevelUp.Mobile.Core.Abstractions;
-using LevelUp.Mobile.Features.Auth.Services;
 using LevelUp.Mobile.Infrastructure.Session;
 using LevelUp.Mobile.Infrastructure.Sync;
 using LevelUp.Mobile.Infrastructure.Token;
@@ -13,6 +12,7 @@ namespace LevelUp.Mobile.Extensions
         {
             services.AddSingleton<ITokenService, TokenService>();
             services.AddSingleton<ISessionService, SessionService>();
+            services.AddSingleton<AppState>();
 
             services.AddSingleton<WeeklyPlanService>();
             services.AddSingleton<HomeService>();

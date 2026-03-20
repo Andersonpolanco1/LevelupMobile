@@ -14,13 +14,15 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
     {
         private readonly HomeService _homeService;
         private readonly ITokenService _tokenService;
+        private readonly AppState _appState;
 
-        public HomeViewModel(HomeService homeService, ITokenService tokenService)
+        public HomeViewModel(HomeService homeService, ITokenService tokenService, AppState appState)
         {
             _homeService = homeService;
             _tokenService = tokenService;
             LocalizationService.Instance.PropertyChanged += (_, _) =>
                 OnPropertyChanged(nameof(Greeting));
+            _appState = appState;
         }
 
         [ObservableProperty] private string? _userName;
@@ -61,6 +63,8 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
         [RelayCommand]
         private async Task InitializeAsync()
         {
+            if (!_appState.HomeNeedsRefresh()) return;
+
             if (IsBusy) return;
             IsBusy = true;
             try
@@ -105,6 +109,7 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
                             .Select(g => new TodayExerciseGroup(g.Key, g.OrderBy(e => e.Order)))
                     );
                 }
+                _appState.HomeLoaded();
             }
             catch (Exception ex)
             {

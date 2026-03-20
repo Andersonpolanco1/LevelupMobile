@@ -12,7 +12,7 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
     [QueryProperty(nameof(PlanId), "id")]
     public partial class PlanDetailViewModel(
         WeeklyPlanService planService,
-        ITokenService tokenService) : BaseViewModel
+        ITokenService tokenService, AppState appState) : BaseViewModel
     {
         [ObservableProperty] private string? _planId;
 
@@ -130,6 +130,8 @@ namespace LevelUp.Mobile.Features.Plans.ViewModels
             {
                 await planService.ActivateAsync(userId, Plan.Id);
                 Plan = await planService.GetByIdAsync(Plan.Id);
+
+                appState.InvalidateHome();
             });
         }
     }
