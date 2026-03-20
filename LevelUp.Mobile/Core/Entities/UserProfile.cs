@@ -31,7 +31,7 @@ namespace LevelUp.Mobile.Core.Entities
         public Language PreferredLanguage { get; set; } = Language.English;
 
         /// <summary>Tema visual: System / Light / Dark.</summary>
-        public ThemeMode PreferredTheme { get; set; } = ThemeMode.System;
+        public AppTheme PreferredTheme { get; set; } = AppTheme.Dark;
 
         /// <summary>Unidad preferida para mostrar pesos.</summary>
         public WeightUnit PreferredWeightUnit { get; set; } = WeightUnit.Lb;

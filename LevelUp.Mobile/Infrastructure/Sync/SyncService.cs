@@ -1,12 +1,13 @@
 ﻿// Infrastructure/Sync/SyncService.cs
-using System.Text.Json;
 using LevelUp.Mobile.Core.Abstractions;
 using LevelUp.Mobile.Core.Entities;
 using LevelUp.Mobile.Core.Enums;
+using LevelUp.Mobile.Core.Settings;
 using LevelUp.Mobile.Infrastructure.Api;
 using LevelUp.Mobile.Infrastructure.Api.Dtos;
 using LevelUp.Mobile.Infrastructure.LocalDb;
 using LevelUp.Mobile.Infrastructure.Repositories;
+using System.Text.Json;
 
 namespace LevelUp.Mobile.Infrastructure.Sync;
 
@@ -362,6 +363,7 @@ public class SyncService : ISyncService
         };
 
         await _profileRepo.UpsertAsync(profile);
+        AppPreferences.SetTheme(profile.PreferredTheme);
         Log("SyncProfile END ✓");
     }
 

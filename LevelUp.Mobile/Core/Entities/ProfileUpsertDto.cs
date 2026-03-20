@@ -7,7 +7,7 @@ namespace LevelUp.Mobile.Core.Entities
     {
         public decimal? CurrentBodyWeightInLb { get; set; }
         public Language PreferredLanguage { get; set; }
-        public ThemeMode PreferredTheme { get; set; }
+        public AppTheme PreferredTheme { get; set; }
         public WeightUnit PreferredWeightUnit { get; set; }
         public string? TimeZoneId { get; set; }
         public DateTime UpdatedAt { get; set; }

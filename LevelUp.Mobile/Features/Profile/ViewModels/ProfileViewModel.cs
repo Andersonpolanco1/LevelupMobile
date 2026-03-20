@@ -89,6 +89,7 @@ namespace LevelUp.Mobile.Features.Profile.ViewModels
                     ?? CreateDefaultProfile();
 
                 MapToViewModel(_profile);
+                ApplyPreferences(_profile);
             }
             catch (Exception ex)
             {
@@ -174,19 +175,12 @@ namespace LevelUp.Mobile.Features.Profile.ViewModels
             AppPreferences.SetLanguage(p.PreferredLanguage);
             LocalizationService.Instance.SetLanguage(p.PreferredLanguage);
 
-            var appTheme = p.PreferredTheme switch
-            {
-                ThemeMode.Light => AppTheme.Light,
-                ThemeMode.Dark => AppTheme.Dark,
-                _ => AppTheme.Unspecified
-            };
-
-            AppPreferences.SetTheme(appTheme);
+            AppPreferences.SetTheme(p.PreferredTheme);
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 if (Application.Current is not null)
-                    Application.Current.UserAppTheme = appTheme;
+                    Application.Current.UserAppTheme = p.PreferredTheme;
             });
         }
 
@@ -208,8 +202,8 @@ namespace LevelUp.Mobile.Features.Profile.ViewModels
                 BodyWeightDisplay = string.Empty;
             }
 
-            IsDarkTheme = p.PreferredTheme == ThemeMode.Dark ||
-                          (p.PreferredTheme == ThemeMode.System &&
+            IsDarkTheme = p.PreferredTheme == AppTheme.Dark ||
+                          (p.PreferredTheme == AppTheme.Unspecified &&
                            Application.Current?.RequestedTheme == AppTheme.Dark);
             
             SelectedLanguageIndex = p.PreferredLanguage == Language.Spanish ? 1 : 0;
@@ -219,7 +213,7 @@ namespace LevelUp.Mobile.Features.Profile.ViewModels
         private void MapFromViewModel(UserProfile p)
         {
             p.PreferredLanguage = SelectedLanguageIndex == 1 ? Language.Spanish : Language.English;
-            p.PreferredTheme = IsDarkTheme ? ThemeMode.Dark : ThemeMode.Light;
+            p.PreferredTheme = IsDarkTheme ? AppTheme.Dark : AppTheme.Light;
             p.PreferredWeightUnit = SelectedWeightUnitIndex == 1 ? WeightUnit.Kg : WeightUnit.Lb;
 
             if (decimal.TryParse(BodyWeightDisplay, out var weight) && weight > 0)
@@ -238,7 +232,7 @@ namespace LevelUp.Mobile.Features.Profile.ViewModels
             ProfilePictureUrl = _session.PhotoUrl,
             CreatedAt = DateTime.UtcNow,
             PreferredLanguage = Language.English,
-            PreferredTheme = ThemeMode.Dark,
+            PreferredTheme = AppTheme.Dark,
             PreferredWeightUnit = WeightUnit.Lb,
             TimeZoneId = TimeZoneInfo.Local.Id
         };
