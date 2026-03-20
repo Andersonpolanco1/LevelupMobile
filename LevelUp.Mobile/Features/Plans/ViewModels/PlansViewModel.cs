@@ -1,49 +1,69 @@
 ﻿// Features/Plans/ViewModels/PlansViewModel.cs
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using LevelUp.Mobile.Core.Entities;
 using LevelUp.Mobile.Services;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 namespace LevelUp.Mobile.Features.Plans.ViewModels;
 
-public class PlansViewModel
+public partial class PlansViewModel(
+    WeeklyPlanService planService,
+    AppState appState) : ObservableObject
 {
-    private readonly WeeklyPlanService _service;
+    public ObservableCollection<WeeklyPlan> Plans { get; } = [];
 
-    public ObservableCollection<WeeklyPlan> Plans { get; } = new();
-    public ICommand LoadPlansCommand { get; }
-    public ICommand CreatePlanCommand { get; }
-    public ICommand OpenPlanCommand { get; }
+    [ObservableProperty] private bool isBusy;
 
-    public PlansViewModel(WeeklyPlanService service)
+    // ── Carga inteligente ─────────────────────────────────────────────
+
+    [RelayCommand]
+    public async Task LoadIfNeededAsync()
     {
-        _service = service;
-
-        LoadPlansCommand = new Command(async () => await LoadPlansAsync());
-
-        CreatePlanCommand = new Command(async () =>
-            await Shell.Current.GoToAsync("///Plans/Create"));
-
-        OpenPlanCommand = new Command<WeeklyPlan>(async plan =>
-            await Shell.Current.GoToAsync($"///Plans/Detail?id={plan.Id}"));
+        if (!appState.PlansNeedsRefresh()) return;
+        await LoadAsync();
     }
 
-    private async Task LoadPlansAsync()
+    [RelayCommand]
+    public async Task LoadAsync()
     {
-        Plans.Clear();
-        var plans = await _service.GetPlansAsync();
-        if (plans is null) return;
-
-        foreach (var plan in plans)
+        if (IsBusy) return;
+        IsBusy = true;
+        try
         {
-            var days = await _service.GetDaysAsync(plan.Id);
-            plan.DaysOfWeekShortName = days
-                .OrderBy(d => d.DayOfWeek)
-                .Select(d => GetShortName(d.DayOfWeek))
-                .ToArray();
-            Plans.Add(plan);
+            var plans = await planService.GetPlansAsync();
+            if (plans is null) return;
+
+            Plans.Clear();
+            foreach (var plan in plans)
+            {
+                var days = await planService.GetDaysAsync(plan.Id);
+                plan.DaysOfWeekShortName = days
+                    .OrderBy(d => d.DayOfWeek)
+                    .Select(d => GetShortName(d.DayOfWeek))
+                    .ToArray();
+                Plans.Add(plan);
+            }
+
+            appState.PlansLoaded();
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
+
+    // ── Navegación ────────────────────────────────────────────────────
+
+    [RelayCommand]
+    private async Task CreatePlanAsync()
+        => await Shell.Current.GoToAsync("///Plans/Create");
+
+    [RelayCommand]
+    private async Task OpenPlanAsync(WeeklyPlan plan)
+        => await Shell.Current.GoToAsync($"///Plans/Detail?id={plan.Id}");
+
+    // ── Helper ────────────────────────────────────────────────────────
 
     private static string GetShortName(DayOfWeek day) => day switch
     {

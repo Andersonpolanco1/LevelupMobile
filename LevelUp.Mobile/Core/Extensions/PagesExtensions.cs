@@ -17,41 +17,49 @@ namespace LevelUp.Mobile.Extensions
     {
         public static IServiceCollection AddPagesAndViewModels(this IServiceCollection services)
         {
+            // ── Sin estado persistente → Transient ────────────────────────────
+            // Se crean nuevos cada vez, correcto para páginas de autenticación
+            // y páginas que siempre deben arrancar limpias
             services.AddTransient<SplashPage>();
             services.AddTransient<SplashViewModel>();
-
             services.AddTransient<LoginPage>();
             services.AddTransient<LoginViewModel>();
 
-            services.AddTransient<HomePage>();
-            services.AddTransient<HomeViewModel>();
+            // ── Páginas de creación/edición → Transient ───────────────────────
+            // Deben arrancar limpias cada vez que se abren
+            services.AddTransient<CreatePlanPage>();
+            services.AddTransient<CreatePlanViewModel>();
+            services.AddTransient<PlanEditPage>();
+            services.AddTransient<PlanEditViewModel>();
 
-            services.AddTransient<ExercisesPage>();
-            services.AddTransient<ExerciseDetailPage>();
+            // ── Páginas de detalle → Transient ────────────────────────────────
+            // Reciben QueryProperty y cargan según el ID recibido
+            services.AddTransient<PlanDetailPage>();
+            services.AddTransient<PlanDetailViewModel>();
+            services.AddTransient<PlanDayDetailPage>();
+            services.AddTransient<PlanDayDetailViewModel>();
 
+            // ── Workout → Transient ───────────────────────────────────────────
+            // Datos en tiempo real, siempre frescos
             services.AddTransient<WorkoutPage>();
             services.AddTransient<ActiveWorkoutPage>();
             services.AddTransient<WorkoutSummaryPage>();
 
-            services.AddTransient<PlansPage>();
-            services.AddTransient<PlansViewModel>();
+            // ── Tabs principales → Singleton ──────────────────────────────────
+            // Viven durante toda la sesión, usan AppState para saber si recargar
+            services.AddSingleton<HomePage>();
+            services.AddSingleton<HomeViewModel>();
+            services.AddSingleton<PlansPage>();
+            services.AddSingleton<PlansViewModel>();
+            services.AddSingleton<ProfilePage>();
+            services.AddSingleton<ProfileViewModel>();
 
-            services.AddTransient<PlanDetailViewModel>();
-            services.AddTransient<PlanDetailPage>();
-
-            services.AddTransient<CreatePlanPage>();
-            services.AddTransient<CreatePlanViewModel>();
-
-            services.AddTransient<PlanEditPage>();
-            services.AddTransient<PlanEditViewModel>();
-
-            services.AddTransient<ProfileViewModel>();  // ← esta faltaba
-            services.AddTransient<ProfilePage>();
-
-            services.AddTransient<PlanDayDetailPage>();
-            services.AddTransient<PlanDayDetailViewModel>();
-            services.AddTransient<ExercisePickerPage>();
-            services.AddTransient<ExercisePickerViewModel>();
+            // ── Ejercicios → Singleton ────────────────────────────────────────
+            // Catálogo pesado (100+ items), se cachea entre navegaciones
+            services.AddSingleton<ExercisesPage>();
+            services.AddSingleton<ExercisePickerPage>();
+            services.AddSingleton<ExercisePickerViewModel>();
+            services.AddSingleton<ExerciseDetailPage>();
 
             return services;
         }

@@ -1,22 +1,22 @@
+// Features/Profile/Pages/ProfilePage.xaml.cs
 using LevelUp.Mobile.Features.Profile.ViewModels;
 
-namespace LevelUp.Mobile.Features.Profile.Pages
+namespace LevelUp.Mobile.Features.Profile.Pages;
+
+public partial class ProfilePage : ContentPage
 {
-    public partial class ProfilePage : ContentPage
+    private readonly ProfileViewModel _vm;
+
+    public ProfilePage(ProfileViewModel vm)
     {
-        private readonly ProfileViewModel _vm;
+        InitializeComponent();
+        _vm = vm;
+        BindingContext = vm;
+    }
 
-        public ProfilePage(ProfileViewModel vm)
-        {
-            InitializeComponent();
-            _vm = vm;
-            BindingContext = vm;
-        }
-
-        protected override async void OnAppearing()
-        {
-            base.OnAppearing();
-            await _vm.LoadAsync();
-        }
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await _vm.LoadIfNeededCommand.ExecuteAsync(null);
     }
 }

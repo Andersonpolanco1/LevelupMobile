@@ -5,17 +5,18 @@ namespace LevelUp.Mobile.Features.Plans.Pages;
 
 public partial class PlanDetailPage : ContentPage
 {
+    private readonly PlanDetailViewModel _vm;
+
     public PlanDetailPage(PlanDetailViewModel vm)
     {
         InitializeComponent();
+        _vm = vm;
         BindingContext = vm;
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
-        // Recarga al volver de PlanEditPage o PlanDayDetailPage
-        if (BindingContext is PlanDetailViewModel vm)
-            vm.ReloadIfNeeded();
+        await _vm.ReloadAsync();
     }
 }
