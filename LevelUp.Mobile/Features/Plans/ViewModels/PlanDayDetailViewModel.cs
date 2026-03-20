@@ -144,8 +144,10 @@ public partial class PlanDayDetailViewModel(
         if (Day is null) return;
 
         var result = await Shell.Current.DisplayPromptAsync(
-            "Day Notes",
-            "Add a note for this day:",
+            LocalizationService.Instance["DayNotesTitle"],
+            LocalizationService.Instance["DayNotesSub"],
+            accept: LocalizationService.Instance["Save"],
+            cancel: LocalizationService.Instance["Cancel"],
             initialValue: Day.Notes ?? "",
             maxLength: 200,
             keyboard: Keyboard.Text);

@@ -438,4 +438,13 @@
   <data name="ManageExercises" xml:space="preserve">
     <value>Add / Remove Exercises</value>
   </data>
+  <data name="DayNotesTitle" xml:space="preserve">
+    <value>Day Notes</value>
+  </data>
+  <data name="DayNotesSub" xml:space="preserve">
+    <value>Add a note for this day</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
 </root>

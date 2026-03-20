@@ -208,7 +208,10 @@ namespace LevelUp.Mobile.Features.Profile.ViewModels
                 BodyWeightDisplay = string.Empty;
             }
 
-            IsDarkTheme = p.PreferredTheme == ThemeMode.Dark;
+            IsDarkTheme = p.PreferredTheme == ThemeMode.Dark ||
+                          (p.PreferredTheme == ThemeMode.System &&
+                           Application.Current?.RequestedTheme == AppTheme.Dark);
+            
             SelectedLanguageIndex = p.PreferredLanguage == Language.Spanish ? 1 : 0;
             SelectedWeightUnitIndex = p.PreferredWeightUnit == WeightUnit.Kg ? 1 : 0;
         }
@@ -235,7 +238,7 @@ namespace LevelUp.Mobile.Features.Profile.ViewModels
             ProfilePictureUrl = _session.PhotoUrl,
             CreatedAt = DateTime.UtcNow,
             PreferredLanguage = Language.English,
-            PreferredTheme = ThemeMode.System,
+            PreferredTheme = ThemeMode.Dark,
             PreferredWeightUnit = WeightUnit.Lb,
             TimeZoneId = TimeZoneInfo.Local.Id
         };

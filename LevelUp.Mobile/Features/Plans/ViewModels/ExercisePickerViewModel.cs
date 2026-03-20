@@ -102,7 +102,8 @@ public partial class ExercisePickerViewModel(
                     Exercise = x.Exercise,
                     Name = x.Translation?.Name ?? x.Exercise.Id.ToString()
                 })
-                .OrderBy(x => x.Name)
+                .OrderByDescending(x => _preExistingIds.Contains(x.Exercise.Id)) 
+                .ThenBy(x => x.Name)
                 .ToList();
 
             // 3. Pre-marcar los que ya están en el día
@@ -143,6 +144,10 @@ public partial class ExercisePickerViewModel(
             var q = _searchText.Trim().ToLowerInvariant();
             result = result.Where(r => r.Name.ToLowerInvariant().Contains(q));
         }
+
+        result = result
+        .OrderByDescending(r => r.IsSelected)
+        .ThenBy(r => r.Name);
 
         FilteredExercises = new ObservableCollection<ExercisePickerRow>(result);
         OnPropertyChanged(nameof(IsEmpty));
