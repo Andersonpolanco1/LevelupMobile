@@ -5,6 +5,7 @@ using LevelUp.Mobile.Features.Home.Pages;
 using LevelUp.Mobile.Features.Plans.Pages;
 using LevelUp.Mobile.Features.Profile.Pages;
 using LevelUp.Mobile.Features.Splash.Pages;
+using LevelUp.Mobile.Features.Stats.Pages;
 using LevelUp.Mobile.Features.Workouts.Pages;
 using LevelUp.Mobile.Services;
 
@@ -16,7 +17,10 @@ public partial class AppShell : Shell
     private Tab _exercisesTab = null!;
     private Tab _workoutTab = null!;
     private Tab _plansTab = null!;
-    private Tab _profileTab = null!;
+    private Tab _statsTab = null!;
+
+    // Último tab activo para detectar el cambio
+    private Tab? _previousTab;
 
     public AppShell(IServiceProvider services)
     {
@@ -63,17 +67,17 @@ public partial class AppShell : Shell
                 Items = { new ShellContent { Route = "Plans", ContentTemplate = new DataTemplate(services.GetRequiredService<PlansPage>) } }
             };
 
-            _profileTab = new Tab
+            _statsTab = new Tab
             {
-                Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.User, Size = 20 },
-                Items = { new ShellContent { Route = "Profile", ContentTemplate = new DataTemplate(services.GetRequiredService<ProfilePage>) } }
+                Icon = new FontImageSource { FontFamily = "FASolid", Glyph = FA.ChartLine, Size = 20 },
+                Items = { new ShellContent { Route = "Stats", ContentTemplate = new DataTemplate(services.GetRequiredService<StatsPage>) } }
             };
 
             tabBar.Items.Add(_homeTab);
             tabBar.Items.Add(_exercisesTab);
             tabBar.Items.Add(_workoutTab);
             tabBar.Items.Add(_plansTab);
-            tabBar.Items.Add(_profileTab);
+            tabBar.Items.Add(_statsTab);
 
             Items.Add(tabBar);
 
@@ -87,6 +91,12 @@ public partial class AppShell : Shell
             Routing.RegisterRoute("PlanDayDetail", typeof(PlanDayDetailPage));
             Routing.RegisterRoute("exercisePicker", typeof(ExercisePickerPage));
 
+            // Perfil accesible como ruta suelta (sin tab)
+            Routing.RegisterRoute("Profile", typeof(ProfilePage));
+
+            // ── Suscribir cambio de tab ───────────────────────────────────
+            tabBar.PropertyChanged += OnTabBarPropertyChanged;
+
             UpdateTabTitles();
             LocalizationService.Instance.PropertyChanged += (_, _) => UpdateTabTitles();
         }
@@ -96,7 +106,27 @@ public partial class AppShell : Shell
             System.Diagnostics.Debug.WriteLine($">>> INNER: {ex.InnerException?.Message}");
             throw;
         }
-       
+    }
+
+    // ── Detectar cambio de tab mediante PropertyChanged del TabBar ────────
+    // CurrentItem del TabBar cambia exactamente cuando el usuario toca otro tab.
+    // En ese momento limpiamos el stack del tab que se abandona usando
+    // NavigationStack directamente, sin comparar strings de rutas.
+    private void OnTabBarPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(TabBar.CurrentItem)) return;
+        if (sender is not TabBar tabBar) return;
+
+        var incoming = tabBar.CurrentItem as Tab;
+
+        if (_previousTab != null && _previousTab != incoming)
+        {
+            var stack = Navigation.NavigationStack.ToArray();
+            for (int i = stack.Length - 1; i > 0; i--)
+                Navigation.RemovePage(stack[i]);
+        }
+
+        _previousTab = incoming;
     }
 
     private void UpdateTabTitles()
@@ -105,6 +135,6 @@ public partial class AppShell : Shell
         _exercisesTab.Title = LocalizationService.Instance["TabExercises"];
         _workoutTab.Title = LocalizationService.Instance["TabWorkout"];
         _plansTab.Title = LocalizationService.Instance["TabPlans"];
-        _profileTab.Title = LocalizationService.Instance["TabProfile"];
+        _statsTab.Title = LocalizationService.Instance["TabStats"];
     }
 }

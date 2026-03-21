@@ -9,6 +9,7 @@ using LevelUp.Mobile.Features.Profile.Pages;
 using LevelUp.Mobile.Features.Profile.ViewModels;
 using LevelUp.Mobile.Features.Splash.Pages;
 using LevelUp.Mobile.Features.Splash.ViewModels;
+using LevelUp.Mobile.Features.Stats.Pages;
 using LevelUp.Mobile.Features.Workouts.Pages;
 
 namespace LevelUp.Mobile.Extensions
@@ -60,6 +61,9 @@ namespace LevelUp.Mobile.Extensions
             services.AddSingleton<ExercisePickerPage>();
             services.AddSingleton<ExercisePickerViewModel>();
             services.AddSingleton<ExerciseDetailPage>();
+
+
+            services.AddSingleton<StatsPage>();
 
             return services;
         }

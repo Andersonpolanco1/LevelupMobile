@@ -447,4 +447,7 @@
   <data name="Save" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="TabStats" xml:space="preserve">
+    <value>Statistics</value>
+  </data>
 </root>

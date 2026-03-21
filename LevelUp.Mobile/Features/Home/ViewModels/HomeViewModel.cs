@@ -123,7 +123,7 @@ namespace LevelUp.Mobile.Features.Home.ViewModels
 
         [RelayCommand]
         private async Task OpenSettingsAsync()
-            => await Shell.Current.GoToAsync("///Profile");
+            => await Shell.Current.GoToAsync("Profile");
 
         [RelayCommand]
         private async Task CreatePlanAsync()

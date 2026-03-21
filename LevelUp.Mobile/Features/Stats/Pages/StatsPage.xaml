@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LevelUp.Mobile.Features.Stats.Pages.StatsPage"
+             Title="Estadísticas">
+
+    <VerticalStackLayout HorizontalOptions="Center"
+                         VerticalOptions="Center"
+                         Spacing="12">
+
+        <Label Text="Estadísticas"
+               FontSize="24"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               TextColor="{AppThemeBinding Light=#1A1A1A, Dark=#F5F5F5}" />
+
+        <Label Text="Próximamente..."
+               FontSize="14"
+               HorizontalOptions="Center"
+               TextColor="{AppThemeBinding Light=#888888, Dark=#888888}" />
+
+    </VerticalStackLayout>
+
+</ContentPage>
