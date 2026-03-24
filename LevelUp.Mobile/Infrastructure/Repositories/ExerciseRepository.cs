@@ -91,4 +91,52 @@ public class ExerciseRepository : BaseRepository<Exercise>
                     return groupNameMap.TryGetValue(groupId, out var name) ? name : "—";
                 });
     }
+
+    // 1. Mapa ExerciseId → nombres de músculos primarios (para las cards de la lista)
+    public async Task<Dictionary<Guid, string>> GetPrimaryMuscleNamesAsync(Language language)
+    {
+        var db = await GetDbAsync();
+
+        // Obtener todas las relaciones Exercise → Muscle (rol Primary)
+        var primaryLinks = await db.Table<ExerciseMuscle>()
+            .Where(em => em.Role == MuscleRole.Primary && !em.IsDeleted)
+            .ToListAsync();
+
+        var muscleIds = primaryLinks.Select(em => em.MuscleId).Distinct().ToList();
+
+        // Traducciones de esos músculos
+        var translations = await db.Table<MuscleTranslation>()
+            .Where(t => muscleIds.Contains(t.MuscleId) && t.Language == language && !t.IsDeleted)
+            .ToListAsync();
+
+        var nameMap = translations.ToDictionary(t => t.MuscleId, t => t.Name);
+
+        // Agrupar por ejercicio → concatenar nombres
+        return primaryLinks
+            .GroupBy(em => em.ExerciseId)
+            .ToDictionary(
+                g => g.Key,
+                g => string.Join(", ", g
+                    .Select(em => nameMap.TryGetValue(em.MuscleId, out var n) ? n : "")
+                    .Where(n => !string.IsNullOrEmpty(n)))
+            );
+    }
+
+    // 2. Obtener ejercicio por ID (sin traducción)
+    public async Task<Exercise?> GetByIdAsync(Guid id)
+    {
+        var db = await GetDbAsync();
+        return await db.Table<Exercise>()
+            .Where(e => e.Id == id && !e.IsDeleted)
+            .FirstOrDefaultAsync();
+    }
+
+    // 3. Obtener traducción de un ejercicio
+    public async Task<ExerciseTranslation?> GetTranslationAsync(Guid exerciseId, Language language)
+    {
+        var db = await GetDbAsync();
+        return await db.Table<ExerciseTranslation>()
+            .Where(t => t.ExerciseId == exerciseId && t.Language == language && !t.IsDeleted)
+            .FirstOrDefaultAsync();
+    }
 }

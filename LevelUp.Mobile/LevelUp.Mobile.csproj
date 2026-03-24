@@ -182,4 +182,22 @@
 		<MauiFont Include="Resources\Fonts\Font Awesome 7 Free-Solid-900.otf" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="Resources\Strings\AppStrings.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>AppStrings.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<EmbeddedResource Update="Resources\Strings\AppStrings.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>AppStrings.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Resources\Strings\AppStrings.en.resx" />
+		<EmbeddedResource Update="Resources\Strings\AppStrings.es.resx" />
+	</ItemGroup>
+
 </Project>

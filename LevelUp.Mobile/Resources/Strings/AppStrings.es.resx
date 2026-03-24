@@ -450,4 +450,145 @@
   <data name="TabStats" xml:space="preserve">
     <value>Estadisticas</value>
   </data>
+  <data name="ExercisesFound" xml:space="preserve">
+    <value>ejercicios encontrados</value>
+  </data>
+  <data name="Filters" xml:space="preserve">
+    <value>Filtros</value>
+  </data>
+  <data name="ExerciseType" xml:space="preserve">
+    <value>Tipo de ejercicio</value>
+  </data>
+  <data name="IncludesBodyweight" xml:space="preserve">
+    <value>Incluye peso corporal</value>
+  </data>
+  <data name="IncludesBodyweightDesc" xml:space="preserve">
+    <value>Ejercicios que usan tu peso corporal</value>
+  </data>
+  <data name="ClearAllFilters" xml:space="preserve">
+    <value>Limpiar todos los filtros</value>
+  </data>
+  <data name="TryOtherFilters" xml:space="preserve">
+    <value>Intenta ajustar los filtros</value>
+  </data>
+  <data name="TypeWeightedStrength" xml:space="preserve">
+    <value>Con peso</value>
+  </data>
+  <data name="TypeBodyweightStrength" xml:space="preserve">
+    <value>Peso corporal</value>
+  </data>
+  <data name="TypeRepetitionOnly" xml:space="preserve">
+    <value>Solo reps</value>
+  </data>
+  <data name="TypeIsometric" xml:space="preserve">
+    <value>Isométrico</value>
+  </data>
+  <data name="TypeCardio" xml:space="preserve">
+    <value>Cardio</value>
+  </data>
+  <data name="TypeMobility" xml:space="preserve">
+    <value>Movilidad</value>
+  </data>
+  <data name="MusclesInvolved" xml:space="preserve">
+    <value>Músculos involucrados</value>
+  </data>
+  <data name="Instructions" xml:space="preserve">
+    <value>Instrucciones</value>
+  </data>
+  <data name="Tips" xml:space="preserve">
+    <value>Consejos</value>
+  </data>
+  <data name="CommonMistakes" xml:space="preserve">
+    <value>Errores comunes</value>
+  </data>
+  <data name="Bodyweight" xml:space="preserve">
+    <value>Peso corporal</value>
+  </data>
+  <data name="BodyweightInfo" xml:space="preserve">
+    <value>Info de peso corporal</value>
+  </data>
+  <data name="BodyweightFactor" xml:space="preserve">
+    <value>Factor</value>
+  </data>
+  <data name="OfYourWeight" xml:space="preserve">
+    <value>de tu peso</value>
+  </data>
+  <data name="NoMuscleData" xml:space="preserve">
+    <value>Sin datos musculares</value>
+  </data>
+  <data name="RequiredFields" xml:space="preserve">
+    <value>Campos requeridos</value>
+  </data>
+  <data name="AvailableMetrics" xml:space="preserve">
+    <value>Métricas disponibles</value>
+  </data>
+  <data name="MusclePrimary" xml:space="preserve">
+    <value>Primario</value>
+  </data>
+  <data name="MuscleSecondary" xml:space="preserve">
+    <value>Secundario</value>
+  </data>
+  <data name="MuscleStabilizer" xml:space="preserve">
+    <value>Estabilizador</value>
+  </data>
+  <data name="FieldWeight" xml:space="preserve">
+    <value>Peso</value>
+  </data>
+  <data name="FieldReps" xml:space="preserve">
+    <value>Repeticiones</value>
+  </data>
+  <data name="FieldDuration" xml:space="preserve">
+    <value>Duración</value>
+  </data>
+  <data name="FieldDistance" xml:space="preserve">
+    <value>Distancia</value>
+  </data>
+  <data name="FieldDurationOrDistance" xml:space="preserve">
+    <value>Duración o distancia</value>
+  </data>
+  <data name="MetricVolume" xml:space="preserve">
+    <value>Volumen (Peso × Reps)</value>
+  </data>
+  <data name="Metric1RM" xml:space="preserve">
+    <value>1RM estimado</value>
+  </data>
+  <data name="MetricWeightPR" xml:space="preserve">
+    <value>PR de carga</value>
+  </data>
+  <data name="MetricWeightProgress" xml:space="preserve">
+    <value>Progresión de peso</value>
+  </data>
+  <data name="MetricMaxReps" xml:space="preserve">
+    <value>Máximo de reps</value>
+  </data>
+  <data name="MetricTotalReps" xml:space="preserve">
+    <value>Total de repeticiones</value>
+  </data>
+  <data name="MetricWeeklyProgress" xml:space="preserve">
+    <value>Progreso semanal</value>
+  </data>
+  <data name="MetricTotalTUT" xml:space="preserve">
+    <value>Tiempo bajo tensión total</value>
+  </data>
+  <data name="MetricDurationProgress" xml:space="preserve">
+    <value>Progresión de duración</value>
+  </data>
+  <data name="MetricTotalTime" xml:space="preserve">
+    <value>Tiempo total</value>
+  </data>
+  <data name="MetricPace" xml:space="preserve">
+    <value>Ritmo (pace)</value>
+  </data>
+  <data name="MetricDistance" xml:space="preserve">
+    <value>Distancia acumulada</value>
+  </data>
+  <data name="MetricCalories" xml:space="preserve">
+    <value>Calorías quemadas</value>
+  </data>
+  <data name="MetricMobilityTime" xml:space="preserve">
+    <value>Tiempo de movilidad total</value>
+  </data>
+  <data name="MetricWeeklyConsistency" xml:space="preserve">
+    <value>Consistencia semanal</value>
+  </data>
 </root>

@@ -1,6 +1,7 @@
 ﻿using LevelUp.Mobile.Features.Auth.Pages;
 using LevelUp.Mobile.Features.Auth.ViewModels;
 using LevelUp.Mobile.Features.Exercises.Pages;
+using LevelUp.Mobile.Features.Exercises.ViewModels;
 using LevelUp.Mobile.Features.Home.Pages;
 using LevelUp.Mobile.Features.Home.ViewModels;
 using LevelUp.Mobile.Features.Plans.Pages;
@@ -58,9 +59,11 @@ namespace LevelUp.Mobile.Extensions
             // ── Ejercicios → Singleton ────────────────────────────────────────
             // Catálogo pesado (100+ items), se cachea entre navegaciones
             services.AddSingleton<ExercisesPage>();
+            services.AddSingleton<ExercisesViewModel>();
             services.AddSingleton<ExercisePickerPage>();
             services.AddSingleton<ExercisePickerViewModel>();
             services.AddSingleton<ExerciseDetailPage>();
+            services.AddSingleton<ExerciseDetailViewModel>();
 
 
             services.AddSingleton<StatsPage>();

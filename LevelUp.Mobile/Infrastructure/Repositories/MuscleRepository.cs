@@ -141,4 +141,33 @@ public class MuscleRepository(LocalDatabase db)
 
         return muscle?.MuscleGroupId;
     }
+
+    // Modelo de retorno para detalle de músculos
+    public record ExerciseMuscleDetail(string MuscleName, MuscleRole Role);
+
+    // Obtener todos los músculos de un ejercicio con sus roles y nombres traducidos
+    public async Task<List<ExerciseMuscleDetail>> GetMusclesForExerciseAsync(Guid exerciseId, Language language)
+    {
+        var db = await GetDbAsync();
+
+        var links = await db.Table<ExerciseMuscle>()
+            .Where(em => em.ExerciseId == exerciseId && !em.IsDeleted)
+            .ToListAsync();
+
+        var muscleIds = links.Select(em => em.MuscleId).Distinct().ToList();
+
+        var translations = await db.Table<MuscleTranslation>()
+            .Where(t => muscleIds.Contains(t.MuscleId) && t.Language == language && !t.IsDeleted)
+            .ToListAsync();
+
+        var nameMap = translations.ToDictionary(t => t.MuscleId, t => t.Name);
+
+        return links
+            .Select(em => new ExerciseMuscleDetail(
+                MuscleName: nameMap.TryGetValue(em.MuscleId, out var n) ? n : em.MuscleId.ToString(),
+                Role: em.Role))
+            .OrderBy(m => (int)m.Role)
+            .ThenBy(m => m.MuscleName)
+            .ToList();
+    }
 }
