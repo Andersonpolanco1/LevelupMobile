@@ -41,9 +41,7 @@ public partial class ExerciseDetailViewModel(
     {
         if (_exerciseId == Guid.Empty) return;
 
-        // ── Capturar todos los strings localizados en el MAIN THREAD ──
-        // ResourceManager lanza MissingManifestResourceException si se accede
-        // por primera vez desde un hilo de background en MAUI/Android.
+        // ── Capturar strings localizados en el MAIN THREAD ────────────
         var language = AppPreferences.GetLanguage();
         var l = LocalizationService.Instance;
 
@@ -84,12 +82,9 @@ public partial class ExerciseDetailViewModel(
             [ExerciseType.Mobility] = [l["MetricMobilityTime"], l["MetricWeeklyConsistency"]],
         };
 
-        var bodyweightLabel = l["Bodyweight"];
-
         IsBusy = true;
         try
         {
-            // Trabajo pesado en background — ya no tocamos LocalizationService aquí
             var result = await Task.Run(async () =>
             {
                 var exercise = await exerciseRepo.GetByIdAsync(_exerciseId);
@@ -117,6 +112,7 @@ public partial class ExerciseDetailViewModel(
                     Name = translation?.Name ?? exercise.Id.ToString(),
                     ImageUrl = exercise.ImageUrl,
                     HasImage = !string.IsNullOrEmpty(exercise.ImageUrl),
+                    Type = type,                          // ← necesario para ShowBodyweightBadge
                     TypeLabel = typeLabels.TryGetValue(type, out var tl) ? tl : type.ToString(),
                     TypeIcon = ExercisesViewModel.GetTypeIcon(type),
                     TypeBadgeColor = ExercisesViewModel.GetTypeBadgeColor(type),

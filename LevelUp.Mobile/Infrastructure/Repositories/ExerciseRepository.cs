@@ -126,9 +126,11 @@ public class ExerciseRepository : BaseRepository<Exercise>
     public async Task<Exercise?> GetByIdAsync(Guid id)
     {
         var db = await GetDbAsync();
-        return await db.Table<Exercise>()
+        var exercise = await db.Table<Exercise>()
             .Where(e => e.Id == id && !e.IsDeleted)
             .FirstOrDefaultAsync();
+
+        return exercise;
     }
 
     // 3. Obtener traducción de un ejercicio

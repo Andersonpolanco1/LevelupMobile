@@ -299,5 +299,5 @@ public partial class ExercisesViewModel(
 
     [RelayCommand]
     private async Task OpenDetail(ExerciseRow row)
-        => await Shell.Current.GoToAsync($"Exercises/Detail?exerciseId={row.Exercise.Id}");
+        => await Shell.Current.GoToAsync($"///Exercises/Detail?exerciseId={row.Exercise.Id}");
 }

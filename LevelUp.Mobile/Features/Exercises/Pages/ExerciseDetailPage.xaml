@@ -10,24 +10,68 @@
     x:DataType="vm:ExerciseDetailViewModel"
     Shell.NavBarIsVisible="False">
 
-    <Grid RowDefinitions="*">
+    <Grid RowDefinitions="Auto,*">
 
-        <!-- LOADING STATE -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- HEADER — mismo estilo que PlanDetailPage                   -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="40,*,40"
+              Padding="20,56,20,16"
+              BackgroundColor="{AppThemeBinding
+                  Light={StaticResource SurfaceLight},
+                  Dark={StaticResource SurfaceDark}}">
+
+            <!-- Flecha back naranja -->
+            <Label Grid.Column="0"
+                   Text="{x:Static constants:FA.AngleLeft}"
+                   FontFamily="FASolid" FontSize="22"
+                   TextColor="{StaticResource Primary}"
+                   VerticalOptions="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+
+            <!-- Título centrado -->
+            <Label Grid.Column="1"
+                   Text="{Binding Detail.Name}"
+                   Style="{StaticResource SubtitleLabel}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   MaxLines="1"
+                   LineBreakMode="TailTruncation"/>
+
+            <!-- Columna derecha vacía para simetría -->
+            <BoxView Grid.Column="2" Color="Transparent"/>
+
+            <BoxView Grid.ColumnSpan="3"
+                     Style="{StaticResource Divider}"
+                     VerticalOptions="End"/>
+        </Grid>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- LOADING STATE                                              -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
         <ActivityIndicator
+            Grid.Row="1"
             IsRunning="{Binding IsBusy}"
             IsVisible="{Binding IsBusy}"
             Color="{StaticResource Primary}"
             HorizontalOptions="Center"
             VerticalOptions="Center"/>
 
-        <!-- CONTENIDO PRINCIPAL -->
-        <ScrollView IsVisible="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}">
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- CONTENIDO PRINCIPAL                                        -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <ScrollView Grid.Row="1"
+                    IsVisible="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}">
             <VerticalStackLayout Spacing="0">
 
-                <!-- ═══════════════════════════════════════════════════ -->
-                <!-- IMAGEN HERO + HEADER OVERLAY                       -->
-                <!-- ═══════════════════════════════════════════════════ -->
-                <Grid HeightRequest="280">
+                <!-- ─────────────────────────────────────────────────── -->
+                <!-- IMAGEN HERO                                         -->
+                <!-- ─────────────────────────────────────────────────── -->
+                <Grid HeightRequest="220">
 
                     <!-- Imagen de fondo -->
                     <Image Source="{Binding Detail.ImageUrl}"
@@ -50,7 +94,7 @@
                     </Grid>
 
                     <!-- Gradiente bottom-up -->
-                    <BoxView VerticalOptions="Fill" HeightRequest="280">
+                    <BoxView VerticalOptions="Fill" HeightRequest="220">
                         <BoxView.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                 <GradientStop Color="Transparent" Offset="0.3"/>
@@ -59,35 +103,18 @@
                         </BoxView.Background>
                     </BoxView>
 
-                    <!-- Botón Back -->
-                    <Border Margin="20,52,0,0"
-                            Padding="10"
-                            StrokeThickness="0"
-                            HorizontalOptions="Start"
-                            VerticalOptions="Start"
-                            BackgroundColor="#80000000">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="12"/>
-                        </Border.StrokeShape>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding GoBackCommand}"/>
-                        </Border.GestureRecognizers>
-                        <Label Text="{x:Static constants:FA.AngleLeft}"
-                               FontFamily="FASolid" FontSize="18"
-                               TextColor="White"/>
-                    </Border>
-
-                    <!-- Nombre + badges (bottom) -->
+                    <!-- Badge tipo + nombre (bottom overlay) -->
                     <VerticalStackLayout VerticalOptions="End"
-                                         Padding="20,0,20,18"
+                                         Padding="20,0,20,16"
                                          Spacing="6">
 
+                        <!-- Badge único de tipo — bodyweight solo si NO es ya BodyweightStrength -->
                         <HorizontalStackLayout Spacing="6">
 
-                            <!-- Badge tipo ejercicio -->
+                            <!-- Badge tipo ejercicio (siempre visible) -->
                             <Border Padding="8,4"
                                     StrokeThickness="0"
-                                    BackgroundColor="{StaticResource Primary}">
+                                    BackgroundColor="{Binding Detail.TypeBadgeColor}">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="8"/>
                                 </Border.StrokeShape>
@@ -103,11 +130,12 @@
                                 </HorizontalStackLayout>
                             </Border>
 
-                            <!-- Badge peso corporal -->
+                            <!-- Badge bodyweight EXTRA — solo si tiene factor pero NO es tipo Bodyweight
+                                 (ej: ejercicio WeightedStrength que registra también el peso corporal) -->
                             <Border Padding="8,4"
                                     StrokeThickness="0"
                                     BackgroundColor="#80FFFFFF"
-                                    IsVisible="{Binding Detail.IncludesBodyWeight}">
+                                    IsVisible="{Binding Detail.ShowBodyweightBadge}">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="8"/>
                                 </Border.StrokeShape>
@@ -125,17 +153,12 @@
 
                         </HorizontalStackLayout>
 
-                        <Label Text="{Binding Detail.Name}"
-                               FontSize="24" FontAttributes="Bold"
-                               TextColor="White"
-                               LineBreakMode="WordWrap"/>
-
                     </VerticalStackLayout>
                 </Grid>
 
-                <!-- ═══════════════════════════════════════════════════ -->
-                <!-- CUERPO DEL DETALLE                                 -->
-                <!-- ═══════════════════════════════════════════════════ -->
+                <!-- ─────────────────────────────────────────────────── -->
+                <!-- CUERPO DEL DETALLE                                  -->
+                <!-- ─────────────────────────────────────────────────── -->
                 <VerticalStackLayout Padding="20,20,20,40" Spacing="20">
 
                     <!-- ── MÚSCULOS INVOLUCRADOS ─────────────────────── -->
@@ -170,7 +193,6 @@
                                     <DataTemplate x:DataType="models:MuscleRoleGroup">
                                         <VerticalStackLayout Spacing="8">
 
-                                            <!-- Encabezado de rol -->
                                             <HorizontalStackLayout Spacing="6">
                                                 <Label Text="{Binding RoleIcon}"
                                                        FontFamily="FASolid" FontSize="12"
@@ -184,7 +206,6 @@
                                                        VerticalOptions="Center"/>
                                             </HorizontalStackLayout>
 
-                                            <!-- Chips de músculos -->
                                             <FlexLayout Wrap="Wrap"
                                                         Direction="Row"
                                                         JustifyContent="Start"
@@ -309,7 +330,6 @@
                             <BoxView Style="{StaticResource Divider}"/>
                             <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
 
-                                <!-- Factor -->
                                 <Border Grid.Column="0"
                                         Padding="14,12"
                                         StrokeThickness="0"
@@ -336,7 +356,6 @@
                                     </VerticalStackLayout>
                                 </Border>
 
-                                <!-- Tipo -->
                                 <Border Grid.Column="1"
                                         Padding="14,12"
                                         StrokeThickness="0"
