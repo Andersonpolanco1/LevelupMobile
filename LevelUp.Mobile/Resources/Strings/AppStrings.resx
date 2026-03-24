@@ -591,4 +591,7 @@
   <data name="MetricWeeklyConsistency" xml:space="preserve">
     <value>Weekly Consistency</value>
   </data>
+  <data name="Exercises" xml:space="preserve">
+    <value>Exercises</value>
+  </data>
 </root>

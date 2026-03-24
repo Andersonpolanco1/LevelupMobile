@@ -37,8 +37,6 @@ public class AppState
     public void PlansLoaded() => _plansChanged = false;
 
     // ── ExercisePicker ────────────────────────────────────────────────
-    // El catálogo se cachea entre aperturas. Solo se recarga si el usuario
-    // crea un ejercicio propio (funcionalidad pendiente).
     private bool _exercisePickerChanged = true;
 
     /// <summary>Llamar cuando el usuario crea un ejercicio propio.</summary>
@@ -47,21 +45,46 @@ public class AppState
     public void ExercisePickerLoaded() => _exercisePickerChanged = false;
 
     // ── Exercises (tab de catálogo) ───────────────────────────────────
-    // Mismo patrón que ExercisePicker — catálogo compartido.
-    // Se invalida junto al picker cuando el usuario crea un ejercicio propio.
     private bool _exercisesChanged = true;
 
     /// <summary>
-    /// Llamar cuando el usuario crea o edita un ejercicio propio,
-    /// de modo que el tab Exercises recargue el catálogo en su próxima visita.
+    /// Llamar cuando el usuario crea o edita un ejercicio propio.
+    /// Invalida también el picker — comparten el mismo catálogo.
     /// </summary>
     public void InvalidateExercises()
     {
         _exercisesChanged = true;
-        // Invalidar también el picker — comparten el mismo catálogo
         InvalidateExercisePicker();
     }
 
     public bool ExercisesNeedsRefresh() => _exercisesChanged;
     public void ExercisesLoaded() => _exercisesChanged = false;
+
+    // ── Invalidación global por cambio de idioma ──────────────────────
+
+    /// <summary>
+    /// Llamar desde ProfileViewModel.SaveAsync() cuando el idioma cambia.
+    /// Invalida todos los ViewModels que resuelven strings localizados
+    /// en memoria (labels de chips, nombres de músculos, tipo de ejercicio, etc.).
+    /// <br/><br/>
+    /// Los bindings XAML con {local:Localize} se actualizan solos vía
+    /// LocalizationService.PropertyChanged — solo necesitan invalidación
+    /// los ViewModels que cachean strings resueltos como propiedades C#.
+    /// </summary>
+    public void InvalidateAllOnLanguageChange()
+    {
+        // Exercises: recarga catálogo + labels de tipo en chips y cards
+        _exercisesChanged = true;
+
+        // ExercisePicker: mismos labels de tipo
+        _exercisePickerChanged = true;
+
+        // Home: puede tener el nombre del día o plan cacheado
+        _homePlanChanged = true;
+
+        // Plans: nombres de días si están resueltos en el ViewModel
+        _plansChanged = true;
+
+        // _homeLastLoaded se conserva para no perder la lógica de "nuevo día"
+    }
 }

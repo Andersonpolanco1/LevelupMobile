@@ -64,10 +64,12 @@ public partial class ExercisesViewModel(
     private int _currentPage = 0;
     private List<ExerciseRow> _filteredCache = [];
 
-    // ── Cache / filtros ───────────────────────────────────────────────
+    // ── Cache ─────────────────────────────────────────────────────────
 
     private List<ExerciseRow> _allExercises = [];
     private Dictionary<Guid, HashSet<Guid>> _groupExerciseCache = [];
+
+    // ── Filtros ───────────────────────────────────────────────────────
 
     private string _searchText = "";
     private Guid? _selectedGroupId;
@@ -83,13 +85,21 @@ public partial class ExercisesViewModel(
 
     public async Task InitializeAsync()
     {
-        if (!appState.ExercisesNeedsRefresh() && _allExercises.Count > 0) return;
+        // ViewModel es Singleton: si el catálogo ya está en memoria
+        // y AppState no indica cambio → no hacer nada en absoluto.
+        if (_allExercises.Count > 0 && !appState.ExercisesNeedsRefresh())
+            return;
+
         await LoadAsync();
     }
 
     private async Task LoadAsync()
     {
         if (IsBusy) return;
+
+        // Capturar strings localizados en main thread antes de ir a background
+        var typeFilters = BuildTypeFilters();
+
         IsBusy = true;
         try
         {
@@ -134,12 +144,11 @@ public partial class ExercisesViewModel(
             _allExercises = exerciseRows;
             _groupExerciseCache.Clear();
 
-            // BuildTypeFilters ahora usa el singleton que ya funciona en toda la app
-            var typeFilters = BuildTypeFilters();
-
             MuscleGroups = new ObservableCollection<MuscleGroupChip>(groupChips);
             ExerciseTypeFilters = new ObservableCollection<FilterChip>(typeFilters);
-            ApplyFilters();
+
+            // ApplyFilters solo reasigna FilteredExercises si los datos cambiaron
+            ApplyFilters(forceRefresh: true);
 
             appState.ExercisesLoaded();
         }
@@ -173,7 +182,7 @@ public partial class ExercisesViewModel(
         _ => "#FF6600"
     };
 
-    // ── BuildTypeFilters: usa el singleton, igual que el resto de la app ──
+    // Llamar siempre desde main thread — ResourceManager no es thread-safe
     private static List<FilterChip> BuildTypeFilters()
     {
         var l = LocalizationService.Instance;
@@ -190,7 +199,11 @@ public partial class ExercisesViewModel(
 
     // ── Filtros ───────────────────────────────────────────────────────
 
-    private async void ApplyFilters()
+    /// <param name="forceRefresh">
+    /// true  → siempre reasigna FilteredExercises (tras recarga del catálogo).
+    /// false → solo reasigna si el resultado es diferente al actual (visitas normales).
+    /// </param>
+    private async void ApplyFilters(bool forceRefresh = false)
     {
         IEnumerable<ExerciseRow> result = _allExercises;
 
@@ -218,13 +231,32 @@ public partial class ExercisesViewModel(
             result = result.Where(r => r.Name.ToLowerInvariant().Contains(q));
         }
 
-        _filteredCache = result.OrderBy(r => r.Name).ToList();
+        var newCache = result.OrderBy(r => r.Name).ToList();
+
+        // Evitar re-render si el resultado es idéntico al actual
+        // (mismo count + mismos IDs en el mismo orden)
+        if (!forceRefresh && IsSameResult(newCache))
+            return;
+
+        _filteredCache = newCache;
         _currentPage = 0;
 
         TotalCount = _filteredCache.Count;
         FilteredExercises = new ObservableCollection<ExerciseRow>(_filteredCache.Take(PageSize));
         OnPropertyChanged(nameof(IsEmpty));
         OnPropertyChanged(nameof(ActiveFilterCount));
+    }
+
+    /// <summary>
+    /// Compara rápidamente si la nueva lista es igual a la actual
+    /// usando solo Count + IDs (evita re-render innecesario en OnAppearing).
+    /// </summary>
+    private bool IsSameResult(List<ExerciseRow> newResult)
+    {
+        if (newResult.Count != _filteredCache.Count) return false;
+        for (int i = 0; i < newResult.Count; i++)
+            if (newResult[i].Exercise.Id != _filteredCache[i].Exercise.Id) return false;
+        return true;
     }
 
     // ── Commands ──────────────────────────────────────────────────────
@@ -288,7 +320,10 @@ public partial class ExercisesViewModel(
     private void LoadMore()
     {
         if (IsLoadingMore) return;
-        var next = _filteredCache.Skip((_currentPage + 1) * PageSize).Take(PageSize).ToList();
+        var next = _filteredCache
+            .Skip((_currentPage + 1) * PageSize)
+            .Take(PageSize)
+            .ToList();
         if (next.Count == 0) return;
 
         IsLoadingMore = true;

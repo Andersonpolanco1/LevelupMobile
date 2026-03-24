@@ -457,6 +457,15 @@ namespace LevelUp.Mobile.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exercises.
+        /// </summary>
+        internal static string Exercises {
+            get {
+                return ResourceManager.GetString("Exercises", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} exercises.
         /// </summary>
         internal static string ExercisesCount {

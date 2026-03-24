@@ -17,6 +17,7 @@ public partial class ProfileViewModel : ObservableObject
     private readonly ISessionService _session;
     private readonly ISyncService _syncService;
     private readonly AuthService _authService;
+    private readonly AppState _appState;
 
     // ── Flag de carga ─────────────────────────────────────────────────
     // true  = ya cargó con userId válido, no recargar al cambiar de tab
@@ -67,12 +68,14 @@ public partial class ProfileViewModel : ObservableObject
         UserProfileRepository profileRepo,
         ISessionService session,
         ISyncService syncService,
-        AuthService authService)
+        AuthService authService,
+        AppState appState)          // ← nuevo
     {
         _profileRepo = profileRepo;
         _session = session;
         _syncService = syncService;
         _authService = authService;
+        _appState = appState;    // ← nuevo
     }
 
     // ── Carga inteligente ─────────────────────────────────────────────
@@ -136,6 +139,9 @@ public partial class ProfileViewModel : ObservableObject
     {
         if (_profile is null) return;
 
+        // Capturar idioma actual antes de aplicar cambios
+        var previousLanguage = _profile.PreferredLanguage;
+
         IsSaving = true;
         HasError = false;
         IsSaved = false;
@@ -163,13 +169,19 @@ public partial class ProfileViewModel : ObservableObject
                 System.Diagnostics.Debug.WriteLine("[ProfileVM] sin red, guardado local.");
             }
 
-            // Permitir recarga en el próximo OnAppearing para
-            // reflejar exactamente lo guardado
+            // Si el idioma cambió → invalidar todos los ViewModels que
+            // tienen strings resueltos en memoria (chips, labels, etc.)
+            if (_profile.PreferredLanguage != previousLanguage)
+            {
+                _appState.InvalidateAllOnLanguageChange();
+                System.Diagnostics.Debug.WriteLine(
+                    $"[ProfileVM] idioma cambió {previousLanguage} → {_profile.PreferredLanguage}, cache invalidado");
+            }
+
+            // Permitir recarga del perfil en el próximo OnAppearing
             _loaded = false;
 
             IsSaved = true;
-
-            // No bloquear con await Task.Delay — usar ContinueWith
             _ = Task.Delay(2000).ContinueWith(_ =>
                 MainThread.BeginInvokeOnMainThread(() => IsSaved = false));
         }
